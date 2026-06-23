@@ -1,0 +1,46 @@
+# Continued pretrain Caracal Base 3B
+# Sprint 1, task C4
+
+model:
+  base: Qwen/Qwen2.5-Coder-3B-Instruct
+  # pin specific revision after C2 bake-off
+  pretrained_revision: null  # ex: "abc123def" hash
+
+lora:
+  r: 32
+  alpha: 64
+  dropout: 0.0
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+training:
+  learning_rate: 5.0e-5
+  lr_scheduler: cosine
+  warmup_ratio: 0.03
+  per_device_train_batch_size: 4
+  gradient_accumulation_steps: 4
+  num_epochs: 1
+  max_seq_length: 4096
+  packing: true
+  bf16: true
+  optim: paged_adamw_8bit
+  gradient_checkpointing: true
+
+dataset:
+  manifest: data/corpus_manifest.yaml
+  total_tokens_target: 1500000000  # 1.5B
+
+hub:
+  repo_id: iterate-labs/caracal-base-pretrain
+  push_every_n_steps: 200
+  final_repo_id: iterate-labs/caracal-base-3b
+
+wandb:
+  project: caracal-base-pretrain
+  resume_id: caracal-base-pretrain-main

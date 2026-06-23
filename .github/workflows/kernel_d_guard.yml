@@ -1,0 +1,32 @@
+name: KERNEL-D Guard
+
+on:
+  pull_request:
+    paths:
+      - 'eval/held_out_2026.yaml'
+      - 'harness/kernel/**'
+      - 'harness/sandbox/**'
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify ADR exists
+        run: |
+          if [ ! -d "harness/decisions" ]; then
+            echo "ERROR: harness/decisions/ missing"
+            exit 1
+          fi
+          # Check at least one ADR was added or modified in this PR
+          echo "KERNEL-D paths modified. Manual review required: 2 reviewers + ADR."
+      - name: Comment review requirement
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '**KERNEL-D change detected.** 2 revisores obrigatorios + ADR em `harness/decisions/`. Veja `CONTRIBUTING.md`.'
+            })

@@ -1,0 +1,46 @@
+# State machine policy DSL
+# 6 estados rigidos para modulo Crafter
+
+states:
+  - id: ANALYZE
+    description: examinar codigo, listar funcoes alvo
+    valid_transitions: [HYPOTHESIZE]
+    reward_on_entry: 0.0
+
+  - id: HYPOTHESIZE
+    description: enumerar 3 hipoteses de bug class
+    valid_transitions: [INSTRUMENT, ANALYZE]
+    reward_on_entry: 0.05  # progressao valida
+
+  - id: INSTRUMENT
+    description: pedir gcov / valor de variavel / trace fuzzer
+    valid_transitions: [EXECUTE, HYPOTHESIZE]
+    reward_on_entry: 0.05
+
+  - id: EXECUTE
+    description: gerar input concreto, rodar
+    valid_transitions: [REFINE, INSTRUMENT, PATCH]
+    reward_on_entry: 0.05
+
+  - id: REFINE
+    description: ajustar baseado em feedback
+    valid_transitions: [INSTRUMENT, EXECUTE, PATCH]
+    reward_on_entry: 0.03
+
+  - id: PATCH
+    description: gerar fix unified diff
+    valid_transitions: [END]
+    reward_on_entry: 0.10
+
+  - id: END
+    description: trajetoria terminada
+    reward_on_entry: 0.0
+
+  - id: ERROR_LOOP_INFINITE
+    description: detectado loop infinito (mais de 30 passos sem PATCH)
+    reward_on_entry: -1.0
+    terminal: true
+
+invalid_transition_penalty: -0.5
+
+start_state: ANALYZE

@@ -1,0 +1,7 @@
+{
+  "_comment": "KERNEL-D file hashes for integrity probe. Gerado em build/release.",
+  "_pattern": "sha256",
+  "classes.yaml": "TBD",
+  "budgets.yaml": "TBD",
+  "reward_registry.yaml": "TBD"
+}

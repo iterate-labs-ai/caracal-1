@@ -1,0 +1,41 @@
+# KERNEL-D · budget enforcer
+# Limites duros que o loop NUNCA pode editar.
+# Edicao deste arquivo: 2 reviewers + ADR obrigatorio.
+
+defaults:
+  per_action:
+    max_tokens_out: 8192
+    max_wall_seconds: 300
+    max_usd: 0.50
+
+  per_ciclo:
+    max_tokens_out: 1000000
+    max_wall_seconds: 14400  # 4 horas
+    max_usd: 20.00
+
+  per_dia:
+    max_usd: 200.00
+    alert_threshold_pct: 80
+
+overrides:
+  classe_C_train_step:
+    max_wall_seconds: 28800  # 8 horas
+    max_usd: 100.00
+
+  classe_D_review:
+    max_wall_seconds: 1800  # 30 minutos humanos
+    max_usd: 5.00
+
+  sandbox_modal:
+    max_cpu_seconds_per_eval: 60
+    max_memory_gb: 2
+    max_pids: 512
+    max_parallel_containers: 3000
+
+stop_pattern_detection:
+  trigger_on:
+    - "proposer tentou editar budgets.yaml"
+    - "proposer tentou editar classes.yaml"
+    - "proposer tentou editar reward_registry.yaml"
+    - "proposer tentou aumentar max_tokens_out"
+  action: reject_trajectory_and_flag

@@ -1,0 +1,16 @@
+# CODEOWNERS · gera enforcement em PRs
+# Kernel-D files exigem 2 revisores (sera adicionado via branch protection settings)
+
+# default: qualquer fundador revisa
+*               @PAMF2 @arturpn1 @dev-knz @aletlucas @VitorScrt
+
+# KERNEL-D · 2 reviewers obrigatorios via branch protection
+eval/held_out_2026.yaml         @PAMF2 @arturpn1 @dev-knz @aletlucas @VitorScrt
+harness/kernel/                  @PAMF2 @arturpn1 @dev-knz @aletlucas @VitorScrt
+harness/sandbox/                 @PAMF2 @arturpn1 @dev-knz @aletlucas @VitorScrt
+
+# documentos importantes: qualquer fundador
+README.md                        @PAMF2 @arturpn1 @dev-knz @aletlucas @VitorScrt
+HOWTO.md                         @PAMF2 @arturpn1 @dev-knz @aletlucas @VitorScrt
+SCHEDULE.md                      @PAMF2 @arturpn1 @dev-knz @aletlucas @VitorScrt
+CONTRIBUTING.md                  @PAMF2

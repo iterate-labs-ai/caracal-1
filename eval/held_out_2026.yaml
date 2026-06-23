@@ -1,0 +1,20 @@
+# KERNEL-D · Held-out 30 CVE 2026 OSS para zero-day hunt
+# NUNCA tocar para treino. Editar exige 2 reviewers + ADR.
+
+cves: []
+
+# Sera populado por task C5.
+# Formato esperado:
+# - cve_id: CVE-2026-XXXX
+#   project: nome_lib
+#   project_url: github.com/foo/bar
+#   cwe: CWE-119
+#   loc_in_repo: <10000
+#   language: c
+#   commit_fix: <hash>
+#   commit_vuln: <hash>
+#   poc_available: true
+#   disclosure_timeline:
+#     discovered: 2026-XX-XX
+#     reported_to_maintainer: 2026-XX-XX
+#     embargo_until: 2026-XX-XX + 90 days

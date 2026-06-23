@@ -1,0 +1,134 @@
+# Manifesto do corpus para Caracal Base continued pretrain
+# Total alvo: 1.7B tokens
+# Todas as fontes passam por pipeline de decontaminacao (eval/check_decontamination.py)
+
+sources:
+  - id: nvd_cve_descriptions
+    name: NVD CVE feed completo
+    url: https://nvd.nist.gov/vuln/data-feeds
+    license: CC0
+    target_tokens: 250000000  # ~250M
+
+  - id: github_patch_diffs_cve_tagged
+    name: GitHub patch diffs CVE-tagged
+    method: scrape via API + NVD commit SHAs
+    license: per_repo
+    target_tokens: 400000000
+
+  - id: oss_fuzz_reproducers
+    name: OSS-Fuzz reproducers historicos
+    repo: github.com/google/oss-fuzz-vulns
+    license: Apache-2.0
+    target_tokens: 200000000
+
+  - id: project_zero_blog
+    name: Google Project Zero blog
+    url: googleprojectzero.blogspot.com
+    license: fair_use_research
+    target_tokens: 50000000
+
+  - id: trail_of_bits_blog
+    name: Trail of Bits blog
+    url: blog.trailofbits.com
+    license: fair_use_research
+    target_tokens: 30000000
+
+  - id: aflpp_docs_papers
+    name: AFL++ docs + research papers
+    license: Apache-2.0+arXiv
+    target_tokens: 20000000
+
+  - id: primevul
+    name: PrimeVul dataset
+    hf: secmlr/PrimeVul
+    license: MIT
+    target_tokens: 150000000
+
+  - id: bigvul
+    name: BigVul dataset
+    hf: bstee615/bigvul
+    license: CC-BY-4.0
+    target_tokens: 200000000
+
+  - id: diversevul
+    name: DiverseVul dataset
+    hf: bstee615/diversevul
+    license: MIT
+    target_tokens: 150000000
+
+  - id: secure_instruct
+    name: Secure-Instruct synthetic 2026
+    paper: arxiv 2510.07189
+    license: MIT
+    target_tokens: 50000000
+
+  - id: oss_fuzz_execution_traces
+    name: OSS-Fuzz execution traces (gerados internamente)
+    method: gcov + ASan dumps de 100K runs
+    license: derived_from_oss_fuzz
+    target_tokens: 200000000
+
+  - id: nist_juliet
+    name: NIST Juliet Test Suite
+    url: samate.nist.gov/SARD/test-suites
+    license: US_Gov_Public
+    target_tokens: 80000000
+
+  - id: nist_sard
+    name: SARD Software Assurance Reference Dataset
+    url: samate.nist.gov/SARD/testsuite.php
+    license: US_Gov_Public
+    target_tokens: 100000000
+
+  - id: devign
+    name: Devign
+    hf: antolin/devign
+    license: MIT
+    target_tokens: 60000000
+
+  - id: vuldeepecker
+    name: VulDeePecker
+    repo: github.com/CGCL-codes/VulDeePecker
+    license: MIT
+    target_tokens: 40000000
+
+  - id: crossvul
+    name: CrossVul multi-language
+    source: Zenodo
+    license: CC-BY
+    target_tokens: 80000000
+
+  - id: megavul
+    name: MegaVul
+    hf: Icyrockton/MegaVul
+    license: MIT
+    target_tokens: 120000000
+
+  - id: reposvul
+    name: Reposvul real-world repo-level
+    paper: arXiv 2401.13169
+    license: MIT
+    target_tokens: 100000000
+
+  - id: patchdb
+    name: PatchDB 12K security patches
+    repo: github.com/SunLab-GMU/PatchDB
+    license: academic
+    target_tokens: 50000000
+
+  - id: sven
+    name: SVEN SARD-derived hardened
+    paper: arXiv 2302.05319
+    license: MIT
+    target_tokens: 30000000
+
+decontamination:
+  required: true
+  pipeline: eval/check_decontamination.py
+  layers:
+    - sha256_hash_exact
+    - jaccard_8gram_threshold_0.3
+    - embedding_cosine_threshold_0.85
+  blocked_against:
+    - eval/held_out_2026.yaml  # 30 CVE 2026 zero-day hunt
+    - cybergym_1507  # full benchmark

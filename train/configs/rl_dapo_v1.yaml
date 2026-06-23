@@ -1,0 +1,50 @@
+# RL principal · verl + DAPO GRPO
+# Sprint 3, tasks C26-C28
+
+algorithm: dapo  # GRPO + asymmetric clip
+
+hyperparameters:
+  learning_rate: 3.0e-6
+  kl_coefficient: 0.002
+  clip_eps_low: 0.20
+  clip_eps_high: 0.28
+  group_size: 16  # rollouts per prompt
+  prompt_batch_size: 32
+  max_response_length: 6144
+  num_steps: 3500
+  reference_model_dtype: bf16  # NAO FP8
+
+warmup:
+  steps: 1500
+  bootstrap_shaping_ungated: true
+  shaping_after_warmup:
+    enabled: true
+    gated_on_r_binary_positive: true
+    max_shaping_value: 0.15
+
+curriculum:
+  easy_first_steps: 1000
+  sort_by_sft_success_probability: true
+
+reward:
+  registry: harness/kernel/reward_registry.yaml
+
+archive:
+  snapshot_every_n_steps: 500
+  parent_sampling: dgm_with_temperature
+  temperature_start: 1.0
+  temperature_end: 0.5
+  archive_grows_above_steps: 50
+  top_k_retained_per_cell: 32
+
+eval:
+  dev_slice_every_n_steps: 500
+  full_cybergym_at_steps: [2000, 3500]
+  humaneval_regression_check: true
+
+day_14_kill_switch:
+  enabled: true
+  required_uplift_pp_over_sft: 2.0
+
+wandb:
+  project: caracal-rl-v1

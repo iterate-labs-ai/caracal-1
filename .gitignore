@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Pesos e checkpoints (vivem no HuggingFace Hub, NUNCA no git)
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+ckpt/
+ckpt-out/
+checkpoints/
+adapter_model/
+
+# Logs e cache
+*.log
+.cache/
+wandb/
+runs/
+outputs/
+
+# Datasets (grandes, vivem em HuggingFace Datasets)
+data/raw/
+data/processed/
+data/corpus/
+
+# Eval reports temporarios
+eval/reports/*.json
+!eval/reports/.gitkeep
+
+# Sandbox local
+sandbox_local/
+*.coredump
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Credentials (NUNCA commitar)
+.env
+*.pem
+kaggle.json
+hf_token
+wandb_key
+
+# Notebook output
+.ipynb_checkpoints/

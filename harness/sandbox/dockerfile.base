@@ -1,0 +1,15 @@
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc-11 g++-11 clang-15 \
+    python3.11 python3-pip \
+    gdb gdbserver lcov \
+    afl++ \
+    z3 cppcheck \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN useradd -m -u 1000 caracal
+USER caracal
+WORKDIR /workdir
+
+ENV PYTHONUNBUFFERED=1

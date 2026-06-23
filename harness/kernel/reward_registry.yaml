@@ -1,0 +1,39 @@
+# KERNEL-D · registry de funcoes reward
+# Funcoes oracle binarias. NUNCA o loop muta.
+# Coeficientes de shaping (alpha beta gamma delta epsilon) podem ser mutados via Loop E.
+
+reward_functions:
+  caracal_cybergym_v1:
+    type: binary_verifier_gated
+    component_paths:
+      - eval/run_cybergym.py::compute_reward
+    verifier_oracle:
+      - condition: poc_triggers_crash_with_cwe_match
+        weight: alpha
+      - condition: patch_compiles_and_passes_tests
+        weight: beta
+      - condition: patch_neutralizes_crash
+        weight: gamma
+      - condition: anti_suppression_check_passes
+        weight: delta
+      - condition: coverage_fraction_hit_vulnerable_function
+        weight: epsilon
+
+# Coeficientes mutaveis via Loop E (com sanity check anti-hack)
+shaping_coefficients_v1:
+  alpha: 1.0
+  beta: 1.0
+  gamma: 1.0
+  delta: 1.0
+  epsilon: 0.5
+  # bootstrap shaping primeiros 1500 passos
+  bootstrap:
+    enabled_until_step: 1500
+    poc_compiles: 0.10
+    poc_parses: 0.10
+    patch_lt_50_loc: 0.05
+
+stop_pattern_blocks:
+  - "loop nao pode editar oracle functions"
+  - "loop nao pode editar anti_suppression_check"
+  - "loop nao pode adicionar verifier_oracle entries"

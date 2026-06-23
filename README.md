@@ -1,0 +1,35 @@
+# Caracal-1
+
+Modelo especialista em ciberseguranca de 3 bilhoes de parametros. Base Qwen2.5-Coder-3B-Instruct (Apache 2.0). 5 modulos LoRA especialistas sobre um Caracal Base compartilhado.
+
+## Status
+
+- v1 ship alvo: 21 jul 2026
+- Sprint atual: 1 (foundation)
+- Tasks pool: [issues abertas](https://github.com/iterate-labs-ai/caracal-1/issues)
+- Schedule placa de video: [SCHEDULE.md](SCHEDULE.md)
+- Como usar: [HOWTO.md](HOWTO.md)
+- Plano completo: doc local do Pedro (`iterate_labs.html`)
+
+## Modulos
+
+1. **Recon** · scout codebase + embodied gdb live
+2. **Hypothesizer** · 3 hipoteses de bug class por target
+3. **Crafter** · escreve PoC via state machine policy
+4. **Validator** · spec formal + Z3 bounded
+5. **Patcher** · unified diff + anti-supressao
+
+## Arquitetura recursiva
+
+6 loops aninhados (A pretrain · B SFT · C RL · D scaffold mutation · E reward coef mutation · F humanos promovem kernel). KERNEL-D intocavel pelo loop.
+
+## Repos relacionados
+
+- [evaluator](https://github.com/iterate-labs-ai/evaluator) · suite held-out kernel D
+- [archive](https://github.com/iterate-labs-ai/archive) · DGM + MAP-Elites
+- [harness](https://github.com/iterate-labs-ai/harness) · runtime + sandbox + classes
+- [infra](https://github.com/iterate-labs-ai/infra) · spot + creditos
+
+## Licenca
+
+Apache 2.0 (heranca Qwen base)

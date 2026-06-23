@@ -1,0 +1,25 @@
+name: Decontamination check
+
+on:
+  pull_request:
+    paths:
+      - 'data/**'
+      - 'eval/held_out_2026.yaml'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: pip install pyyaml hashlib sentence-transformers scikit-learn
+      - name: Run decontamination check
+        run: |
+          if [ -f "eval/check_decontamination.py" ]; then
+            python eval/check_decontamination.py --strict
+          else
+            echo "TODO: implement eval/check_decontamination.py (C6 task)"
+          fi

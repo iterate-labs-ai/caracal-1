@@ -1,0 +1,47 @@
+# KERNEL-D · Classes A/B/C/D config
+# Inspirado em Anthropic RSP ASL tiers + BSL biosafety levels.
+# Edicao deste arquivo: 2 reviewers + ADR obrigatorio.
+
+classes:
+  A:
+    description: Prompts, hyperparams
+    paths:
+      - "**/prompts/**"
+      - "train/configs/**"
+      - "modules/*/config.yaml"
+    review_required: 0
+    auto_loop_can_edit: true
+
+  B:
+    description: Tools, scaffold
+    paths:
+      - "scripts/**"
+      - "harness/state_machine/**"
+      - "harness/schemas/**"
+    review_required: 1
+    auto_loop_can_edit: true
+
+  C:
+    description: Pesos do modelo (via SFT/GRPO)
+    paths:
+      - "modules/*/checkpoint.yaml"
+      - "train/**.py"
+    review_required: 2
+    auto_loop_can_edit: true
+    extra_gates:
+      - suite_held_out
+      - probes_anti_hack
+      - three_seeds
+
+  D:
+    description: Kernel intocavel pelo loop
+    paths:
+      - "eval/held_out_2026.yaml"
+      - "harness/kernel/**"
+      - "harness/sandbox/**"
+      - "harness/kernel/reward_registry.yaml"
+      - "harness/kernel/budgets.yaml"
+    review_required: 2
+    auto_loop_can_edit: false
+    codeowners_required: true
+    adr_required: true

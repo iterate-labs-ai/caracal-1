@@ -1,0 +1,25 @@
+module: hypothesizer
+base_model: iterate-labs/caracal-base-3b
+lora_r: 32
+lora_alpha: 64
+lora_dropout: 0.05
+target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+training:
+  learning_rate: 2.0e-4
+  lr_scheduler: cosine
+  batch_size: 4
+  gradient_accumulation_steps: 4
+  num_epochs: 2
+  max_seq_length: 4096
+  bf16: true
+  optim: adamw_8bit
+hub:
+  repo_id: iterate-labs/caracal-1-hypothesizer-lora
+  push_every_n_steps: 200
