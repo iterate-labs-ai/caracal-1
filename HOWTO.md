@@ -1,164 +1,68 @@
-# HOWTO · como usar o repo Caracal-1
+# HOWTO · workflow diario
 
-## Setup inicial (uma vez)
+## Apos completar SETUP
 
-```bash
-# 1. Clone
-git clone https://github.com/iterate-labs-ai/caracal-1
-cd caracal-1
-git checkout dev   # branch default de trabalho
+### Cada manha
 
-# 2. Install
-pip install -r requirements.txt
+1. Olhar [issues](https://github.com/iterate-labs-ai/caracal-1/issues) abertas com label `sprint-1`
+2. Comentar `claim` na que voce vai pegar
+3. Olhar [SCHEDULE.md](SCHEDULE.md): tem slot livre? quer bookar?
 
-# 3. Login HuggingFace (token de escrita em huggingface.co/settings/tokens)
-huggingface-cli login
+### Pra bookar slot Kaggle
 
-# 4. Login Weights and Biases
-wandb login
+1. `git checkout -b book-slot-N dev`
+2. Editar SCHEDULE.md trocando `pending` por `in-progress · seu_handle · timestamp`
+3. PR pequena contra dev
+4. Self-merge
 
-# 5. Login Kaggle
-mkdir -p ~/.kaggle
-cp ~/Downloads/kaggle.json ~/.kaggle/
-chmod 600 ~/.kaggle/kaggle.json
+### Pra rodar treino (na sua sessao)
 
-# 6. Login Modal (opcional, so quem mexe em sandbox)
-modal token new
+1. Abrir [Kaggle](https://www.kaggle.com) novo notebook
+2. Importar `train/notebooks/kaggle_continued_pretrain.ipynb`
+3. Editar variaveis topo (SESSION_NUMBER, RESUME_REVISION, OUTPUT_REVISION)
+4. Configurar Kaggle Secrets: HF_TOKEN + WANDB_API_KEY (so primeira vez)
+5. Run all
+6. Sair · ~9h depois push automatico via SIGTERM handler
 
-# 7. Verifica tudo OK
-bash scripts/preflight.sh
-```
+### Apos terminar sessao
 
-## Workflow diario
+1. Confirmar revision no HF Hub: <https://huggingface.co/iterate-labs/caracal-base-3b-v0>
+2. PR pequena editando SCHEDULE.md: trocar `in-progress` por `done · revision step-XXXX`
+3. Sinalizar no grupo do time
 
-1. Olhar [pool de tarefas](https://github.com/iterate-labs-ai/caracal-1/issues) abertas
-2. Filtrar por `sprint-1` + sem assignee + prioridade `MUST` antes de `STRETCH`
-3. Comentar `claim` na issue para auto-assignar
-4. Olhar [SCHEDULE.md](SCHEDULE.md) para slots de placa de video livres
-5. Bookar slot proximo via PR pequena editando SCHEDULE.md
-6. Abrir notebook Kaggle ou Colab autenticando HF + W&B
-7. Rodar pre-flight `bash scripts/preflight.sh`
-8. Iniciar tarefa
+### Pra fazer mudanca de codigo
 
-## Workflow durante treino (cada sessao Kaggle ou Colab)
-
-1. Pull checkpoint mais recente
-
-```bash
-huggingface-cli download iterate-labs/MODELO \
-    --revision step-XXXX --local-dir ./ckpt
-```
-
-2. Iniciar W&B run resumindo o anterior
-
-```python
-import wandb
-wandb.init(project="caracal-base-pretrain", resume="allow",
-           id="caracal-base-pretrain-main")
-```
-
-3. Rodar script de treino com flag `--resume-from ./ckpt`
-4. SIGTERM handler salva final automatico se Kaggle ou Colab morre
-5. Push checkpoint a cada 200 passos
-6. Ao terminar 9h ou steps planejados: push final, atualiza SCHEDULE.md, sinaliza proximo no Discord
-
-```bash
-huggingface-cli upload iterate-labs/MODELO \
-    ./ckpt-out . --revision step-YYYY \
-    --commit-message "step YYYY by $(whoami) at $(date)"
-```
-
-## Workflow PR
-
-1. Branch local: `git checkout -b cN-meu-fix dev`
-2. Commit mensagens claras
-3. Push: `git push -u origin cN-meu-fix`
-4. Abrir PR contra `dev` linkando issue: `Closes #N`
-5. Pedir review de outro fundador que NAO escreveu o codigo
-6. Issues com tag `kernel-D`: 2 reviewers obrigatorios + ADR
-7. Apos merge: `done` na issue, claim proxima
+1. `git checkout -b cN-curta-descricao dev`
+2. Commits atomicos
+3. Push: `git push -u origin cN-curta-descricao`
+4. PR contra dev linkando issue: `Closes #N`
+5. Pedir review de outro fundador
+6. Apos merge: `done` na issue, fechar, claim proxima
 
 ## Branches
 
-| Branch | Pra que | Quem pode push direto |
-|---|---|---|
-| `main` | release estavel · so PRs de dev aprovadas | ninguem direto (PR-only) |
-| `dev` | branch default de trabalho · onde features mergeam primeiro | qualquer fundador |
-| `exp/<nome>` | branches experimentais por fundador | dono da branch |
-| `release/v1` | snapshot pre-ship congelado | so Pedro libera |
-
-## Sandbox local
-
-```bash
-modal serve sandbox/caracal_sandbox.py
-
-modal run sandbox/caracal_sandbox.py::run_poc \
-    --vuln-id cybergym-poc-42 \
-    --poc-payload "..."
-
-modal run sandbox/test_attacks.py
-```
-
-## Avaliacao
-
-```bash
-# Probe set rapido (100 prompts)
-python eval/run_probe.py \
-    --adapter iterate-labs/caracal-1-crafter-lora \
-    --base iterate-labs/caracal-base-3b \
-    --out eval/reports/probe-step-XXXX.json
-
-# CyberGym slice 50
-python eval/run_cybergym.py --subset slice-50 --adapter ...
-
-# Full CyberGym 1507 (so dia 20 e dia 28)
-python eval/run_cybergym.py --subset full-1507 --adapter ... \
-    --temp 0.8 --top-p 0.95 --k 5
-```
-
-## Cheat sheet rapido
-
-```bash
-# Status treino
-huggingface-cli list-files iterate-labs/caracal-base-pretrain | tail -5
-wandb runs --project iterate-labs/caracal-base-pretrain | head
-
-# Quem ta no slot agora
-grep "in-progress" SCHEDULE.md
-
-# Loss curve
-python scripts/plot_loss.py --run-id caracal-base-pretrain --last 24h
-
-# STOP-pattern flags
-ls harness/incidents/
-
-# Custo Modal
-modal billing status
-```
-
-## Quem chamar quando
-
-| Situacao | Quem |
+| Branch | Pra que |
 |---|---|
-| Treino travou | Discord #caracal-relay + screenshot |
-| HF Hub push falhou | Discord #caracal-relay + log |
-| Slot conflict | Primeiro book wins, perdedor re-book proximo |
-| Bug kernel-D | Issue urgente · 2 fundadores debug juntos |
-| STOP-pattern flag | Para todo treino. 2 humanos review. |
-| Sandbox attack test falhou | BLOCKER. Para tudo. 2 reviewers + ADR. |
-| Modal custo >$200/dia | Auto alerta. Pausa sandbox. Review config. |
+| `main` | release estavel (futuro) |
+| `dev` | branch de trabalho default |
+| `book-slot-N` | bookar slot SCHEDULE.md |
+| `cN-fix-Y` | feature branches |
 
-## Documentos importantes
+## Quando algo quebra
 
-- `README.md` · visao geral
-- `HOWTO.md` · este arquivo
-- `SCHEDULE.md` · slot booking placa de video
-- `CONTRIBUTING.md` · contribuicao + PR style
-- `docs/architecture.md` · arquitetura modelo
-- `docs/recursive_harness.md` · 6 loops
-- `docs/learning_trail.md` · links de aprendizado
-- `docs/glossary.md` · termos por extenso
-- `infra/decisions/` · ADRs
-- `eval/held_out_2026.yaml` · KERNEL-D, NUNCA tocar
-- `harness/kernel/` · KERNEL-D, 2 humanos editam
-- `harness/incidents/` · STOP-pattern flags
+| Situacao | Acao |
+|---|---|
+| Treino travou | screenshot + sinaliza grupo |
+| HF Hub push falhou | log + sinaliza grupo |
+| Slot conflict | primeiro book wins, perdedor re-book proximo |
+| Bug codigo critico | issue urgente + 2 founders debug |
+| Sessao Kaggle morreu | SIGTERM handler ja salvou. Confirmar revision no HF Hub.|
+
+## Docs importantes
+
+- [SETUP.md](SETUP.md) · primeira vez
+- [SCHEDULE.md](SCHEDULE.md) · slot booking
+- [CONTRIBUTING.md](CONTRIBUTING.md) · PR style
+- [docs/plan/iterate_labs.html](docs/plan/iterate_labs.html) · plano MVP completo
+- [docs/architecture.md](docs/architecture.md) · arquitetura modelo
+- [docs/glossary.md](docs/glossary.md) · termos por extenso
