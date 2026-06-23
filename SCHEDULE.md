@@ -1,59 +1,82 @@
-# SCHEDULE · slot booking de placa de video
+# SCHEDULE · revezamento de placa de video
 
-Pool de slots Kaggle (5 contas × 20h/sem T4) + Colab Pro+ (20 contas × 3h/dia). Atualizar este arquivo via PR pequena ao bookar slot. Mencionar `@PAMF2` se conflito.
+## Inventario de contas
 
-## Sprint 1 · Caracal Base continued pretrain · semana 23-29 jun
+### Kaggle · 5 contas · 100h/sem T4 (20h cada)
 
-Cronograma alvo: 9 sessoes × ~9h = 80h T4 distribuidas em 2-3 dias. Total ~50000 passos.
+| Conta Kaggle | Fundador | Phone verified | GPU T4 ativada |
+|---|---|---|---|
+| 1 | Pedro (PAMF2) | pendente | pendente |
+| 2 | Arthur (arturpn1) | pendente | pendente |
+| 3 | Vitor (VitorScrt) | pendente | pendente |
+| 4 | Kevin (dev-knz) | pendente | pendente |
+| 5 | Alexandre (aletlucas) | pendente | pendente |
 
-| Sessao | Conta Kaggle | Inicio BRT | Fim BRT | Steps | Checkpoint saida | Status |
+### Colab · 5 contas Google free · ~105h/sem T4 esporadico
+
+| Conta Google Colab | Fundador | Status |
+|---|---|---|
+| 1 | Pedro | pendente |
+| 2 | Arthur | pendente |
+| 3 | Vitor | pendente |
+| 4 | Kevin | pendente |
+| 5 | Alexandre | pendente |
+
+Pedro tem adicionalmente **4 contas Colab extras** = pode rodar ate 5 sessoes Colab paralelas no Pedro sozinho. Overflow capacity.
+
+### Capacidade total v0
+
+- Kaggle T4: 100h/sem garantido
+- Colab T4: ~105h/sem esporadico + 84h/sem extras do Pedro
+- Total: ~290h/sem T4
+
+## Sprint 0 · Caracal Base 3B v0 · 25h em 3 sessoes Kaggle
+
+Treino MVP: Qwen2.5-Coder-3B + PrimeVul + BigVul + DiverseVul. ~20000 passos.
+
+| Sessao | Conta | Inicio BRT | Fim BRT | Resume | Output | Status |
 |---|---|---|---|---|---|---|
-| 1 | PAMF2 (Pedro) | seg 23 jun 09:00 | seg 23 jun 18:00 | 0 → 5500 | step-5500 | pending |
-| 2 | arturpn1 (Arthur) | seg 23 jun 14:00 | seg 23 jun 23:00 | 5500 → 11000 | step-11000 | pending |
-| 3 | VitorScrt (Vitor) | seg 23 jun 19:00 | ter 24 jun 04:00 | 11000 → 16500 | step-16500 | pending |
-| 4 | dev-knz (Kevin) | ter 24 jun 00:00 | ter 24 jun 09:00 | 16500 → 22000 | step-22000 | pending |
-| 5 | aletlucas (Alexandre) | ter 24 jun 05:00 | ter 24 jun 14:00 | 22000 → 27500 | step-27500 | pending |
-| 6 | PAMF2 (2a) | ter 24 jun 10:00 | ter 24 jun 19:00 | 27500 → 33000 | step-33000 | pending |
-| 7 | arturpn1 (2a) | ter 24 jun 15:00 | qua 25 jun 00:00 | 33000 → 38500 | step-38500 | pending |
-| 8 | VitorScrt (2a) | ter 24 jun 20:00 | qua 25 jun 05:00 | 38500 → 44000 | step-44000 | pending |
-| 9 | dev-knz (2a) | qua 25 jun 01:00 | qua 25 jun 10:00 | 44000 → 50000 | **step-50000 final** | pending |
+| 1 | Pedro (PAMF2) | seg 24 jun 14h00 | seg 24 jun 23h00 | (do zero) | step-7000 | pending |
+| 2 | Arthur (arturpn1) | ter 25 jun 09h00 | ter 25 jun 18h00 | step-7000 | step-14000 | pending |
+| 3 | Vitor (VitorScrt) | ter 25 jun 19h00 | qua 26 jun 04h00 | step-14000 | **caracal-base-3b-v0 (final)** | pending |
 
-Sobreposicao de 4-5h entre sessoes consecutivas garante zero gap de placa de video. Cada fundador faz 2 sessoes nesta semana = ~18h dentro do limite Kaggle 20h.
+**Kevin e Alexandre observam, debugam se quebrar, ajudam revisao.**
 
-## Sprint 2 · 5 modulos SFT estagio 2 · semana 30 jun - 6 jul
+## Sprint 0.5 · Avaliacao basica
 
-Padrao diferente: cada fundador roda 1 modulo em paralelo na propria conta. Sem revezamento.
+Apos sessao 3 terminar, qualquer fundador disponivel:
 
-| Conta | Modulo | Dataset | Tempo estimado | Status |
-|---|---|---|---|---|
-| qualquer fundador disponivel | Recon | gdb_traces 5K | ~25h T4 | pending |
-| qualquer fundador disponivel | Hypothesizer | ctf_writeups 8K | ~30h T4 | pending |
-| qualquer fundador disponivel | Crafter | poc_patch 5K + Cyber-Zero 10K | ~40h T4 | pending |
-| qualquer fundador disponivel | Validator | spec_synth gerados | ~20h T4 | pending |
-| qualquer fundador disponivel | Patcher | patches_cve | ~30h T4 | pending |
+| Tarefa | Conta | Tempo estimado | Quem pega |
+|---|---|---|---|
+| Avaliar Caracal Base 3B v0 vs Qwen base zero-shot em 50 vulns CyberGym | Kaggle (qualquer) | 4h T4 | livre |
+| Documentar resultados em `infra/baselines/v0_eval.md` | local | 1h | livre |
+| Decidir: continuar caminho ou repensar | reuniao | 30min | todos |
 
-Quem termina antes pega outro modulo. Pool aberto.
+## Apos v0 funcionar · decisao do time
 
-## Sprint 3 · RL principal · semana 7-13 jul
+Possibilidades:
 
-Move para Google Cloud A100 quando creditos chegarem ($25k via Google for Startups). Schedule mudo para slots A100. Atualizar este arquivo quando creditos confirmados.
+| Cenario | Proximo passo |
+|---|---|
+| Score sobe vs Qwen base | Adicionar mais datasets (scraping NVD/Project Zero) · v1 |
+| Score nao move | Repensar hyperparams ou abordagem |
+| Score cai | Debug contaminacao ou hyperparam |
+| Treino quebra | Bug no script · debug + retry |
 
-## Sprint 4 · avaliacao + ship · semana 14-20 jul
-
-Ultimos 100h A100 para full eval + zero-day hunt + release HF Hub.
-
-## Como bookar slot
+## Como bookar slot futuro
 
 1. Editar este arquivo na branch `dev`
-2. Trocar `pending` para `in-progress · sua conta · timestamp`
-3. PR pequena: `book slot N para X`
-4. Self-merge se nao conflito · sinalizar Discord #caracal-relay
-5. Apos terminar treino, edit row para `done · revision step-YYYY`
-
-## Como resolver conflito
-
-Quem book primeiro wins (timestamp do commit). Quem perdeu re-book proximo slot livre. Documentar conflito em `infra/incidents/schedule-conflict-YYYY-MM-DD.md`.
+2. Trocar `pending` por `in-progress · seu_handle · timestamp`
+3. PR pequena
+4. Self-merge se nao conflito
+5. Apos terminar: trocar para `done · revision step-XXXX`
 
 ## HF Hub revisions
 
-Cada checkpoint vai como revision tagged em `iterate-labs/caracal-base-pretrain`. Revisions imutaveis. Audit completo via `huggingface-cli list-revisions iterate-labs/caracal-base-pretrain`.
+Todos checkpoints vao como revisions em `iterate-labs/caracal-base-3b-v0`:
+
+- step-7000 (pos sessao 1)
+- step-14000 (pos sessao 2)
+- main / final (pos sessao 3)
+
+Audit: `huggingface-cli list-revisions iterate-labs/caracal-base-3b-v0`

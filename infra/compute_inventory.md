@@ -1,49 +1,33 @@
-# Inventario de placa de video
+# Inventario de placa de video v0 (gratis)
 
-## Kaggle 5 contas T4 = 100h/sem
+## Capacidade
 
-| Conta | Fundador | Status | Phone verified | T4 ativo |
-|---|---|---|---|---|
-| PAMF2 | Pedro | active | pendente | pendente |
-| arturpn1 | Arthur | active | pendente | pendente |
-| VitorScrt | Vitor | pending | pendente | pendente |
-| dev-knz | Kevin | pending | pendente | pendente |
-| aletlucas | Alexandre | pending | pendente | pendente |
-
-## Colab Pro+ 20 contas = 420h/sem
-
-5 pessoas × 4 contas Google cada × 3h/dia. Custo total $1000/mes.
-
-| Fundador | Contas (#) | Status |
+| Fonte | Capacidade | Status |
 |---|---|---|
-| Pedro | 4 | pendente |
-| Arthur | 4 | pendente |
-| Vitor | 4 | pendente |
-| Kevin | 4 | pendente |
-| Alexandre | 4 | pendente |
+| Kaggle T4 · 5 contas × 20h/sem | 100h/sem garantido | a configurar |
+| Colab T4 free · 5 contas × ~3h/dia | ~105h/sem esporadico | a configurar |
+| Colab T4 free · Pedro extras 4 contas | ~84h/sem esporadico | Pedro ja tem |
+| **Total** | **~290h/sem T4** | |
 
-## Modal CPU host = continuo
+## Cortado do MVP (volta depois)
 
-- Plan: pay-as-you-go
-- Budget: ~$300/mes esperado
-- Use case: sandbox (gdb + gcov + counterfactual + SMT)
+| Recurso | Custo | Quando voltar |
+|---|---|---|
+| Modal CPU sandbox | $300/mes | Sprint 3 quando RL com PoC executando |
+| Colab Pro+ subscriptions | $50/mes × N | So se Kaggle T4 demorar demais |
+| Wasabi/Backblaze storage | $50/mes 5TB | Se passar 100GB no HF |
+| Lambda/Vast spot A100 | varia | Quando Google for Startups creditos chegarem (ago) |
 
-## Cloud creditos (chegando)
+## Cloud creditos esperados
 
-| Programa | Tier alvo | Status | ETA |
+| Programa | Tier | Submit | ETA |
 |---|---|---|---|
-| Google for Startups | $25k credits A100 | submit antes 27 jun | mes ago |
-| Azure Founders Hub | $25k credits | submit | mes ago |
-| NVIDIA Inception | free + DGX trial + AWS routing $100k | submit | mes ago |
-| AWS Activate | $100k via Inception | submit | fim ago |
-| Oracle for Startups | ate $300k | submit | indef |
-| IBM Cloud Startups | $120k | submit | indef |
+| Google for Startups Cloud | $25k A100 | ate 27 jun | ago 2026 |
+| NVIDIA Inception | free + DGX trial | qualquer hora | semanas |
+| AWS via Inception | $100k tier | apos Inception | fim ago |
+
+So aplicar pra esses programas paralelo · nao bloqueia MVP.
 
 ## Storage
 
-- HuggingFace Hub · gratis · adapter pushes
-- Wasabi/Backblaze B2 · ~$50/mes · 5TB checkpoint streaming
-
-## Total v1 capacity
-
-520h/sem placa de video + Modal CPU continuo + storage S3-compatible.
+Pesos vivem em **HuggingFace Hub** com revisions imutaveis. Gratis ate 100GB por modelo. Caracal Base 3B v0 cabe folgado.
