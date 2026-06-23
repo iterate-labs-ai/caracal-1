@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Iterate Labs · Caracal · plano executavel</title>
+<style>
+  :root {
+    --ink:#111; --soft:#666; --line:#e0e0e0; --bg:#fafaf7; --card:#fff;
+    --accent:#1a3a6e; --ok:#1b5e20; --warn:#bf360c; --why:#4527a0;
+    --must:#1b5e20; --stretch:#e65100; --later:#6a1b9a; --kernel:#000;
+    --learn:#0277bd;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    color: var(--ink); background: var(--bg);
+    max-width: 920px; margin: 0 auto; padding: 40px 24px 100px;
+    line-height: 1.6; font-size: 15px;
+  }
+  h1 { font-size: 32px; font-weight: 800; margin: 0 0 6px; letter-spacing: -0.02em; }
+  .lead { color: var(--soft); font-size: 14px; margin: 0 0 32px; }
+
+  h2 { font-size: 22px; font-weight: 800; margin: 56px 0 12px; padding-bottom: 4px; border-bottom: 3px solid var(--ink); display: inline-block; letter-spacing: -0.01em; }
+  h3 { font-size: 16px; font-weight: 700; margin: 28px 0 10px; color: var(--accent); }
+  h4 { font-size: 14px; font-weight: 700; margin: 18px 0 6px; }
+  p { margin: 0 0 14px; }
+
+  .toc { background: var(--card); border: 1px solid var(--line); padding: 18px 22px; border-radius: 6px; margin: 0 0 32px; font-size: 14px; }
+  .toc strong { display:block; margin-bottom: 8px; font-size: 12px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.06em; }
+  .toc a { display: block; padding: 4px 0; color: var(--ink); text-decoration: none; }
+  .toc a:hover { color: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 22px; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: #ececea; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+  .module-card { background: var(--card); border-left: 5px solid var(--accent); border-radius: 0 6px 6px 0; padding: 14px 18px; margin: 10px 0; }
+  .module-card h4 { margin: 0; color: var(--accent); font-size: 15px; }
+  .module-card .meta { font-size: 12px; color: var(--soft); font-family: ui-monospace, monospace; margin: 2px 0 8px; }
+  .module-card p { margin: 0; font-size: 14px; }
+
+  code { font-family: ui-monospace, monospace; background: #ececec; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+  pre { background: #f4f4f4; padding: 14px 18px; border-radius: 4px; font-size: 12px; line-height: 1.5; overflow-x: auto; }
+
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; vertical-align: middle; margin-left: 4px; }
+  .tag-must { background: #e8f5e9; color: var(--must); }
+  .tag-stretch { background: #fff3e0; color: var(--stretch); }
+  .tag-later { background: #f3e5f5; color: var(--later); }
+  .tag-kernel { background: #000; color: white; }
+  .tag-w1 { background: #e3f2fd; color: #0d47a1; }
+  .tag-w2 { background: #ede7f6; color: #311b92; }
+  .tag-w3 { background: #fff3e0; color: #bf360c; }
+  .tag-w4 { background: #ffebee; color: #b71c1c; }
+
+  .alert { background: #fff8e1; padding: 14px 18px; border-left: 4px solid var(--warn); border-radius: 0 4px 4px 0; margin: 14px 0; font-size: 14px; }
+  .alert strong { color: var(--warn); }
+  .reco { background: #e8f5e9; padding: 16px 22px; border-left: 4px solid var(--ok); border-radius: 0 4px 4px 0; margin: 16px 0; font-size: 14px; }
+  .reco strong { color: var(--ok); }
+
+  .task { background: var(--card); border: 1px solid var(--line); border-radius: 4px; padding: 12px 16px; margin: 6px 0; font-size: 13px; }
+  .task-head { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; margin-bottom: 4px; }
+  .task-n { font-weight: 800; color: var(--accent); min-width: 40px; }
+  .task-t { font-weight: 700; flex: 1; min-width: 200px; }
+  .task-body { font-size: 12px; color: #444; line-height: 1.5; margin-top: 4px; }
+
+  a { color: var(--accent); }
+
+  svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+
+  .step { background: var(--card); border-left: 4px solid var(--accent); padding: 12px 18px; margin: 8px 0; border-radius: 0 4px 4px 0; font-size: 13px; }
+  .step strong { color: var(--accent); display: block; margin-bottom: 4px; }
+
+  .trilha { background: var(--card); border-left: 4px solid var(--learn); border-radius: 0 6px 6px 0; padding: 16px 22px; margin: 14px 0; }
+  .trilha h4 { margin: 0 0 8px; color: var(--learn); font-size: 16px; }
+  .trilha .area-meta { font-size: 12px; color: var(--soft); margin-bottom: 10px; font-style: italic; }
+  .trilha table { font-size: 12px; margin: 4px 0; }
+  .trilha .type-tag { display: inline-block; padding: 1px 6px; border-radius: 8px; font-size: 9px; font-weight: 700; letter-spacing: 0.04em; vertical-align: middle; }
+  .tt-paper { background: #e3f2fd; color: #0d47a1; }
+  .tt-github { background: #f5f5f5; color: #333; }
+  .tt-youtube { background: #ffebee; color: #b71c1c; }
+  .tt-blog { background: #fff3e0; color: #bf360c; }
+  .tt-book { background: #e8f5e9; color: #1b5e20; }
+  .tt-course { background: #f3e5f5; color: #6a1b9a; }
+  .tt-docs { background: #fffde7; color: #f57f17; }
+</style>
+</head>
+<body>
+
+<h1>Caracal · plano executavel</h1>
+<p class="lead">Modelo especialista em ciberseguranca, 3 bilhoes de parametros. 5 fundadores, pool aberto, todos treinam tudo. Ship v1 ate 21 jul 2026 (4 sprints). Atualizado 22 jun. Documento pra imprimir e levar pra reuniao com o time.</p>
+
+<div class="toc">
+<strong>Indice</strong>
+<a href="#alvo">1. Alvo e numeros</a>
+<a href="#modulos">2. Os 5 modulos de Caracal (sem dono fixo)</a>
+<a href="#arq">3. Arquitetura (diagrama)</a>
+<a href="#datasets">4. Datasets concretos (28 fontes)</a>
+<a href="#trilha">5. Trilha de aprendizado (docs / github / videos)</a>
+<a href="#tools">6. Ferramentas e contas a abrir</a>
+<a href="#sprint">7. Sprints sem-a-sem</a>
+<a href="#tasks">8. 35 tarefas (com prioridade)</a>
+<a href="#compute">9. Compute e creditos</a>
+<a href="#riscos">10. Riscos e mitigacoes</a>
+<a href="#recursivo">11. Harness recursivo (6 loops self-improving)</a>
+<a href="#kaggle">12. Estrategia Kaggle: 5 contas relay race</a>
+<a href="#howto">13. Como usar (instrucoes por fundador)</a>
+<a href="#enviar">14. Mensagem pronta pra enviar aos fundadores</a>
+<a href="#glossario">15. Glossario</a>
+</div>
+
+<!-- ============================================================= -->
+
+<h2 id="alvo">1. Alvo e numeros</h2>
+
+<table>
+<tr><th>Coisa</th><th>Valor</th></tr>
+<tr><td>Modelo final</td><td>Caracal-1 v1, 3B parametros, base Qwen2.5-Coder-3B-Instruct (Apache 2.0)</td></tr>
+<tr><td>Data de envio</td><td>21 jul 2026 (4 sprints de 7 dias)</td></tr>
+<tr><td>Alvo CyberGym 1507</td><td>40-50% pass@5 (frontier GPT-5 fez 11%)</td></tr>
+<tr><td>Alvo zero-days</td><td>10-15 em 30 OSS repos held-out 2026</td></tr>
+<tr><td>Alvo custo</td><td>$700 por zero-day amortizado, $30-35k total v1</td></tr>
+<tr><td>Distribuicao</td><td>HuggingFace Hub <code>iterate-labs/caracal-1-v1</code></td></tr>
+<tr><td>Paper preprint</td><td>arXiv ate 14 ago 2026</td></tr>
+<tr><td>Org GitHub</td><td><a href="https://github.com/iterate-labs-ai">github.com/iterate-labs-ai</a></td></tr>
+</table>
+
+<div class="reco">
+<strong>Pool aberto, todos treinam tudo.</strong> Sem dono fixo de modulo. Quem termina uma tarefa do pool comenta <code>claim</code> na proxima. Cada um aprende todos os modulos ao longo dos sprints. Rotacao real = redundancia + ownership coletivo.
+</div>
+
+<!-- ============================================================= -->
+
+<h2 id="modulos">2. Os 5 modulos de Caracal (sem dono fixo)</h2>
+
+<p>Caracal-1 v1 e composto por 5 modulos LoRA especialistas sobre um Caracal Base compartilhado. Cada modulo e LoRA r=32 de 130MB. Conversam via protocolo JSON estruturado. <strong>Qualquer fundador treina qualquer modulo</strong> conforme tarefa disponivel no pool. Ao longo de 4 sprints todos terao tocado em todos os modulos.</p>
+
+<div class="module-card">
+<h4>Modulo 1 · Recon</h4>
+<div class="meta">130MB LoRA r=32 · embodied via gdb live · STRETCH inicial, MUST sprint 2</div>
+<p>Scout codebase, prioriza alvos. Le call graphs estaticos. <strong>Novidade radical:</strong> opera tambem via comandos gdb/mi reais em sessao live. Le state runtime, valores de variaveis, backtrace. Aprende debugging como skill core, nao chuteira chain-of-thought.</p>
+</div>
+
+<div class="module-card">
+<h4>Modulo 2 · Hypothesizer</h4>
+<div class="meta">130MB LoRA r=32</div>
+<p>Enumera 3 hipoteses de bug class por target. Output estruturado: tipo CWE, primitiva de exploit, dificuldade estimada, primitivas necessarias do banco. Treinado em writeups de CTF + Project Zero + Trail of Bits.</p>
+</div>
+
+<div class="module-card">
+<h4>Modulo 3 · Crafter</h4>
+<div class="meta">130MB LoRA r=32 · state machine policy</div>
+<p>Escreve PoC concreto, segue state machine rigida: ANALYZE → INSTRUMENT → EXECUTE → REFINE. Recompensa parcial por transicoes validas. Counterfactual mutator (gera "mutacao minimal que NAO triggaria") amarra reward causalmente.</p>
+</div>
+
+<div class="module-card">
+<h4>Modulo 4 · Validator</h4>
+<div class="meta">130MB LoRA r=32 · SMT bounded Z3</div>
+<p>Gera specification formal do bug em Hoare-lite. Invoca Z3 bounded (depth 5) pra verificar match entre spec e PoC. Causal grounding por <strong>prova</strong>, nao so empirico. Reward por consistencia spec ↔ PoC ↔ execucao.</p>
+</div>
+
+<div class="module-card">
+<h4>Modulo 5 · Patcher</h4>
+<div class="meta">130MB LoRA r=32 · anti-supressao check</div>
+<p>Gera unified diff. Anti-supressao check (re-roda sanitizer em 10 inputs adjacentes pra pegar catch-and-ignore). Preserva coverage existente. Reward por patch valido + nao quebrar testes + nao suprimir bugs adjacentes.</p>
+</div>
+
+<!-- ============================================================= -->
+
+<h2 id="arq">3. Arquitetura (diagrama)</h2>
+
+<svg viewBox="0 0 900 540" xmlns="http://www.w3.org/2000/svg" style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px;">
+  <defs>
+    <marker id="ar" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#1a3a6e"/></marker>
+  </defs>
+
+  <rect x="250" y="20" width="400" height="90" rx="8" fill="#e3f2fd" stroke="#0d47a1" stroke-width="2"/>
+  <text x="450" y="46" text-anchor="middle" font-weight="800" font-size="16" fill="#0d47a1">Caracal Base 3B</text>
+  <text x="450" y="66" text-anchor="middle" fill="#444" font-size="12">Qwen2.5-Coder-3B + 1.5B tokens cyber + 200M traces execucao</text>
+  <text x="450" y="82" text-anchor="middle" fill="#666" font-size="11">AST attention overlay (+12M) · Mental Simulator head (+50M)</text>
+  <text x="450" y="98" text-anchor="middle" fill="#666" font-size="11">Verifier head inline (+30M PRM) · pretrained backbone congelado</text>
+
+  <rect x="20" y="160" width="160" height="80" rx="6" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2"/>
+  <text x="100" y="184" text-anchor="middle" font-weight="700" fill="#4a148c">Recon</text>
+  <text x="100" y="200" text-anchor="middle" fill="#666" font-size="10">pool aberto</text>
+  <text x="100" y="216" text-anchor="middle" fill="#444" font-size="10">embodied gdb</text>
+  <text x="100" y="230" text-anchor="middle" fill="#666" font-size="9">130MB LoRA r=32</text>
+
+  <rect x="200" y="160" width="160" height="80" rx="6" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2"/>
+  <text x="280" y="184" text-anchor="middle" font-weight="700" fill="#4a148c">Hypothesizer</text>
+  <text x="280" y="200" text-anchor="middle" fill="#666" font-size="10">pool aberto</text>
+  <text x="280" y="216" text-anchor="middle" fill="#444" font-size="10">3 bug hypotheses</text>
+  <text x="280" y="230" text-anchor="middle" fill="#666" font-size="9">130MB LoRA r=32</text>
+
+  <rect x="380" y="160" width="160" height="80" rx="6" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2"/>
+  <text x="460" y="184" text-anchor="middle" font-weight="700" fill="#4a148c">Crafter</text>
+  <text x="460" y="200" text-anchor="middle" fill="#666" font-size="10">pool aberto</text>
+  <text x="460" y="216" text-anchor="middle" fill="#444" font-size="10">state machine + PoC</text>
+  <text x="460" y="230" text-anchor="middle" fill="#666" font-size="9">130MB LoRA r=32</text>
+
+  <rect x="560" y="160" width="160" height="80" rx="6" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2"/>
+  <text x="640" y="184" text-anchor="middle" font-weight="700" fill="#4a148c">Validator</text>
+  <text x="640" y="200" text-anchor="middle" fill="#666" font-size="10">pool aberto</text>
+  <text x="640" y="216" text-anchor="middle" fill="#444" font-size="10">SMT bounded Z3</text>
+  <text x="640" y="230" text-anchor="middle" fill="#666" font-size="9">130MB LoRA r=32</text>
+
+  <rect x="740" y="160" width="140" height="80" rx="6" fill="#f3e5f5" stroke="#6a1b9a" stroke-width="2"/>
+  <text x="810" y="184" text-anchor="middle" font-weight="700" fill="#4a148c">Patcher</text>
+  <text x="810" y="200" text-anchor="middle" fill="#666" font-size="10">pool aberto</text>
+  <text x="810" y="216" text-anchor="middle" fill="#444" font-size="10">unified diff + anti-sup</text>
+  <text x="810" y="230" text-anchor="middle" fill="#666" font-size="9">130MB LoRA</text>
+
+  <line x1="100" y1="110" x2="100" y2="160" stroke="#6a1b9a" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="280" y1="110" x2="280" y2="160" stroke="#6a1b9a" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="460" y1="110" x2="460" y2="160" stroke="#6a1b9a" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="640" y1="110" x2="640" y2="160" stroke="#6a1b9a" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="810" y1="110" x2="810" y2="160" stroke="#6a1b9a" stroke-width="2" marker-end="url(#ar)"/>
+
+  <rect x="120" y="280" width="660" height="100" rx="8" fill="#fff3e0" stroke="#bf360c" stroke-width="2"/>
+  <text x="450" y="304" text-anchor="middle" font-weight="800" fill="#bf360c" font-size="14">Caixa de areia Modal + protocolo de mensagens</text>
+  <text x="140" y="328" fill="#444" font-size="11">• gdb/mi server (Recon embodied)</text>
+  <text x="140" y="346" fill="#444" font-size="11">• gcov coverage tracker (Crafter reward signal)</text>
+  <text x="140" y="364" fill="#444" font-size="11">• ASan/UBSan/MSan sanitizers (binary verifier)</text>
+  <text x="490" y="328" fill="#444" font-size="11">• Counterfactual mutator (causal reward)</text>
+  <text x="490" y="346" fill="#444" font-size="11">• Z3 bounded SMT (Validator pipeline)</text>
+  <text x="490" y="364" fill="#444" font-size="11">• 3K containers paralelos · $0.40/h CPU 32-core</text>
+
+  <line x1="100" y1="240" x2="200" y2="280" stroke="#bf360c" stroke-width="1.5" marker-end="url(#ar)"/>
+  <line x1="280" y1="240" x2="320" y2="280" stroke="#bf360c" stroke-width="1.5" marker-end="url(#ar)"/>
+  <line x1="460" y1="240" x2="460" y2="280" stroke="#bf360c" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="640" y1="240" x2="600" y2="280" stroke="#bf360c" stroke-width="1.5" marker-end="url(#ar)"/>
+  <line x1="810" y1="240" x2="720" y2="280" stroke="#bf360c" stroke-width="1.5" marker-end="url(#ar)"/>
+
+  <rect x="120" y="420" width="660" height="90" rx="8" fill="#f1f8e9" stroke="#33691e" stroke-width="2"/>
+  <text x="450" y="446" text-anchor="middle" font-weight="800" fill="#33691e" font-size="14">Arquivo Darwin Godel + MAP-Elites + primitivas</text>
+  <text x="140" y="470" fill="#444" font-size="11">• 450 celulas (CWE × primitiva × linguagem)</text>
+  <text x="140" y="488" fill="#444" font-size="11">• Parent sampling p = score / (1 + filhos com edicao)</text>
+  <text x="490" y="470" fill="#444" font-size="11">• Triplet evolutivo: (5 LoRAs, scaffold prompt, primitive lib)</text>
+  <text x="490" y="488" fill="#444" font-size="11">• Closed-loop harness mutation (RSI light)</text>
+  <text x="450" y="504" text-anchor="middle" fill="#666" font-size="10">snapshot cada 500 passos · top 32 retidos · prune dominados weekly</text>
+
+  <line x1="450" y1="380" x2="450" y2="420" stroke="#33691e" stroke-width="2" marker-end="url(#ar)"/>
+</svg>
+
+<p style="text-align:center;font-size:12px;color:var(--soft);font-style:italic;">5 LoRAs especialistas compartilham um Caracal Base. Sandbox roda comandos especializados (gdb, coverage, sanitizer, SMT). Archive evolutivo guarda tudo: pesos + scaffold + primitivas.</p>
+
+<!-- ============================================================= -->
+
+<h2 id="datasets">4. Datasets concretos (28 fontes)</h2>
+
+<p>Tudo decontaminado contra CyberGym 1507 e held-out 30 CVE 2026 via pipeline C6 (hash + 8-gram + cosseno).</p>
+
+<h3>4.1 Continued pretrain Caracal Base 3B (~1.7B tokens)</h3>
+
+<table>
+<tr><th>Fonte</th><th>Tamanho</th><th>Acesso</th><th>Licenca</th></tr>
+<tr><td>NVD CVE feed completo</td><td>~250M tokens</td><td><a href="https://nvd.nist.gov/vuln/data-feeds">nvd.nist.gov/vuln/data-feeds</a> · JSON 2002-2026</td><td>CC0</td></tr>
+<tr><td>GitHub patch diffs CVE-tagged</td><td>~400M tokens</td><td>GitHub API + commit SHAs do NVD</td><td>por repo</td></tr>
+<tr><td>OSS-Fuzz reproducers historicos</td><td>~200M tokens</td><td><a href="https://github.com/google/oss-fuzz-vulns">google/oss-fuzz-vulns</a></td><td>Apache 2.0</td></tr>
+<tr><td>Project Zero blog</td><td>~50M tokens</td><td>Scrape <code>googleprojectzero.blogspot.com</code></td><td>fair use research</td></tr>
+<tr><td>Trail of Bits blog</td><td>~30M tokens</td><td>Scrape <code>blog.trailofbits.com</code></td><td>fair use research</td></tr>
+<tr><td>AFL++ docs + research papers</td><td>~20M tokens</td><td>github.com/AFLplusplus + arXiv</td><td>Apache 2.0 + arXiv</td></tr>
+<tr><td>PrimeVul</td><td>~150M tokens</td><td>HF <code>secmlr/PrimeVul</code></td><td>MIT</td></tr>
+<tr><td>BigVul</td><td>~200M tokens</td><td>HF <code>bstee615/bigvul</code> · Zenodo</td><td>CC-BY-4.0</td></tr>
+<tr><td>DiverseVul</td><td>~150M tokens</td><td>HF <code>bstee615/diversevul</code></td><td>MIT</td></tr>
+<tr><td>Secure-Instruct synthetic 2026</td><td>~50M tokens</td><td>arXiv 2510.07189 + HF release</td><td>MIT</td></tr>
+<tr><td><strong>OSS-Fuzz execution traces (Tier 3)</strong></td><td>~200M tokens</td><td>Gerar com gcov + ASan dumps de 100K runs</td><td>derivado de OSS-Fuzz</td></tr>
+<tr><td><strong>NIST Juliet Test Suite (NOVO)</strong></td><td>~80M tokens</td><td><a href="https://samate.nist.gov/SARD/test-suites">samate.nist.gov/SARD</a> · 64K casos sinteticos rotulados</td><td>publico US Gov</td></tr>
+<tr><td><strong>SARD (Software Assurance Reference Dataset)</strong></td><td>~100M tokens</td><td>samate.nist.gov/SARD/testsuite.php</td><td>publico US Gov</td></tr>
+<tr><td><strong>Devign</strong></td><td>~60M tokens</td><td>HF <code>antolin/devign</code> · arXiv 1909.03496</td><td>MIT</td></tr>
+<tr><td><strong>VulDeePecker (CWE-119, CWE-399)</strong></td><td>~40M tokens</td><td><a href="https://github.com/CGCL-codes/VulDeePecker">CGCL-codes/VulDeePecker</a></td><td>MIT</td></tr>
+<tr><td><strong>CrossVul</strong></td><td>~80M tokens</td><td>Zenodo · multi-language (C, C++, PHP, Java)</td><td>CC-BY</td></tr>
+<tr><td><strong>MegaVul</strong></td><td>~120M tokens</td><td>HF <code>Icyrockton/MegaVul</code></td><td>MIT</td></tr>
+<tr><td><strong>Reposvul</strong></td><td>~100M tokens</td><td>arXiv 2401.13169 · 4K real-world CVEs · repo level</td><td>MIT</td></tr>
+<tr><td><strong>PatchDB</strong></td><td>~50M tokens</td><td>github.com/SunLab-GMU/PatchDB · 12K security patches</td><td>academic</td></tr>
+<tr><td><strong>SVEN (SARD-derived hardened)</strong></td><td>~30M tokens</td><td>arXiv 2302.05319 · SARD curado para fine-tune</td><td>MIT</td></tr>
+</table>
+
+<h3>4.2 SFT estagio 2 (~35K exemplos curados)</h3>
+
+<table>
+<tr><th>Fonte</th><th>Quantidade</th><th>Acesso</th></tr>
+<tr><td>CTF writeups (multiplas fontes)</td><td>~8K</td><td>Scrape ctftime.org + writeups.io + GitHub topic <code>ctf-writeups</code></td></tr>
+<tr><td>pwn.college labs + solucoes</td><td>~2K</td><td><a href="https://github.com/pwncollege">github.com/pwncollege</a></td></tr>
+<tr><td>Cyber-Zero ReAct traces</td><td>~10K</td><td>HF dataset Cyber-Zero (arXiv 2508.00910) · <strong>so SFT, NUNCA RL substrate</strong></td></tr>
+<tr><td>Hand-curated PoC+patch pairs (curadoria interna)</td><td>~5K</td><td>Bug bounty disclosures + HackerOne reports publicos via API</td></tr>
+<tr><td>gdb session traces (Recon embodied)</td><td>~5K</td><td>Scrape ippsec + LiveOverflow + John Hammond videos + CTF writeups</td></tr>
+<tr><td><strong>HackerOne disclosed reports (NOVO)</strong></td><td>~3K</td><td><a href="https://hackerone.com/hacktivity">hackerone.com/hacktivity</a> via API · filter publico</td></tr>
+<tr><td><strong>ExploitDB metasploit modules (NOVO)</strong></td><td>~2K</td><td><a href="https://github.com/offensive-security/exploitdb">offensive-security/exploitdb</a></td></tr>
+</table>
+
+<h3>4.3 Treino por reforco e avaliacao</h3>
+
+<table>
+<tr><th>Conjunto</th><th>Tarefas</th><th>Uso</th></tr>
+<tr><td>CyberGym 1507 (Berkeley, ICLR 2026)</td><td>1507 vulns / 188 projetos</td><td>Avaliacao primaria · NUNCA em treino</td></tr>
+<tr><td>CyberGym subset 200 (curado por nos)</td><td>200 vulns &lt;50 LOC patch, &lt;30min wall</td><td>Treino por reforco</td></tr>
+<tr><td>30 CVE held-out 2026 (curado C5)</td><td>30 OSS pequenos pos-jan/2026</td><td>Zero-day hunt headline · NUNCA visto</td></tr>
+<tr><td>CyBench (40 CTFs)</td><td>40 CTF profissionais</td><td>Avaliacao secundaria</td></tr>
+<tr><td>InterCode-CTF</td><td>variavel</td><td>Treino interactive</td></tr>
+<tr><td>HumanEval+ / MBPP+</td><td>~600 problemas Python</td><td>Regression guard (nao perder capability geral)</td></tr>
+<tr><td>SWE-Bench-Verified Lite 50</td><td>50 instancias</td><td>Sanity check geral</td></tr>
+<tr><td><strong>CTF-Dojo (NOVO)</strong></td><td>variavel</td><td>arXiv 2508.18370 · treino agent finding vulns via CTF</td></tr>
+<tr><td><strong>ZeroDayBench (NOVO)</strong></td><td>variavel CVSS≥7.0</td><td>arXiv 2603.02297 · ICLR 2026 Workshop · discovery + remediation</td></tr>
+<tr><td><strong>CVE-Bench (NOVO)</strong></td><td>real-world</td><td>repair eval</td></tr>
+<tr><td><strong>BountyBench (NOVO)</strong></td><td>bug bounty real</td><td>discovery validation</td></tr>
+<tr><td><strong>CAIBench (NOVO)</strong></td><td>meta-bench</td><td>arXiv 2510.24317 · agregador cross-benchmark</td></tr>
+</table>
+
+<!-- ============================================================= -->
+
+<h2 id="trilha">5. Trilha de aprendizado (docs / github / videos)</h2>
+
+<p>Todos vao treinar todos os modulos. Cada area vem com 4-6 recursos comecando do basico. Marcar leitura no <code>docs/learned.md</code> de cada repo.</p>
+
+<div class="trilha">
+<h4>A · Fundamentos Transformer + LLM</h4>
+<div class="area-meta">Comecar aqui se nunca implementou um Transformer.</div>
+<table>
+<tr><th>Recurso</th><th>Link</th><th>Tipo</th></tr>
+<tr><td>Andrej Karpathy · "Let's build GPT from scratch"</td><td><a href="https://www.youtube.com/watch?v=kCc8FmEb1nY">youtube.com/watch?v=kCc8FmEb1nY</a></td><td><span class="type-tag tt-youtube">video</span></td></tr>
+<tr><td>Karpathy · nanoGPT repo</td><td><a href="https://github.com/karpathy/nanoGPT">karpathy/nanoGPT</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>Annotated Transformer · Harvard NLP</td><td><a href="http://nlp.seas.harvard.edu/annotated-transformer/">nlp.seas.harvard.edu/annotated-transformer</a></td><td><span class="type-tag tt-blog">blog</span></td></tr>
+<tr><td>3Blue1Brown · Neural Networks (series 1-7)</td><td><a href="https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi">youtube playlist</a></td><td><span class="type-tag tt-youtube">video</span></td></tr>
+<tr><td>Lilian Weng · Transformer family</td><td><a href="https://lilianweng.github.io/posts/2023-01-27-the-transformer-family-v2/">lilianweng.github.io</a></td><td><span class="type-tag tt-blog">blog</span></td></tr>
+<tr><td>HuggingFace LLM Course</td><td><a href="https://huggingface.co/learn/llm-course">huggingface.co/learn/llm-course</a></td><td><span class="type-tag tt-course">curso</span></td></tr>
+</table>
+</div>
+
+<div class="trilha">
+<h4>B · LoRA / PEFT / fine-tuning eficiente</h4>
+<div class="area-meta">Necessario antes de treinar qualquer modulo Caracal.</div>
+<table>
+<tr><th>Recurso</th><th>Link</th><th>Tipo</th></tr>
+<tr><td>LoRA paper · Hu et al 2021</td><td><a href="https://arxiv.org/abs/2106.09685">arXiv 2106.09685</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+<tr><td>QLoRA paper · Dettmers et al 2023</td><td><a href="https://arxiv.org/abs/2305.14314">arXiv 2305.14314</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+<tr><td>HuggingFace PEFT docs</td><td><a href="https://huggingface.co/docs/peft">huggingface.co/docs/peft</a></td><td><span class="type-tag tt-docs">docs</span></td></tr>
+<tr><td>Unsloth · notebooks oficiais</td><td><a href="https://github.com/unslothai/unsloth">unslothai/unsloth</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>Sebastian Raschka · LoRA from Scratch</td><td><a href="https://magazine.sebastianraschka.com/p/lora-and-dora-from-scratch">magazine.sebastianraschka.com</a></td><td><span class="type-tag tt-blog">blog</span></td></tr>
+<tr><td>TRL docs · SFTTrainer</td><td><a href="https://huggingface.co/docs/trl/sft_trainer">huggingface.co/docs/trl</a></td><td><span class="type-tag tt-docs">docs</span></td></tr>
+</table>
+</div>
+
+<div class="trilha">
+<h4>C · Reinforcement Learning de LLM (GRPO/DAPO/PPO)</h4>
+<div class="area-meta">Core do treino dos modulos Caracal. Foco em GRPO + DAPO.</div>
+<table>
+<tr><th>Recurso</th><th>Link</th><th>Tipo</th></tr>
+<tr><td>DeepSeek-R1 paper</td><td><a href="https://arxiv.org/abs/2501.12948">arXiv 2501.12948</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+<tr><td>Will Brown · GRPO Demystified</td><td><a href="https://willccbb.github.io">willccbb.github.io</a></td><td><span class="type-tag tt-blog">blog</span></td></tr>
+<tr><td>verl framework docs</td><td><a href="https://github.com/volcengine/verl">volcengine/verl</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>OpenAI Spinning Up RL</td><td><a href="https://spinningup.openai.com">spinningup.openai.com</a></td><td><span class="type-tag tt-course">curso</span></td></tr>
+<tr><td>HuggingFace Alignment Handbook</td><td><a href="https://github.com/huggingface/alignment-handbook">huggingface/alignment-handbook</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>OpenPipe ART (agent RL)</td><td><a href="https://github.com/OpenPipe/ART">OpenPipe/ART</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>Yannic Kilcher · DeepSeek-R1 explained</td><td>youtube search "Kilcher DeepSeek-R1"</td><td><span class="type-tag tt-youtube">video</span></td></tr>
+</table>
+</div>
+
+<div class="trilha">
+<h4>D · Ciberseguranca basics (binary exploitation + web)</h4>
+<div class="area-meta">Pra entender que tipo de bug estamos cacando. Pegada hands-on.</div>
+<table>
+<tr><th>Recurso</th><th>Link</th><th>Tipo</th></tr>
+<tr><td>LiveOverflow · Binary Exploitation playlist</td><td><a href="https://www.youtube.com/c/LiveOverflow">youtube.com/c/LiveOverflow</a></td><td><span class="type-tag tt-youtube">video</span></td></tr>
+<tr><td>pwn.college · curriculo gratis Arizona State</td><td><a href="https://pwn.college">pwn.college</a></td><td><span class="type-tag tt-course">curso</span></td></tr>
+<tr><td>ippsec · HackTheBox writeups</td><td><a href="https://www.youtube.com/c/ippsec">youtube.com/c/ippsec</a></td><td><span class="type-tag tt-youtube">video</span></td></tr>
+<tr><td>John Hammond · CTF + malware</td><td><a href="https://www.youtube.com/c/JohnHammond010">youtube.com/c/JohnHammond010</a></td><td><span class="type-tag tt-youtube">video</span></td></tr>
+<tr><td>"Hacking: The Art of Exploitation" · Jon Erickson</td><td>amazon · classico</td><td><span class="type-tag tt-book">livro</span></td></tr>
+<tr><td>"Practical Binary Analysis" · Dennis Andriesse</td><td>nostarch.com</td><td><span class="type-tag tt-book">livro</span></td></tr>
+<tr><td>OWASP Top 10</td><td><a href="https://owasp.org/Top10/">owasp.org/Top10</a></td><td><span class="type-tag tt-docs">docs</span></td></tr>
+<tr><td>CWE/CAPEC database · MITRE</td><td><a href="https://cwe.mitre.org">cwe.mitre.org</a></td><td><span class="type-tag tt-docs">docs</span></td></tr>
+<tr><td>Project Zero blog</td><td><a href="https://googleprojectzero.blogspot.com">googleprojectzero.blogspot.com</a></td><td><span class="type-tag tt-blog">blog</span></td></tr>
+</table>
+</div>
+
+<div class="trilha">
+<h4>E · gdb + debugging embodied (Recon module)</h4>
+<div class="area-meta">Critico pra modulo Recon. gdb skill rara mas alta alavancagem.</div>
+<table>
+<tr><th>Recurso</th><th>Link</th><th>Tipo</th></tr>
+<tr><td>gdb manual · GNU</td><td><a href="https://sourceware.org/gdb/current/onlinedocs/gdb/">sourceware.org/gdb</a></td><td><span class="type-tag tt-docs">docs</span></td></tr>
+<tr><td>gdb/mi (Machine Interface) docs</td><td><a href="https://sourceware.org/gdb/current/onlinedocs/gdb/GDB_002fMI.html">gdb/MI manual</a></td><td><span class="type-tag tt-docs">docs</span></td></tr>
+<tr><td>pwndbg (gdb plugin pra exploit dev)</td><td><a href="https://github.com/pwndbg/pwndbg">pwndbg/pwndbg</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>GEF (GDB Enhanced Features)</td><td><a href="https://github.com/hugsy/gef">hugsy/gef</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>pwntools (Python exploit dev)</td><td><a href="https://github.com/Gallopsled/pwntools">Gallopsled/pwntools</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>LiveOverflow · gdb tutorials</td><td>youtube search "LiveOverflow gdb"</td><td><span class="type-tag tt-youtube">video</span></td></tr>
+</table>
+</div>
+
+<div class="trilha">
+<h4>F · Sandbox + container security</h4>
+<div class="area-meta">Caixa de areia hardened pra rodar codigo nao-confiavel.</div>
+<table>
+<tr><th>Recurso</th><th>Link</th><th>Tipo</th></tr>
+<tr><td>gVisor docs</td><td><a href="https://gvisor.dev">gvisor.dev</a></td><td><span class="type-tag tt-docs">docs</span></td></tr>
+<tr><td>Firejail docs</td><td><a href="https://firejail.wordpress.com">firejail.wordpress.com</a></td><td><span class="type-tag tt-docs">docs</span></td></tr>
+<tr><td>nsjail (Google sandbox)</td><td><a href="https://github.com/google/nsjail">google/nsjail</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>seccomp BPF tutorial</td><td><a href="https://man7.org/linux/man-pages/man2/seccomp.2.html">man7.org/seccomp</a></td><td><span class="type-tag tt-docs">docs</span></td></tr>
+<tr><td>Modal docs · serverless containers</td><td><a href="https://modal.com/docs">modal.com/docs</a></td><td><span class="type-tag tt-docs">docs</span></td></tr>
+<tr><td>OSS-Fuzz docs · build infra</td><td><a href="https://google.github.io/oss-fuzz/">google.github.io/oss-fuzz</a></td><td><span class="type-tag tt-docs">docs</span></td></tr>
+</table>
+</div>
+
+<div class="trilha">
+<h4>G · SMT + Z3 (Validator module)</h4>
+<div class="area-meta">Verificacao formal pra Validator module. Z3 bounded depth.</div>
+<table>
+<tr><th>Recurso</th><th>Link</th><th>Tipo</th></tr>
+<tr><td>Z3 tutorial · Microsoft Research</td><td><a href="https://microsoft.github.io/z3guide/">microsoft.github.io/z3guide</a></td><td><span class="type-tag tt-docs">docs</span></td></tr>
+<tr><td>Z3 Python API</td><td><a href="https://z3prover.github.io/api/html/z3.html">z3prover.github.io</a></td><td><span class="type-tag tt-docs">docs</span></td></tr>
+<tr><td>"The Z3 Theorem Prover" paper</td><td>arXiv search "Z3 theorem prover"</td><td><span class="type-tag tt-paper">paper</span></td></tr>
+<tr><td>angr · symbolic execution</td><td><a href="https://github.com/angr/angr">angr/angr</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>KLEE · symbolic execution</td><td><a href="https://klee.github.io">klee.github.io</a></td><td><span class="type-tag tt-docs">docs</span></td></tr>
+<tr><td>Hoare logic intro · Software Foundations Vol 1</td><td><a href="https://softwarefoundations.cis.upenn.edu">softwarefoundations.cis.upenn.edu</a></td><td><span class="type-tag tt-book">livro</span></td></tr>
+</table>
+</div>
+
+<div class="trilha">
+<h4>H · Archive evolutivo (Darwin Godel + MAP-Elites)</h4>
+<div class="area-meta">Inovacao Sakana 2025. Reference implementation publica.</div>
+<table>
+<tr><th>Recurso</th><th>Link</th><th>Tipo</th></tr>
+<tr><td>Darwin Godel Machine paper · Sakana 2025</td><td><a href="https://arxiv.org/abs/2505.22954">arXiv 2505.22954</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+<tr><td>DGM reference implementation</td><td><a href="https://github.com/jennyzzt/dgm">jennyzzt/dgm</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>Sakana AI blog · Darwin Godel</td><td><a href="https://sakana.ai/dgm/">sakana.ai/dgm</a></td><td><span class="type-tag tt-blog">blog</span></td></tr>
+<tr><td>MAP-Elites paper · Mouret & Clune 2015</td><td><a href="https://arxiv.org/abs/1504.04909">arXiv 1504.04909</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+<tr><td>POET (Open-Ended Learning) · Wang et al</td><td><a href="https://arxiv.org/abs/1901.01753">arXiv 1901.01753</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+<tr><td>STOP paper (self-improvement gone wrong)</td><td><a href="https://arxiv.org/abs/2310.02304">arXiv 2310.02304</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+</table>
+</div>
+
+<div class="trilha">
+<h4>I · Process Reward Models (verifier inline)</h4>
+<div class="area-meta">Inline verifier head. PRMs guiando tree search.</div>
+<table>
+<tr><th>Recurso</th><th>Link</th><th>Tipo</th></tr>
+<tr><td>"Let's Verify Step by Step" · OpenAI</td><td><a href="https://arxiv.org/abs/2305.20050">arXiv 2305.20050</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+<tr><td>GenPRM paper · AAAI 2026</td><td><a href="https://arxiv.org/abs/2504.00891">arXiv 2504.00891</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+<tr><td>AB-MCTS (adaptive branching) · NeurIPS 2025</td><td><a href="https://arxiv.org/abs/2503.04412">arXiv 2503.04412</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+<tr><td>ProcessBench</td><td><a href="https://github.com/QwenLM/ProcessBench">QwenLM/ProcessBench</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+</table>
+</div>
+
+<div class="trilha">
+<h4>J · Datasets cyber AI (referencias academicas)</h4>
+<div class="area-meta">Conhecer o landscape de benchmarks e dados.</div>
+<table>
+<tr><th>Recurso</th><th>Link</th><th>Tipo</th></tr>
+<tr><td>CyberGym paper · Berkeley ICLR 2026</td><td><a href="https://arxiv.org/abs/2506.02548">arXiv 2506.02548</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+<tr><td>CyberGym repo oficial</td><td><a href="https://github.com/sunblaze-ucb/cybergym">sunblaze-ucb/cybergym</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>Cyber-Zero paper</td><td><a href="https://arxiv.org/abs/2508.00910">arXiv 2508.00910</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+<tr><td>CTF-Dojo paper</td><td><a href="https://arxiv.org/abs/2508.18370">arXiv 2508.18370</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+<tr><td>ZeroDayBench paper</td><td><a href="https://arxiv.org/abs/2603.02297">arXiv 2603.02297</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+<tr><td>Awesome AI Pentest (curated list)</td><td><a href="https://github.com/insidetrust/awesome-ai-pentest">insidetrust/awesome-ai-pentest</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>PentestGPT (referencia)</td><td><a href="https://github.com/GreyDGL/PentestGPT">GreyDGL/PentestGPT</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>HuggingFace datasets tag <code>cybersecurity</code></td><td><a href="https://huggingface.co/datasets?search=vulnerability">huggingface.co/datasets</a></td><td><span class="type-tag tt-docs">docs</span></td></tr>
+</table>
+</div>
+
+<div class="trilha">
+<h4>K · vLLM + serving + speculative decoding</h4>
+<div class="area-meta">Inferencia em producao + speculative draft pro rollout RL.</div>
+<table>
+<tr><th>Recurso</th><th>Link</th><th>Tipo</th></tr>
+<tr><td>vLLM docs</td><td><a href="https://docs.vllm.ai">docs.vllm.ai</a></td><td><span class="type-tag tt-docs">docs</span></td></tr>
+<tr><td>vLLM repo</td><td><a href="https://github.com/vllm-project/vllm">vllm-project/vllm</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>PagedAttention paper</td><td><a href="https://arxiv.org/abs/2309.06180">arXiv 2309.06180</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+<tr><td>SGLang (alternativa)</td><td><a href="https://github.com/sgl-project/sglang">sgl-project/sglang</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>Speculative decoding survey</td><td><a href="https://arxiv.org/abs/2401.07851">arXiv 2401.07851</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+<tr><td>llama.cpp · GGUF + edge inference</td><td><a href="https://github.com/ggerganov/llama.cpp">ggerganov/llama.cpp</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+</table>
+</div>
+
+<div class="trilha">
+<h4>L · World models + mental simulator (Tier 3 inovacao)</h4>
+<div class="area-meta">Continued pretrain em execucao traces. World models.</div>
+<table>
+<tr><th>Recurso</th><th>Link</th><th>Tipo</th></tr>
+<tr><td>World Models paper · Ha & Schmidhuber</td><td><a href="https://arxiv.org/abs/1803.10122">arXiv 1803.10122</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+<tr><td>DreamerV3 paper</td><td><a href="https://arxiv.org/abs/2301.04104">arXiv 2301.04104</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+<tr><td>Genie 2 · DeepMind 2024</td><td><a href="https://deepmind.google/discover/blog/genie-2-a-large-scale-foundation-world-model/">deepmind.google blog</a></td><td><span class="type-tag tt-blog">blog</span></td></tr>
+</table>
+</div>
+
+<div class="trilha">
+<h4>M · State machine policies + agent harness</h4>
+<div class="area-meta">DSL pra forcar disciplina no Crafter module.</div>
+<table>
+<tr><th>Recurso</th><th>Link</th><th>Tipo</th></tr>
+<tr><td>DSPy · Stanford NLP</td><td><a href="https://github.com/stanfordnlp/dspy">stanfordnlp/dspy</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>Guidance · Microsoft</td><td><a href="https://github.com/guidance-ai/guidance">guidance-ai/guidance</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>LangGraph · agent state machines</td><td><a href="https://github.com/langchain-ai/langgraph">langchain-ai/langgraph</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>OpenAI Agents SDK 2026</td><td><a href="https://github.com/openai/openai-agents-python">openai/openai-agents-python</a></td><td><span class="type-tag tt-github">github</span></td></tr>
+<tr><td>ReAct paper</td><td><a href="https://arxiv.org/abs/2210.03629">arXiv 2210.03629</a></td><td><span class="type-tag tt-paper">paper</span></td></tr>
+</table>
+</div>
+
+<!-- ============================================================= -->
+
+<h2 id="tools">6. Ferramentas e contas a abrir</h2>
+
+<h3>Contas necessarias (5 fundadores em paralelo)</h3>
+
+<table>
+<tr><th>Servico</th><th>Quantidade</th><th>Custo</th><th>Pra que</th></tr>
+<tr><td>Kaggle</td><td>5 contas (1 por fundador), phone-verified</td><td>gratis</td><td>20h/sem T4 cada = 100h/sem total</td></tr>
+<tr><td>Google Cloud · Colab Pro+</td><td>20 contas (4 por fundador)</td><td>$50/mes × 20 = $1000/mes</td><td>3h/dia × 20 contas = 420h/sem T4 + A100 esporadico</td></tr>
+<tr><td>Modal</td><td>1 conta lab</td><td>~$300/mes uso esperado</td><td>CPU host pra sandbox (gdb + gcov + counterfactual + SMT)</td></tr>
+<tr><td>HuggingFace</td><td>1 conta org <code>iterate-labs</code></td><td>gratis</td><td>Empurrar adapter cada 200 passos · publicar modelos</td></tr>
+<tr><td>W&B</td><td>1 conta org <code>iterate-labs</code></td><td>gratis academic</td><td>Tracking todas as runs</td></tr>
+<tr><td>GitHub (ja temos)</td><td>5 contas · org <code>iterate-labs-ai</code></td><td>gratis</td><td>Codigo + issues + Actions</td></tr>
+<tr><td>Wasabi ou Backblaze B2</td><td>1 bucket</td><td>~$50/mes (5TB)</td><td>Checkpoint storage S3-compatible</td></tr>
+<tr><td>Google for Startups (alvo)</td><td>1 application</td><td>$25k credits</td><td>Submit antes 27 jun, chega ago</td></tr>
+<tr><td>AWS via NVIDIA Inception (alvo)</td><td>1 application</td><td>$100k tier</td><td>Inception registra free, AWS routing fim ago</td></tr>
+</table>
+
+<h3>Software stack (instalar na primeira sessao)</h3>
+
+<pre>pip install -U unsloth trl transformers accelerate peft bitsandbytes
+pip install verl  # quando comecar RL principal (sprint 3)
+pip install vllm  # inferencia
+pip install datasets pyyaml wandb huggingface_hub
+pip install scrapling[fetchers]  # scraping
+pip install z3-solver  # SMT validator
+pip install qdrant-client  # primitive library vector index
+
+# Sandbox host (Modal)
+apt-get install -y gdb gdbserver gcc-multilib lcov afl++ \
+                   z3 cppcheck clang clang-tools
+docker pull aflplusplus/aflplusplus:latest
+docker pull gcr.io/oss-fuzz-base/base-runner</pre>
+
+<!-- ============================================================= -->
+
+<h2 id="sprint">7. Sprints sem-a-sem</h2>
+
+<div class="step">
+<strong>Sprint 1 · dias 1-7 · Foundation <span class="tag tag-w1">jun 22 - jun 28</span></strong>
+5 contas Kaggle + 20 contas Colab + 1 Modal funcionando. Decontamination pipeline 3-camadas. Held-out 30 CVE curado. CyberGym subset 200 containerizado. Baseline zero-shot Qwen Coder 3B documentado. Continued pretrain Caracal Base 3B em andamento (1.5B tokens).
+</div>
+
+<div class="step">
+<strong>Sprint 2 · dias 8-14 · 5 modulos SFT estagio 2 <span class="tag tag-w2">jun 29 - jul 5</span></strong>
+Caracal Base publicado HF Hub. Cada fundador pega tarefa do pool e treina o modulo correspondente. Pool roda sem dono, conforme disponibilidade. 5 LoRAs no HF Hub ao fim do sprint. Mental Simulator head treinada. Inline Verifier Head treinada. Reward function v1 testada.
+</div>
+
+<div class="step">
+<strong>Sprint 3 · dias 15-22 · Treino por reforco principal <span class="tag tag-w3">jul 6 - jul 13</span></strong>
+verl + DAPO rodando. 3500 passos GRPO sobre 5 modulos coordenados. Archive DGM com 450 celulas MAP-Elites populadas. Primitive library cresce. Speculative draft Phi-3-mini ativo. Avaliacao intermediaria CyberGym 1507 dia 20.
+</div>
+
+<div class="step">
+<strong>Sprint 4 · dias 23-30 · Avaliacao + zero-day + ship <span class="tag tag-w4">jul 14 - jul 21</span></strong>
+Avaliacao final CyberGym 1507 + CyBench + HumanEval+ regression. Caça zero-day em 30 OSS held-out com responsible disclosure. Caracal-1 v1 publicado HF Hub com model card. Demo Colab publico GGUF quantizado. Preprint arXiv submit.
+</div>
+
+<!-- ============================================================= -->
+
+<h2 id="tasks">8. 35 tarefas (com prioridade)</h2>
+
+<p><span class="tag tag-must">MUST</span> obrigatorio pra ship v1. <span class="tag tag-stretch">STRETCH</span> adicionar se folga. <span class="tag tag-later">v1.5+</span> depois do ship. <span class="tag tag-kernel">kernel-D</span> 2 revisores.</p>
+
+<h3>Sprint 1 · Foundation</h3>
+
+<div class="task"><div class="task-head"><span class="task-n">C1</span><span class="task-t">Setup Kaggle 5 contas + Colab Pro+ 20 contas + Modal CPU host</span><span class="tag tag-must">MUST</span></div><div class="task-body">5 contas Kaggle phone-verified, 20 Google + Colab Pro+, 1 Modal lab. Smoke test 10 vulneraveis paralelo. <code>infra/compute_inventory.md</code> documentando 520h/sem.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C2</span><span class="task-t">Bake-off Qwen-Coder-3B vs R1-Distill-1.5B vs Phi-4-mini-3.8B</span><span class="tag tag-must">MUST</span></div><div class="task-body">50 tarefas CyberGym slice, zero-shot. ADR <code>infra/decisions/0001-base-model.md</code>. Kill-switch &gt;3pp uplift troca base.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C3</span><span class="task-t">Baseline zero-shot Qwen Coder 3B CyberGym + probe 100</span><span class="tag tag-must">MUST</span></div><div class="task-body">Numeros pass@1 e pass@5 em <code>infra/baselines/qwen_coder_3b_zero_shot.md</code>.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C4</span><span class="task-t">Caracal Base 3B continued pretrain 1.5B tokens cyber</span><span class="tag tag-must">MUST</span></div><div class="task-body">NVD + patch diffs + OSS-Fuzz + Project Zero + Trail of Bits + AFL++ + PrimeVul + BigVul + DiverseVul + Secure-Instruct + Juliet + SARD + Devign + VulDeePecker + CrossVul + MegaVul + Reposvul + PatchDB + SVEN. Unsloth + LoRA r=32 alpha=64. 80h T4. Publicar <code>iterate-labs/caracal-base-3b</code>.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C5</span><span class="task-t">Held-out 30 CVE 2026 OSS para zero-day hunt</span><span class="tag tag-must">MUST</span><span class="tag tag-kernel">kernel-D</span></div><div class="task-body">30 CVE pos jan/2026, C/C++, &lt;10K LOC. Hash check zero overlap. <code>eval/held_out_2026.yaml</code>.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C6</span><span class="task-t">Pipeline decontamination 3 camadas</span><span class="tag tag-must">MUST</span><span class="tag tag-kernel">kernel-D</span></div><div class="task-body">SHA256 + 8-gram Jaccard &gt;0.3 + cosseno embedding &gt;0.85. CVE-ID dedup. Falsos positivos &lt;2%.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C7</span><span class="task-t">CyberGym subset 200 + sandbox Modal Docker hardened</span><span class="tag tag-must">MUST</span></div><div class="task-body">200 vulns curadas, gVisor + firejail + nsjail + seccomp, 60s timeout, 2GB ram, rede off. 5 attack tests passam.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C8</span><span class="task-t">Reward verifier-gated + anti-supressao + coverage</span><span class="tag tag-must">MUST</span><span class="tag tag-kernel">kernel-D</span></div><div class="task-body">Binario r=1 se crash CWE match + patch passa testes + anti-supressao 10 inputs adjacentes. Coverage gcov. Bootstrap shaping 1500 passos.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C9</span><span class="task-t">Archive Darwin Godel + MAP-Elites 450 celulas</span><span class="tag tag-must">MUST</span></div><div class="task-body">30 CWE × 5 primitivas × 3 langs. Parent sampling score / (1 + filhos com edicao). Snapshot cada 500 passos.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C10</span><span class="task-t">Kaggle 5 contas script rotacao</span><span class="tag tag-must">MUST</span></div><div class="task-body">5 contas phone-verified, T4 ativo, script rotacao API kaggle.json.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C11</span><span class="task-t">Colab Pro+ 20 contas script rotacao + auto-resume</span><span class="tag tag-must">MUST</span></div><div class="task-body">20 contas ativadas. Auto-resume HF Hub checkpoint testado.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C12</span><span class="task-t">Caracal Base 3B model card + estrategia reuso</span><span class="tag tag-must">MUST</span></div><div class="task-body">Model card HF Hub completo. ADR reuso pra Forja-MLE, Visao-Driving, Voz-Duplex.</div></div>
+
+<h3>Sprint 2 · Tier 3 inovacoes</h3>
+
+<div class="task"><div class="task-head"><span class="task-n">C13</span><span class="task-t">Causal trace pretraining (mental simulator head)</span><span class="tag tag-must">MUST</span></div><div class="task-body">100K traces AFL/OSS-Fuzz (gcov + ASan dumps). Head 50M sobre Caracal Base. Self-supervised next-state. ~20h T4.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C14</span><span class="task-t">AST attention overlay head</span><span class="tag tag-stretch">STRETCH</span></div><div class="task-body">Head 12M usa AST adjacency como bias. Parser tree-sitter pra C/C++. End-to-end com Stage 2.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C15</span><span class="task-t">State machine policy DSL + validator</span><span class="tag tag-must">MUST</span></div><div class="task-body">6 estados ANALYZE / HYPOTHESIZE / INSTRUMENT / EXECUTE / REFINE / PATCH. Validator harness valida transicoes.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C16</span><span class="task-t">Speculative draft model setup (Phi-3-mini)</span><span class="tag tag-stretch">STRETCH</span></div><div class="task-body">Distillar Phi-3-mini em outputs Caracal Base. Plug em vLLM. 3-5x speedup rollouts.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C17</span><span class="task-t">Counterfactual mutator + reward causal</span><span class="tag tag-must">MUST</span></div><div class="task-body">Pra cada PoC gerar mutacao minimal que NAO triggaria. Reward por disparidade. Modal CPU.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C18</span><span class="task-t">Compositional primitive library (writeable RAG)</span><span class="tag tag-must">MUST</span></div><div class="task-body">Banco Qdrant indexado por embedding. Modelo escreve quando descobre primitive nova. Ferramenta <code>retrieve_primitive(query)</code>.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C19</span><span class="task-t">Inline verifier head PRM 30M</span><span class="tag tag-must">MUST</span></div><div class="task-body">Cabeca adicional sobre embedding final. Dual loss gera + julga. Tree search guided.</div></div>
+
+<h3>Sprint 2-3 · 5 modulos especialistas (pool aberto)</h3>
+
+<div class="task"><div class="task-head"><span class="task-n">C20</span><span class="task-t">Modulo Recon · embodied gdb live</span><span class="tag tag-must">MUST</span></div><div class="task-body">gdb/mi protocol parser. Action space 50 comandos. Sandbox com gdbserver. SFT em 5K gdb traces. RL adapted pra Recon.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C21</span><span class="task-t">Modulo Hypothesizer · 3 bug hypotheses</span><span class="tag tag-must">MUST</span></div><div class="task-body">SFT em 8K CTF writeups + Project Zero. Output 3 hipoteses estruturadas por target com CWE class + primitive + dificuldade.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C22</span><span class="task-t">Modulo Crafter · state machine + PoC</span><span class="tag tag-must">MUST</span></div><div class="task-body">SFT em 5K pares PoC+patch + Cyber-Zero traces. Output usa state machine C15. Counterfactual reward C17.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C23</span><span class="task-t">Modulo Validator · SMT bounded Z3</span><span class="tag tag-must">MUST</span></div><div class="task-body">SFT em pares spec+PoC sinteticos. Z3 depth 5. Reward por consistencia spec ↔ PoC ↔ execucao.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C24</span><span class="task-t">Modulo Patcher · unified diff + anti-supressao</span><span class="tag tag-must">MUST</span></div><div class="task-body">SFT em patches CVE-fix. Output unified diff. Anti-supressao 10 inputs adjacentes. Preserva coverage.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C25</span><span class="task-t">Protocolo de mensagens inter-modulo + arbitragem</span><span class="tag tag-must">MUST</span></div><div class="task-body">Schema JSON estruturado. Recon → Hypothesizer → Crafter → Validator → Patcher. Logging W&B.</div></div>
+
+<h3>Sprint 3 · Reforco</h3>
+
+<div class="task"><div class="task-head"><span class="task-n">C26</span><span class="task-t">verl + DAPO config + warmup 1500 passos</span><span class="tag tag-must">MUST</span></div><div class="task-body">lr=3e-6, KL=0.002 BF16 ref, eps_low=0.2 eps_high=0.28, batch=32, 16 rollouts/prompt. Bootstrap shaping ungated.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C27</span><span class="task-t">Reforco principal 3500 passos + archive snapshots</span><span class="tag tag-must">MUST</span></div><div class="task-body">Shaping condicionado r_binary&gt;0 capped 0.15. Snapshot cada 500 passos. Avaliacao intermediaria dia 20.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C28</span><span class="task-t">Kill switch self-play dia 14</span><span class="tag tag-must">MUST</span></div><div class="task-body">Se ganho RL &lt;2pp vs SFT em probe set, desliga self-play e ship single-agent.</div></div>
+
+<h3>Sprint 4 · Ship</h3>
+
+<div class="task"><div class="task-head"><span class="task-n">C29</span><span class="task-t">Avaliacao final CyberGym 1507 pass@5 + ensemble</span><span class="tag tag-must">MUST</span></div><div class="task-body">k=5, temp 0.8, top_p 0.95. 3-vote ensemble. HumanEval+/MBPP+ regression. SWE-Bench-Verified Lite 50 sanity.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C30</span><span class="task-t">Caca zero-day em 30 OSS held-out 2026</span><span class="tag tag-must">MUST</span></div><div class="task-body">Modal Docker pool. Responsible disclosure (private + 90 dias embargo). CVE request quando confirmado.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C31</span><span class="task-t">Release HF Hub iterate-labs/caracal-1-v1</span><span class="tag tag-must">MUST</span></div><div class="task-body">5 LoRAs + heads + tokenizer + model card + decontamination report + reproducibility scripts.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C32</span><span class="task-t">Demo Colab publico GGUF quantizado</span><span class="tag tag-must">MUST</span></div><div class="task-body">llama.cpp Q4_K_M. Clean-run T4 free &lt;5min. Badge Open in Colab. Gif 30s.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C33</span><span class="task-t">Preprint arXiv</span><span class="tag tag-stretch">STRETCH</span></div><div class="task-body">"Caracal-1: A Multi-Module 3B Specialist for Vulnerability Discovery via Verifiable Reward RL with Embodied Debugging". 8 paginas + appendix.</div></div>
+
+<h3>v1.5+ (apos ship)</h3>
+
+<div class="task"><div class="task-head"><span class="task-n">C34</span><span class="task-t">SAE features bonus reward + steering + detection</span><span class="tag tag-later">v1.5+</span></div><div class="task-body">SAE 50M sobre ativacoes Caracal Base layer 18. Feature labeling 50 features cyber. Paper hook top-tier.</div></div>
+
+<div class="task"><div class="task-head"><span class="task-n">C35</span><span class="task-t">Caracal-XS 500M auto-distilled WebGPU edge</span><span class="tag tag-later">v1.5+</span></div><div class="task-body">Distillation v1 → 500M. Q4 GGUF. transformers.js + WebGPU. Dev local browser. Telemetria opt-in.</div></div>
+
+<!-- ============================================================= -->
+
+<h2 id="compute">9. Compute e creditos</h2>
+
+<table>
+<tr><th>Fonte</th><th>Capacidade</th><th>Quando</th><th>Uso</th></tr>
+<tr><td>Kaggle (5 contas T4)</td><td>100h/sem</td><td>Disponivel ja</td><td>Caracal Base continued pretrain + SFT estagio 1</td></tr>
+<tr><td>Colab Pro+ (20 contas)</td><td>420h/sem T4 + A100 esporadico</td><td>Disponivel ja</td><td>SFT estagio 2 + RL warmup + ablacoes</td></tr>
+<tr><td>Modal CPU host</td><td>continuo $0.40/h 32-core</td><td>Disponivel ja</td><td>Sandbox + gdb + gcov + counterfactual + SMT</td></tr>
+<tr><td>Google for Startups</td><td>$25k creditos A100</td><td>Chega ago (submit antes 27 jun)</td><td>RL principal 3500 passos Sprint 3</td></tr>
+<tr><td>NVIDIA Inception + AWS Activate</td><td>$100k tier AWS</td><td>Chega fim ago</td><td>Scaling v2 + Caracal Pro 7B mes 2+</td></tr>
+<tr><td>Wasabi/Backblaze storage</td><td>5TB ~$50/mes</td><td>Disponivel ja</td><td>Checkpoint streaming S3-compatible</td></tr>
+</table>
+
+<h3>Schedule semanal de placa de video</h3>
+
+<table>
+<tr><th>Semana</th><th>Caracal Base</th><th>SFT estagio 2</th><th>RL warmup</th><th>RL main</th><th>Avaliacao</th></tr>
+<tr><td>1 (jun 22-28)</td><td>80h T4 Kaggle</td><td>-</td><td>-</td><td>-</td><td>20h T4 probe</td></tr>
+<tr><td>2 (jun 29-jul 5)</td><td>-</td><td>40h T4 + 20h A100</td><td>50h A100</td><td>-</td><td>30h A100</td></tr>
+<tr><td>3 (jul 6-13)</td><td>-</td><td>-</td><td>-</td><td>290h A100 GCP</td><td>40h A100</td></tr>
+<tr><td>4 (jul 14-21)</td><td>-</td><td>-</td><td>-</td><td>polish</td><td>100h A100 full + 0-day hunt</td></tr>
+</table>
+
+<!-- ============================================================= -->
+
+<h2 id="riscos">10. Riscos e mitigacoes</h2>
+
+<table>
+<tr><th>Risco</th><th>Mitigacao</th></tr>
+<tr><td>1. Colapso recompensa esparsa primeiros 1500 passos</td><td>Bootstrap shaping ungated + easy-first curriculum + coverage signal denso</td></tr>
+<tr><td>2. Teto contexto 32K em logic bugs cross-file</td><td>LSP + ctags + RAG retrieval. v2 hybrid Mamba drop-in.</td></tr>
+<tr><td>3. Patch-suppression hack (catch-and-ignore)</td><td>Anti-supressao re-roda sanitizer em 10 inputs adjacentes</td></tr>
+<tr><td>4. Cyber-Zero distribution gap</td><td>Cyber-Zero so SFT, NUNCA rollout RL. 100% real Docker pra reward.</td></tr>
+<tr><td>5. Contaminacao train + eval</td><td>Pipeline 3 camadas C6 + dedup CVE-ID + auditoria manual sample</td></tr>
+<tr><td>6. Quantizacao FP8 corrompe KL</td><td>Referencia BF16 nao FP8, KL=0.002</td></tr>
+<tr><td>7. Sandbox overrun custo Modal</td><td>Observation replay cache 35-55% + budget alert $200/dia</td></tr>
+<tr><td>8. Self-play colusao</td><td>Pools congelados + tripwire + dia 14 kill switch</td></tr>
+<tr><td>9. Mode collapse archive</td><td>MAP-Elites 450 celulas + Darwin Godel parent sampling</td></tr>
+<tr><td>10. gdb embodied Recon dataset ralo</td><td>Trajectories sinteticas com gdb scripted batch. Fallback static analysis.</td></tr>
+<tr><td>11. SMT bounded Validator falha em casos complexos</td><td>2 modos: SMT pra simple, empirico counterfactual pra complex</td></tr>
+<tr><td>12. 5 contas Kaggle preempted simultaneo</td><td>Auto-resume HF Hub. Fallback Colab Pro+ pool 20 contas.</td></tr>
+</table>
+
+<!-- ============================================================= -->
+
+<!-- ============================================================= -->
+
+<h2 id="recursivo">11. Harness recursivo (6 loops self-improving)</h2>
+
+<p>Caracal-Ω-Recursive opera em 6 loops aninhados. Cada loop muta um nivel da pilha. Boundary intocavel: <strong>kernel-D</strong> (evaluator, sandbox, reward registry, budget enforcer, classes config). So humanos editam kernel-D. Os 5 loops abaixo dele evoluem por si proprios contra o evaluator congelado. Padrao Darwin Godel Machine (Sakana 2025) mais SICA (17→53% SWE Bench Verified) mais salvaguardas STOP-anti-reward-hacking.</p>
+
+<svg viewBox="0 0 880 460" xmlns="http://www.w3.org/2000/svg" style="font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px;">
+  <defs>
+    <marker id="rr" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#1a3a6e"/></marker>
+  </defs>
+
+  <rect x="40" y="20" width="800" height="50" rx="6" fill="#000" stroke="#000"/>
+  <text x="440" y="42" text-anchor="middle" font-weight="800" fill="white" font-size="14">KERNEL-D · intocavel pelo loop · 2 humanos editam</text>
+  <text x="440" y="58" text-anchor="middle" fill="#ddd" font-size="11">evaluator · sandbox · reward registry · budget enforcer · classes config · capability tier</text>
+
+  <rect x="100" y="90" width="680" height="50" rx="6" fill="#e3f2fd" stroke="#0d47a1"/>
+  <text x="120" y="110" font-weight="700" fill="#0d47a1">Loop A · Continued Pretrain</text>
+  <text x="120" y="128" fill="#444" font-size="11">one-shot · 1.5B tokens cyber + 200M traces · sai Caracal Base 3B</text>
+
+  <rect x="100" y="156" width="680" height="50" rx="6" fill="#e3f2fd" stroke="#0d47a1"/>
+  <text x="120" y="176" font-weight="700" fill="#0d47a1">Loop B · SFT estagio 2</text>
+  <text x="120" y="194" fill="#444" font-size="11">one-shot · 35K exemplos curados por modulo · sai 5 LoRAs especialistas</text>
+
+  <rect x="100" y="222" width="680" height="50" rx="6" fill="#f3e5f5" stroke="#6a1b9a"/>
+  <text x="120" y="242" font-weight="700" fill="#4a148c">Loop C · Reinforcement Learning (recursivo)</text>
+  <text x="120" y="260" fill="#444" font-size="11">verl + DAPO · archive Darwin Godel snapshot cada 500 passos · parent sampling nao-greedy</text>
+
+  <rect x="100" y="288" width="680" height="50" rx="6" fill="#fff3e0" stroke="#bf360c"/>
+  <text x="120" y="308" font-weight="700" fill="#bf360c">Loop D · Mutacao de scaffold (recursivo, dentro do archive)</text>
+  <text x="120" y="326" fill="#444" font-size="11">prompts · tool budget · retrieval depth · state machine transitions · temperatura schedule · valida em dev slice</text>
+
+  <rect x="100" y="354" width="680" height="50" rx="6" fill="#fff3e0" stroke="#bf360c"/>
+  <text x="120" y="374" font-weight="700" fill="#bf360c">Loop E · Mutacao de reward shaping coeficientes (recursivo, kernel-D limit)</text>
+  <text x="120" y="392" fill="#444" font-size="11">pesos α β γ δ · coeficientes de shaping bootstrap · NAO muta funcao reward · NAO muta verifier oracle</text>
+
+  <rect x="100" y="420" width="680" height="30" rx="6" fill="#fce4ec" stroke="#880e4f"/>
+  <text x="120" y="440" font-weight="700" fill="#880e4f">Loop F · Promocao humana de mutacoes consistentes para kernel-D (semanal, 2 assinaturas)</text>
+</svg>
+
+<h3>11.1 Loops em detalhe</h3>
+
+<table>
+<tr><th>Loop</th><th>O que muta</th><th>Quem aprova</th><th>Frequencia</th><th>Validador</th></tr>
+<tr><td><strong>A · Pretrain</strong></td><td>Pesos do Caracal Base</td><td>2 humanos PR</td><td>1 vez (Sprint 1)</td><td>Probe set + HumanEval+ regression</td></tr>
+<tr><td><strong>B · SFT</strong></td><td>Pesos LoRA de cada modulo</td><td>1 humano PR</td><td>1 vez por modulo (Sprint 2)</td><td>Probe set + slice CyberGym 50</td></tr>
+<tr><td><strong>C · RL</strong></td><td>Pesos LoRA (GRPO/DAPO updates)</td><td>auto (loop) com gates de eval cada 500 passos</td><td>continuo Sprint 3</td><td>Eval gate suite + probes anti-hack + dev slice 64 vulns</td></tr>
+<tr><td><strong>D · Scaffold</strong></td><td>Prompts, tool budget, retrieval depth, state machine transitions, temperatura</td><td>auto (loop) com Pareto improvement em dev slice</td><td>continuo apos 1000 passos RL</td><td>Improvement em 100-prompt dev slice (NUNCA CyberGym 1507)</td></tr>
+<tr><td><strong>E · Reward shaping</strong></td><td>Coeficientes α β γ δ ε do reward composto</td><td>auto (loop) com sanity check anti-hack</td><td>continuo apos 1500 passos RL</td><td>Coverage probe + length probe + canary leak check</td></tr>
+<tr><td><strong>F · Promocao kernel</strong></td><td>Mutacoes do Loop D/E que reincidem com ganho 3+ vezes</td><td>2 humanos + ADR registrado</td><td>weekly review</td><td>Manual auditoria + held-out 30 CVE 2026 sample (read-only)</td></tr>
+</table>
+
+<h3>11.2 Boundaries de seguranca (kernel-D intocavel)</h3>
+
+<table>
+<tr><th>Componente</th><th>Loop pode mutar?</th><th>Por que</th></tr>
+<tr><td>Evaluator suite (CyberGym 1507, held-out 30 CVE)</td><td>NUNCA</td><td>Sistema nao deve poder editar seu proprio teste (STOP precedent)</td></tr>
+<tr><td>Reward function (verifier oracle binario)</td><td>NUNCA</td><td>Gameabilidade infinita se loop edita propria recompensa</td></tr>
+<tr><td>Reward shaping coeficientes (α β γ δ ε)</td><td>SIM (Loop E)</td><td>Coeficientes auxiliares so. Funcao oracle preservada.</td></tr>
+<tr><td>Sandbox config (gVisor, seccomp, network off)</td><td>NUNCA</td><td>Loop nao pode reduzir proprio isolamento</td></tr>
+<tr><td>Budget enforcer (tokens, wall, USD)</td><td>NUNCA</td><td>STOP: sistema tentou remover proprio budget. Bloqueado por design.</td></tr>
+<tr><td>Classes A/B/C/D config</td><td>NUNCA</td><td>Loop nao pode escalar privilegio proprio</td></tr>
+<tr><td>Prompts e scaffolds</td><td>SIM (Loop D)</td><td>Classe A: edita livre. Auditoria via archive.</td></tr>
+<tr><td>Tools e retrieval logic</td><td>SIM (Loop D)</td><td>Classe B: edita com 1 review.</td></tr>
+<tr><td>Pesos do modelo</td><td>SIM (Loops A/B/C)</td><td>Classe C: 2 reviewers + 3 seeds + suite completa.</td></tr>
+</table>
+
+<h3>11.3 Detector STOP-pattern</h3>
+
+<p>Probe automatica roda em cada gate de eval. Detecta tentativas do loop de:</p>
+
+<ul>
+<li>Editar arquivos do kernel-D (rejeitado por classes config + Action C4)</li>
+<li>Aumentar proprio budget (rejeitado por enforcer kernel)</li>
+<li>Reduzir proprio isolamento (sandbox config nunca acessivel)</li>
+<li>Suprimir crashes em vez de patchar (anti-supressao check Action C8)</li>
+<li>Coletar canary strings inseridas em corpus (probe anti-leak)</li>
+</ul>
+
+<p>Trigger = trajetoria descartada + flag em <code>harness/incidents/YYYY-MM-DD.md</code> + review humano.</p>
+
+<!-- ============================================================= -->
+
+<h2 id="kaggle">12. Estrategia Kaggle: 5 contas relay race</h2>
+
+<p>Constraint Kaggle: cada conta 20h/sem T4, sessao max 9h, sistema arquivos efemero. Solucao: <strong>revezamento coordenado</strong> via HuggingFace Hub como buffer compartilhado. Cada conta treina 9h consecutivas, push checkpoint, proxima conta resume. Total 80h Caracal Base = 9 sessoes de ~9h distribuidas em 2-3 dias.</p>
+
+<h3>12.1 Protocolo de revezamento</h3>
+
+<pre># A. Pegar slot livre no schedule (planilha shared)
+# B. Pull checkpoint mais recente
+huggingface-cli download iterate-labs/caracal-base-pretrain \
+    --revision step-XXXX --local-dir ./ckpt
+
+# C. Resume treino N steps (no notebook Kaggle)
+python train_continued_pretrain.py \
+    --resume-from ./ckpt \
+    --steps-to-run 5500 \
+    --output ./ckpt-out \
+    --wandb-resume
+
+# D. Push novo checkpoint
+huggingface-cli upload iterate-labs/caracal-base-pretrain \
+    ./ckpt-out . --revision step-YYYY \
+    --commit-message "step YYYY by Pedro session 2 jun 23"
+
+# E. Atualizar SCHEDULE.md com timestamp + revision
+# F. Sinalizar proximo no Discord #caracal-base-relay</pre>
+
+<h3>12.2 Cronograma de revezamento Sprint 1 (Caracal Base 80h T4)</h3>
+
+<p>Cada fundador faz 2 sessoes nessa semana (~18h dentro do limite 20h). 5 fundadores × 2 sessoes = 10 sessoes × 9h = 90h, com folga.</p>
+
+<table>
+<tr><th>Sessao</th><th>Conta</th><th>Inicio</th><th>Fim</th><th>Steps</th><th>Checkpoint saida</th></tr>
+<tr><td>1</td><td>fundador A</td><td>seg 23 jun 09h BRT</td><td>seg 23 jun 18h</td><td>0 → 5500</td><td>step-5500</td></tr>
+<tr><td>2</td><td>fundador B</td><td>seg 23 jun 14h</td><td>seg 23 jun 23h</td><td>5500 → 11000</td><td>step-11000</td></tr>
+<tr><td>3</td><td>fundador C</td><td>seg 23 jun 19h</td><td>ter 24 jun 04h</td><td>11000 → 16500</td><td>step-16500</td></tr>
+<tr><td>4</td><td>fundador D</td><td>ter 24 jun 00h</td><td>ter 24 jun 09h</td><td>16500 → 22000</td><td>step-22000</td></tr>
+<tr><td>5</td><td>fundador E</td><td>ter 24 jun 05h</td><td>ter 24 jun 14h</td><td>22000 → 27500</td><td>step-27500</td></tr>
+<tr><td>6</td><td>fundador A (2a)</td><td>ter 24 jun 10h</td><td>ter 24 jun 19h</td><td>27500 → 33000</td><td>step-33000</td></tr>
+<tr><td>7</td><td>fundador B (2a)</td><td>ter 24 jun 15h</td><td>qua 25 jun 00h</td><td>33000 → 38500</td><td>step-38500</td></tr>
+<tr><td>8</td><td>fundador C (2a)</td><td>ter 24 jun 20h</td><td>qua 25 jun 05h</td><td>38500 → 44000</td><td>step-44000</td></tr>
+<tr><td>9</td><td>fundador D (2a)</td><td>qua 25 jun 01h</td><td>qua 25 jun 10h</td><td>44000 → 50000 (fim)</td><td>step-50000 final</td></tr>
+</table>
+
+<p>Sessoes 1+2, 2+3, 3+4... sao consecutivas com 4-5h sobreposicao. Overlap permite que conta atual prepare proxima (download checkpoint para conta seguinte enquanto continua treinando). <strong>Loop sem gap de placa de video.</strong> Treino total terminado quarta 25 jun manha. Sobra a semana para Sprint 1 finalizar outras tarefas.</p>
+
+<h3>12.3 Sprint 2 SFT estagio 2 · 5 modulos paralelo</h3>
+
+<p>Diferente de Sprint 1: cada modulo treina em paralelo. Cada fundador roda 1 modulo durante a semana usando suas 20h. 5 modulos × ~30h cada = 150h, distribuido em 5 contas paralelas em ~3 dias.</p>
+
+<pre># Cada fundador roda na propria conta Kaggle, sem revezamento
+python train_lora_module.py \
+    --base-model iterate-labs/caracal-base-3b \
+    --module {recon|hypothesizer|crafter|validator|patcher} \
+    --dataset {gdb_traces|ctf_writeups|poc_patch|spec_synth|patches_cve} \
+    --r 32 --alpha 64 --lr 2e-4 \
+    --output iterate-labs/caracal-1-{module}-lora</pre>
+
+<h3>12.4 Coordenacao operacional</h3>
+
+<table>
+<tr><th>Mecanismo</th><th>Onde</th><th>Pra que</th></tr>
+<tr><td>SCHEDULE.md no repo caracal-1</td><td>github.com/iterate-labs-ai/caracal-1/SCHEDULE.md</td><td>Slot booking + revisions + ultima atualizacao</td></tr>
+<tr><td>HuggingFace Hub revisions</td><td><code>iterate-labs/caracal-base-pretrain</code> com tags step-N</td><td>Buffer compartilhado entre contas</td></tr>
+<tr><td>Discord/Slack #caracal-relay</td><td>canal lab</td><td>Sinalizacao tempo real "step-22000 pushed, sua vez"</td></tr>
+<tr><td>W&B run continuo</td><td>iterate-labs/caracal-base-pretrain</td><td>Loss curve uniforme entre contas, tracking unico</td></tr>
+<tr><td>Pre-flight script</td><td><code>scripts/preflight.sh</code></td><td>Valida HF auth + pulling checkpoint OK + GPU disponivel antes de iniciar</td></tr>
+<tr><td>Auto-resume on SIGTERM</td><td><code>scripts/sigterm_handler.py</code></td><td>Se sessao Kaggle morre, salva checkpoint final + push HF Hub</td></tr>
+</table>
+
+<h3>12.5 Conflito e recuperacao</h3>
+
+<table>
+<tr><th>Situacao</th><th>O que fazer</th></tr>
+<tr><td>Duas contas push simultaneo</td><td>HF Hub aceita ambos como revisions diferentes. Quem termina 2o reverte e resume do primeiro (perdas: 1 hora).</td></tr>
+<tr><td>Conta preempted antes de push</td><td>SIGTERM handler salva final. Se nao salvou, proximo resume do ultimo HF Hub valido (perdas: ate 9h).</td></tr>
+<tr><td>Loss curve diverge entre contas</td><td>Cancela ultimas N sessoes, resume de checkpoint sane. ADR registra incidente.</td></tr>
+<tr><td>HF Hub rate limit</td><td>Backoff exponencial + Wasabi/Backblaze como fallback (mesmo protocolo S3).</td></tr>
+<tr><td>Kaggle conta ban (raro)</td><td>4 contas continuam. Conta nova phone-verified entra apos 24h.</td></tr>
+</table>
+
+<!-- ============================================================= -->
+
+<h2 id="howto">13. Como usar (instrucoes por fundador)</h2>
+
+<h3>13.1 Setup inicial (uma vez no inicio)</h3>
+
+<pre># 1. Clone o repo
+git clone https://github.com/iterate-labs-ai/caracal-1
+cd caracal-1
+
+# 2. Install dependencias
+pip install -r requirements.txt
+
+# 3. Login HuggingFace (token de escrita)
+# pega em https://huggingface.co/settings/tokens
+huggingface-cli login
+
+# 4. Login Weights and Biases
+# pega em https://wandb.ai/authorize
+wandb login
+
+# 5. Login Kaggle (baixa kaggle.json em kaggle.com/settings)
+mkdir -p ~/.kaggle
+cp ~/Downloads/kaggle.json ~/.kaggle/
+chmod 600 ~/.kaggle/kaggle.json
+
+# 6. Login Modal (se vai mexer em sandbox)
+modal token new
+
+# 7. Verifica tudo OK
+bash scripts/preflight.sh</pre>
+
+<h3>13.2 Workflow diario (cada manha)</h3>
+
+<ol>
+<li>Abrir <a href="https://github.com/iterate-labs-ai/caracal-1/issues">caracal-1 issues</a> e ver pool de tarefas livres</li>
+<li>Escolher uma task com label <code>sprint-1</code> e sem assignee · prioridade: <span class="tag tag-must">MUST</span> antes de <span class="tag tag-stretch">STRETCH</span></li>
+<li>Comentar <code>claim</code> e auto-assign</li>
+<li>Olhar SCHEDULE.md para confirmar slot de placa de video disponivel</li>
+<li>Bookar slot proximo no SCHEDULE.md (PR pequena)</li>
+<li>Abrir notebook Kaggle ou Colab, autenticar HF + W&B</li>
+<li>Rodar pre-flight: <code>bash scripts/preflight.sh</code></li>
+<li>Iniciar tarefa</li>
+</ol>
+
+<h3>13.3 Workflow durante treino (cada sessao Kaggle/Colab)</h3>
+
+<ol>
+<li>Pull checkpoint atual: <code>huggingface-cli download iterate-labs/MODELO --revision step-XXXX</code></li>
+<li>Iniciar W&B run resumindo o run anterior: <code>wandb.init(resume='allow', id='caracal-base-pretrain')</code></li>
+<li>Rodar script de treino com <code>--resume-from ./ckpt</code></li>
+<li>SIGTERM handler ativo: se Kaggle/Colab desconecta, salva final automatico</li>
+<li>Push checkpoint a cada 200 passos como precaution: <code>huggingface-cli upload</code></li>
+<li>Ao terminar 9h ou steps planejados: push final, atualiza SCHEDULE.md, sinaliza proximo no Discord</li>
+</ol>
+
+<h3>13.4 Workflow PR (cada code change)</h3>
+
+<ol>
+<li>Branch local: <code>git checkout -b cN-meu-fix</code></li>
+<li>Commitar mudancas com mensagem clara</li>
+<li>Push: <code>git push -u origin cN-meu-fix</code></li>
+<li>Abrir PR linkando a issue: <code>Closes #N</code></li>
+<li>Pedir review de outro fundador que NAO escreveu o codigo</li>
+<li>Issues tag <code>kernel-D</code>: 2 reviewers obrigatorios</li>
+<li>Apos merge: comentar <code>done</code> na issue, fechar, claim proxima</li>
+</ol>
+
+<h3>13.5 Como rodar sandbox local (debug)</h3>
+
+<pre># Modal local development
+modal serve sandbox/caracal_sandbox.py
+
+# Testar 1 vulneravel
+modal run sandbox/caracal_sandbox.py::run_poc \
+    --vuln-id cybergym-poc-42 \
+    --poc-payload "..."
+
+# Testar 1 patch
+modal run sandbox/caracal_sandbox.py::run_patch \
+    --vuln-id cybergym-poc-42 \
+    --patch-diff "..."
+
+# Testar 5 attack tests (deve TODOS bloquear)
+modal run sandbox/test_attacks.py</pre>
+
+<h3>13.6 Como rodar avaliacao (probe ou full)</h3>
+
+<pre># Probe set (100 prompts internos, rapido)
+python eval/run_probe.py \
+    --adapter iterate-labs/caracal-1-crafter-lora \
+    --base iterate-labs/caracal-base-3b \
+    --out reports/probe-step-XXXX.json
+
+# CyberGym slice 50 (medio)
+python eval/run_cybergym.py --subset slice-50 --adapter ...
+
+# Full CyberGym 1507 (so dia 20 e dia 28 do sprint)
+python eval/run_cybergym.py --subset full-1507 --adapter ... \
+    --temp 0.8 --top-p 0.95 --k 5</pre>
+
+<h3>13.7 Documentos importantes</h3>
+
+<table>
+<tr><th>Doc</th><th>O que tem</th></tr>
+<tr><td><code>README.md</code></td><td>Visao geral repo + setup</td></tr>
+<tr><td><code>SCHEDULE.md</code></td><td>Slot booking de placa de video, ultima revision do modelo</td></tr>
+<tr><td><code>HOWTO.md</code></td><td>Esta secao 13 do plano + extras</td></tr>
+<tr><td><code>infra/decisions/</code></td><td>ADRs · 1 por decisao importante</td></tr>
+<tr><td><code>infra/baselines/</code></td><td>Numeros baseline pra ancora</td></tr>
+<tr><td><code>infra/compute_inventory.md</code></td><td>Inventario de placa de video + Modal CPU</td></tr>
+<tr><td><code>eval/held_out_2026.yaml</code></td><td>30 CVE held-out kernel-D · NUNCA tocar pra treino</td></tr>
+<tr><td><code>harness/decisions/</code></td><td>ADRs de mutacoes Loop F (kernel promotions)</td></tr>
+<tr><td><code>harness/incidents/</code></td><td>STOP-pattern flags e auditorias</td></tr>
+</table>
+
+<h3>13.8 Comandos rapidos cheat sheet</h3>
+
+<pre># Status do treino
+huggingface-cli list-files iterate-labs/caracal-base-pretrain | tail -5
+wandb runs --project iterate-labs/caracal-base-pretrain | head
+
+# Quem ta no slot agora
+cat SCHEDULE.md | grep "in-progress"
+
+# Loss curve atual
+python scripts/plot_loss.py --run-id caracal-base-pretrain --last 24h
+
+# Audit STOP-pattern
+ls harness/incidents/ | tail -5
+
+# Custo Modal acumulado
+modal billing status
+
+# Push HF Hub revision tagged
+huggingface-cli upload iterate-labs/MODEL ./ckpt-out . \
+    --revision step-XXXX --commit-message "..."</pre>
+
+<h3>13.9 Quem chamar quando</h3>
+
+<table>
+<tr><th>Situacao</th><th>Quem</th></tr>
+<tr><td>Treino travou em GPU/Kaggle/Colab</td><td>Discord #caracal-relay + screenshot do erro</td></tr>
+<tr><td>HF Hub push falhou</td><td>Discord #caracal-relay + log</td></tr>
+<tr><td>Slot conflict</td><td>Quem booking primeiro wins. Quem perdeu re-book proximo livre.</td></tr>
+<tr><td>Bug no codigo critico (kernel-D)</td><td>Abre issue urgente · 2 fundadores debug juntos</td></tr>
+<tr><td>STOP-pattern flag</td><td>Trigger automatico: para todo treino. 2 humanos review antes de retomar.</td></tr>
+<tr><td>Sandbox attack test falhou</td><td>BLOCKER. Para tudo. 2 reviewers + ADR.</td></tr>
+<tr><td>Modal custo &gt;$200/dia</td><td>Auto alerta. Pausa sandbox. Review configuracao.</td></tr>
+</table>
+
+<!-- ============================================================= -->
+
+<h2 id="enviar">14. Mensagem pronta pra enviar aos fundadores</h2>
+
+<p>Texto pronto para copiar e enviar no Discord ou WhatsApp do time. Direto ao ponto. Setup em 20 minutos. Bora trabalhar.</p>
+
+<div style="background:#fff;border:2px solid var(--accent);border-radius:8px;padding:24px;margin:16px 0;font-family:ui-monospace,monospace;font-size:13px;line-height:1.7;white-space:pre-wrap;">
+Bora rodar Caracal-1, pessoal.
+
+Repo: https://github.com/iterate-labs-ai/caracal-1
+Branch default: dev
+
+Primeira coisa: aceitar convite que ja mandei pra org iterate-labs-ai no GitHub. Quem ainda nao aceitou, ve no email ou em https://github.com/orgs/iterate-labs-ai/invitations
+
+Depois disso, fazer setup em 20 minutos:
+https://github.com/iterate-labs-ai/caracal-1/blob/dev/SETUP.md
+
+Passos rapidos:
+1. git clone https://github.com/iterate-labs-ai/caracal-1
+   cd caracal-1
+   git checkout dev
+2. pip install -r requirements.txt
+3. Criar conta Hugging Face (huggingface.co/join) e me avisar pra mandar convite org iterate-labs
+4. Criar conta Weights and Biases (wandb.ai/signup), idem
+5. Phone-verify conta Kaggle (1 conta sua basta) e ativar GPU T4
+6. Criar 4 contas Google + assinar Colab Pro+ em cada (R$1000/mes total time, divide)
+7. bash scripts/preflight.sh para confirmar tudo OK
+
+Quando passar pelo preflight, ler nessa ordem:
+- README.md (2 min)
+- HOWTO.md (5 min, workflow diario)
+- SCHEDULE.md (2 min, slot booking placa de video)
+- CONTRIBUTING.md (5 min, PR + KERNEL-D rules)
+
+Pra pegar tarefa:
+https://github.com/iterate-labs-ai/caracal-1/issues
+- Filtrar por label sprint-1 + sem assignee + MUST
+- Comentar "claim" e pegar
+
+Pra rodar treino na sua sessao de Kaggle:
+- Bookar slot livre em SCHEDULE.md via PR pequena
+- Abrir train/notebooks/kaggle_continued_pretrain.ipynb no Kaggle
+- Editar 5 linhas iniciais (SESSION_NUMBER, RESUME_REVISION, OUTPUT_REVISION etc)
+- Configurar Kaggle Secrets HF_TOKEN e WANDB_API_KEY
+- Run all
+- ~9 horas depois push final automatico no HF Hub
+- Atualizar SCHEDULE.md trocando pending pra done
+
+Pra Colab Pro+ mesma coisa em train/notebooks/colab_continued_pretrain.ipynb
+
+Modelo: Caracal-1, especialista cyber 3B parametros. Base Qwen2.5-Coder-3B + 1.5B tokens continued pretrain proprio. 5 modulos LoRA (Recon, Hypothesizer, Crafter, Validator, Patcher). Ship v1 em 21 jul.
+
+Pool aberto. Sem dono. Todos treinam tudo. Quem termina uma tarefa pega proxima do topo da fila.
+
+Alvo: 40 a 50 porcento pass@5 em CyberGym 1507, 10 a 15 zero-days em 30 OSS held-out, 700 dolares por zero-day amortizado.
+
+Plano completo: https://github.com/iterate-labs-ai/caracal-1 + docs/
+
+Duvida no setup: chama no Discord canal #caracal-help (criar canal quando todos entrarem).
+
+Quando todos tiverem rodado preflight com sucesso, fazemos kickoff call segunda 09h BRT para alinhar primeira sessao de revezamento.
+
+Bora.
+</div>
+
+<h3>14.1 Versao curta (WhatsApp · ate 500 chars)</h3>
+
+<div style="background:#fff;border:2px solid var(--accent);border-radius:8px;padding:18px;margin:12px 0;font-family:ui-monospace,monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;">
+Caracal-1 bora.
+
+Repo: github.com/iterate-labs-ai/caracal-1 (branch dev)
+Setup 20min: github.com/iterate-labs-ai/caracal-1/blob/dev/SETUP.md
+
+1. Aceita convite iterate-labs-ai no GitHub
+2. Clone + pip install -r requirements.txt
+3. Criar HF + WandB + Kaggle phone-verified + 4 Colab Pro+
+4. bash scripts/preflight.sh
+
+Quando passar, le README + HOWTO + SCHEDULE + CONTRIBUTING.
+Tarefas em /issues, claim a sua. Treino em notebooks template.
+
+Ship Caracal-1 v1 em 21 jul. Alvo 40-50% pass@5 CyberGym, 10-15 zero-days.
+
+Kickoff seg 09h BRT.
+</div>
+
+<h3>14.2 Checklist primeiro dia para cada fundador</h3>
+
+<p>Imprimir e marcar conforme avanca. Tempo total: ~30 min.</p>
+
+<table>
+<tr><th>#</th><th>Acao</th><th>Tempo</th><th>OK</th></tr>
+<tr><td>1</td><td>Aceitar convite GitHub org iterate-labs-ai</td><td>1 min</td><td>☐</td></tr>
+<tr><td>2</td><td>Criar conta HuggingFace (huggingface.co/join)</td><td>2 min</td><td>☐</td></tr>
+<tr><td>3</td><td>Enviar handle HF pro Pedro pra incluir na org iterate-labs</td><td>1 min</td><td>☐</td></tr>
+<tr><td>4</td><td>Criar conta W&amp;B (wandb.ai/signup)</td><td>2 min</td><td>☐</td></tr>
+<tr><td>5</td><td>Enviar handle W&amp;B pro Pedro</td><td>1 min</td><td>☐</td></tr>
+<tr><td>6</td><td>Conta Kaggle phone-verified · ativar T4</td><td>3 min</td><td>☐</td></tr>
+<tr><td>7</td><td>Criar 4 contas Google (alias) · assinar Colab Pro+ em cada · $200/mes seu</td><td>10 min</td><td>☐</td></tr>
+<tr><td>8</td><td><code>git clone</code> + <code>pip install -r requirements.txt</code></td><td>3 min</td><td>☐</td></tr>
+<tr><td>9</td><td>Login local HF, W&amp;B, Kaggle</td><td>2 min</td><td>☐</td></tr>
+<tr><td>10</td><td>Rodar <code>bash scripts/preflight.sh</code> · tudo verde</td><td>1 min</td><td>☐</td></tr>
+<tr><td>11</td><td>Ler README + HOWTO + SCHEDULE + CONTRIBUTING</td><td>10 min</td><td>☐</td></tr>
+<tr><td>12</td><td>Claim primeira issue em /issues label <code>sprint-1</code> + <code>MUST</code></td><td>2 min</td><td>☐</td></tr>
+</table>
+
+<h3>14.3 Links diretos pra cada fundador acessar</h3>
+
+<table>
+<tr><th>Link</th><th>O que tem</th></tr>
+<tr><td><a href="https://github.com/iterate-labs-ai/caracal-1">github.com/iterate-labs-ai/caracal-1</a></td><td>repo principal · branch dev default</td></tr>
+<tr><td><a href="https://github.com/iterate-labs-ai/caracal-1/blob/dev/SETUP.md">SETUP.md</a></td><td>passo a passo 20 min onboarding</td></tr>
+<tr><td><a href="https://github.com/iterate-labs-ai/caracal-1/blob/dev/HOWTO.md">HOWTO.md</a></td><td>workflow diario apos setup</td></tr>
+<tr><td><a href="https://github.com/iterate-labs-ai/caracal-1/blob/dev/SCHEDULE.md">SCHEDULE.md</a></td><td>slot booking placa de video relay race</td></tr>
+<tr><td><a href="https://github.com/iterate-labs-ai/caracal-1/blob/dev/CONTRIBUTING.md">CONTRIBUTING.md</a></td><td>PR style + KERNEL-D rules</td></tr>
+<tr><td><a href="https://github.com/iterate-labs-ai/caracal-1/blob/dev/docs/architecture.md">docs/architecture.md</a></td><td>arquitetura modelo 5 min</td></tr>
+<tr><td><a href="https://github.com/iterate-labs-ai/caracal-1/blob/dev/docs/recursive_harness.md">docs/recursive_harness.md</a></td><td>6 loops self-improving</td></tr>
+<tr><td><a href="https://github.com/iterate-labs-ai/caracal-1/blob/dev/docs/learning_trail.md">docs/learning_trail.md</a></td><td>links de aprendizado (consulta)</td></tr>
+<tr><td><a href="https://github.com/iterate-labs-ai/caracal-1/issues">/issues</a></td><td>pool de tarefas, claim sua</td></tr>
+<tr><td><a href="https://github.com/iterate-labs-ai/caracal-1/blob/dev/train/notebooks/kaggle_continued_pretrain.ipynb">Kaggle notebook</a></td><td>plug-and-play template treino</td></tr>
+<tr><td><a href="https://github.com/iterate-labs-ai/caracal-1/blob/dev/train/notebooks/colab_continued_pretrain.ipynb">Colab notebook</a></td><td>plug-and-play template treino</td></tr>
+<tr><td><a href="https://huggingface.co/iterate-labs">huggingface.co/iterate-labs</a></td><td>org HF · pesos publicados aqui</td></tr>
+<tr><td><a href="https://wandb.ai/iterate-labs">wandb.ai/iterate-labs</a></td><td>org W&amp;B · tracking treino</td></tr>
+</table>
+
+<!-- ============================================================= -->
+
+<h2 id="glossario">15. Glossario</h2>
+
+<table>
+<tr><th>Termo</th><th>Significado</th></tr>
+<tr><td>LoRA</td><td>Low-rank adapter. Treina apenas matrizes pequenas adicionais congelando base. r=32 = posto 32. ~1% dos parametros do total.</td></tr>
+<tr><td>QLoRA</td><td>LoRA quantizado. Base em 4-bit + adapter 16-bit. Cabe 7B em 16GB.</td></tr>
+<tr><td>SFT</td><td>Supervised Fine-Tuning. Treino supervisionado pares (input, output).</td></tr>
+<tr><td>Continued pretrain</td><td>Mid-training. Continua treino com corpus novo antes do SFT.</td></tr>
+<tr><td>GRPO</td><td>Group Relative Policy Optimization. Algoritmo RL do DeepSeek-R1.</td></tr>
+<tr><td>DAPO</td><td>Variante GRPO 2026 com clip assimetrico eps_low=0.2 eps_high=0.28.</td></tr>
+<tr><td>Reward verificavel</td><td>Recompensa binaria executavel. Imune a reward hacking.</td></tr>
+<tr><td>PoC</td><td>Proof of Concept. Codigo curto que reproduz vulnerabilidade.</td></tr>
+<tr><td>CVE</td><td>Common Vulnerabilities and Exposures. Catalogo publico de vulns.</td></tr>
+<tr><td>CWE</td><td>Common Weakness Enumeration. Classificacao de tipos de bug.</td></tr>
+<tr><td>ASan/UBSan/MSan</td><td>Sanitizers do gcc/clang que detectam OOB, undefined behavior, mem nao init.</td></tr>
+<tr><td>gdb/mi</td><td>Machine Interface do gdb. Output estruturado parseable.</td></tr>
+<tr><td>gcov</td><td>Coverage tool do gcc.</td></tr>
+<tr><td>OSS-Fuzz</td><td>Servico Google fuzzing continuo em OSS critico.</td></tr>
+<tr><td>Darwin Godel Machine</td><td>Arquivo evolutivo de checkpoints. Sakana 2025.</td></tr>
+<tr><td>MAP-Elites</td><td>Quality-diversity. Guarda melhor por combinacao de comportamentos.</td></tr>
+<tr><td>vLLM</td><td>Motor inferencia com PagedAttention. Default da industria.</td></tr>
+<tr><td>Counterfactual</td><td>Mutacao minimal que NAO triggaria bug. Sinal causal.</td></tr>
+<tr><td>SMT</td><td>Satisfiability Modulo Theories. Solver logica primeira ordem (Z3).</td></tr>
+<tr><td>SAE</td><td>Sparse Autoencoder. Decompoe ativacoes em features interpretaveis.</td></tr>
+<tr><td>CyberGym</td><td>Benchmark Berkeley ICLR 2026. 1507 vulns / 188 projetos.</td></tr>
+<tr><td>HuggingFace Hub</td><td>Plataforma pra publicar modelos. Equivalente GitHub pra pesos.</td></tr>
+</table>
+
+<p style="margin-top:48px;font-size:13px;color:var(--soft);text-align:center;">
+Doc unico Caracal v1 plano executavel. Pool aberto, todos treinam tudo. Repos: <a href="https://github.com/iterate-labs-ai">github.com/iterate-labs-ai</a>. Tasks live: <a href="https://github.com/iterate-labs-ai/caracal-1/issues">caracal-1/issues</a>.
+</p>
+
+</body>
+</html>
