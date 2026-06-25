@@ -465,16 +465,24 @@
 
 <!-- ============================================================= -->
 
-<h2 id="sessoes">10. Sessoes de treino</h2>
+<h2 id="sessoes">10. Sessoes de treino · 5 sessoes de 5h (uma por fundador)</h2>
+
+<p>Cada fundador faz 1 sessao de 5h. 25h treino total. Pesos salvos como Kaggle Datasets publicos (sem HF, sem W&B, sem Secrets).</p>
 
 <table>
-<tr><th>Sessao</th><th>Conta Kaggle</th><th>Quando BRT</th><th>Steps</th><th>Resume</th><th>Output</th></tr>
-<tr><td>1</td><td>Pedro</td><td>seg 24 jun 14h-23h</td><td>0 → 7000</td><td>do zero</td><td>step-7000</td></tr>
-<tr><td>2</td><td>Arthur</td><td>ter 25 jun 09h-18h</td><td>7000 → 14000</td><td>step-7000</td><td>step-14000</td></tr>
-<tr><td>3</td><td>Vitor</td><td>ter 25 jun 19h-04h</td><td>14000 → 20000</td><td>step-14000</td><td>caracal-base-3b-v0 final</td></tr>
+<tr><th>Sessao</th><th>Fundador</th><th>Quando BRT</th><th>Steps</th><th>Resume Kaggle Dataset</th><th>Output Kaggle Dataset</th></tr>
+<tr><td>1</td><td>Pedro (PAMF2)</td><td>seg 24 jun 14h-19h</td><td>0 → 4000</td><td>(do zero)</td><td><code>pamf2/caracal-base-step4000</code></td></tr>
+<tr><td>2</td><td>Arthur (arturpn1)</td><td>seg 24 jun 20h-01h</td><td>4000 → 8000</td><td><code>pamf2/caracal-base-step4000</code></td><td><code>arturpn1/caracal-base-step8000</code></td></tr>
+<tr><td>3</td><td>Vitor (VitorScrt)</td><td>ter 25 jun 09h-14h</td><td>8000 → 12000</td><td><code>arturpn1/caracal-base-step8000</code></td><td><code>vitorscrt/caracal-base-step12000</code></td></tr>
+<tr><td>4</td><td>Kevin (dev-knz)</td><td>ter 25 jun 15h-20h</td><td>12000 → 16000</td><td><code>vitorscrt/caracal-base-step12000</code></td><td><code>dev-knz/caracal-base-step16000</code></td></tr>
+<tr><td>5</td><td>Alexandre (aletlucas)</td><td>ter 25 jun 21h-02h</td><td>16000 → 20000</td><td><code>dev-knz/caracal-base-step16000</code></td><td><strong><code>aletlucas/caracal-base-3b-v0</code> (FINAL)</strong></td></tr>
 </table>
 
-<p>Kevin e Alexandre observam, debugam se quebrar, ajudam revisao. Apos sessao 3 terminar, qualquer um pega T10 (avaliacao) na propria conta Kaggle.</p>
+<p>5 sessoes × 5h = 25h treino. Cada um pega 5h da quota 20h/sem (sobra muita). T10 avaliacao apos sessao 5 · qualquer fundador disponivel pega.</p>
+
+<div class="ok">
+<strong>Storage:</strong> Kaggle Datasets publicos. Sem auth complicada. Cada fundador cria seu dataset, proximo baixa via Kaggle CLI. Sem HuggingFace, sem Weights and Biases, sem Kaggle Secrets.
+</div>
 
 <!-- ============================================================= -->
 
@@ -504,70 +512,39 @@ winget install --id GitHub.cli
 gh auth login
 # escolher: GitHub.com → HTTPS → Login with web browser</pre>
 
-<h3>Passo 2 · HuggingFace (~5 min)</h3>
-
-<ol>
-<li>Criar conta em <a href="https://huggingface.co/join">huggingface.co/join</a></li>
-<li>Verificar email</li>
-<li><strong>Mandar seu username HF pro Pedro no grupo</strong> · ele convida pra org <code>iterate-labs</code></li>
-<li>Aceitar convite quando chegar (email + notificacao em huggingface.co/iterate-labs)</li>
-<li>Gerar token em <a href="https://huggingface.co/settings/tokens">huggingface.co/settings/tokens</a>:
-  <ul>
-    <li>Botao "Create new token"</li>
-    <li>Type: <strong>Write</strong></li>
-    <li>Name: <code>caracal-1-kaggle</code></li>
-    <li>Copiar token (comeca com <code>hf_...</code>) e guardar em lugar seguro</li>
-  </ul>
-</li>
-</ol>
-
-<h3>Passo 3 · Weights and Biases (~3 min)</h3>
-
-<ol>
-<li>Criar conta em <a href="https://wandb.ai/signup">wandb.ai/signup</a></li>
-<li>Aceitar convite Academic se aparecer (gratis)</li>
-<li><strong>Mandar username W&B pro Pedro</strong> · ele convida pra org <code>iterate-labs</code></li>
-<li>Pegar API key em <a href="https://wandb.ai/authorize">wandb.ai/authorize</a> · copiar</li>
-</ol>
-
-<h3>Passo 4 · Kaggle (~10 min · mais demorado por causa do phone verify)</h3>
+<h3>Passo 2 · Conta Kaggle phone-verified + GPU T4 (~10 min)</h3>
 
 <ol>
 <li>Criar conta em <a href="https://www.kaggle.com/account/login">kaggle.com/account/login</a> ou logar com Google</li>
 <li>Phone verify obrigatorio (necessario pra ter GPU):
   <ul>
-    <li>kaggle.com/settings → Phone verification</li>
+    <li>kaggle.com/settings · Phone verification</li>
     <li>Pode demorar ~5 min pro SMS chegar</li>
   </ul>
 </li>
-<li>Ativar GPU T4 em kaggle.com/settings → aceitar terms de uso</li>
-<li>Configurar Kaggle Secrets (chave isso direita):
-  <ul>
-    <li>Abrir Kaggle, criar novo notebook</li>
-    <li>Menu superior direito: <strong>Add-ons → Secrets</strong></li>
-    <li>Criar secret nome <code>HF_TOKEN</code>, valor = token HF do passo 2 (<code>hf_...</code>)</li>
-    <li>Criar secret nome <code>WANDB_API_KEY</code>, valor = API key W&B do passo 3</li>
-    <li>Marcar checkbox de cada secret pra ficar disponivel no notebook</li>
-  </ul>
-</li>
+<li>Ativar GPU T4 em kaggle.com/settings · aceitar terms de uso</li>
 </ol>
 
-<h3>Passo 5 · Colab (~3 min)</h3>
+<h3>Passo 3 · Kaggle CLI local (~2 min)</h3>
 
-<ol>
-<li>Logar em <a href="https://colab.research.google.com">colab.research.google.com</a> com conta Google</li>
-<li>Criar novo notebook</li>
-<li>Configurar Secrets (chave na barra esquerda):
-  <ul>
-    <li>Botao chave esquerda (Secrets)</li>
-    <li>Criar <code>HF_TOKEN</code> · cola token HF · habilitar Notebook access</li>
-    <li>Criar <code>WANDB_API_KEY</code> · cola key W&B · habilitar Notebook access</li>
-  </ul>
-</li>
-<li>Runtime → Change runtime type → T4 GPU (default)</li>
-</ol>
+<p>Pra rodar treino do PC e baixar checkpoints entre sessoes:</p>
 
-<h3>Passo 6 · Clone repo localmente (opcional, mas recomendado)</h3>
+<pre>pip install kaggle</pre>
+
+<p>Baixar <code>kaggle.json</code> em <a href="https://www.kaggle.com/settings">kaggle.com/settings</a> · botao "Create New API Token":</p>
+
+<pre>mkdir -p ~/.kaggle
+mv ~/Downloads/kaggle.json ~/.kaggle/
+chmod 600 ~/.kaggle/kaggle.json
+
+# Testar
+kaggle datasets list</pre>
+
+<div class="ok">
+<strong>So isso.</strong> SEM HuggingFace, SEM Weights and Biases, SEM Secrets. Pesos vivem como Kaggle Datasets publicos.
+</div>
+
+<h3>Passo 4 · Clone repo localmente (opcional)</h3>
 
 <p>Quem vai mexer em codigo (alterar scripts, fazer PR), clonar local:</p>
 
@@ -590,12 +567,10 @@ pip install -r requirements.txt</pre>
 <table>
 <tr><th>Item</th><th>OK</th></tr>
 <tr><td>Aceitei convite GitHub iterate-labs-ai</td><td>☐</td></tr>
-<tr><td>Tenho conta HF + aceito org iterate-labs + token write copiado</td><td>☐</td></tr>
-<tr><td>Tenho conta W&B + aceito org iterate-labs + API key copiada</td><td>☐</td></tr>
-<tr><td>Tenho conta Kaggle phone-verified + GPU T4 ativado</td><td>☐</td></tr>
-<tr><td>Configurei Kaggle Secrets HF_TOKEN + WANDB_API_KEY</td><td>☐</td></tr>
-<tr><td>Configurei Colab Secrets HF_TOKEN + WANDB_API_KEY</td><td>☐</td></tr>
-<tr><td>Mandei username HF + W&B pro Pedro pra ele adicionar nas orgs</td><td>☐</td></tr>
+<tr><td>Conta Kaggle phone-verified</td><td>☐</td></tr>
+<tr><td>GPU T4 ativada em Kaggle settings</td><td>☐</td></tr>
+<tr><td>Kaggle CLI instalado + <code>kaggle.json</code> em ~/.kaggle/</td><td>☐</td></tr>
+<tr><td>Clonei repo caracal-1 branch dev</td><td>☐</td></tr>
 </table>
 
 <h3>Troubleshooting</h3>
@@ -604,9 +579,7 @@ pip install -r requirements.txt</pre>
 <tr><th>Problema</th><th>Solucao</th></tr>
 <tr><td>Phone verify Kaggle nao chega</td><td>Esperar 10 min · tentar outro numero · usar Google login</td></tr>
 <tr><td>Kaggle nao da GPU T4 disponivel</td><td>Esperar algumas horas · pode ser quota momentanea</td></tr>
-<tr><td>Convite HF/W&B nao chegou</td><td>Confirmar com Pedro que ele enviou pro username correto</td></tr>
-<tr><td>Token HF "Read" em vez de "Write"</td><td>Refazer com tipo Write · so Write pode pushar pra HF Hub</td></tr>
-<tr><td>Colab nao ve Secrets</td><td>Marcar "Notebook access" no checkbox quando criou o secret</td></tr>
+<tr><td><code>kaggle datasets list</code> da erro auth</td><td>Conferir <code>kaggle.json</code> em ~/.kaggle/ com permissao 600</td></tr>
 </table>
 
 <!-- ============================================================= -->
