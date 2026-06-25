@@ -4,7 +4,7 @@
 
 ### Cada manha
 
-1. Olhar [issues](https://github.com/iterate-labs-ai/caracal-1/issues) abertas com label `sprint-1`
+1. Olhar [issues](https://github.com/iterate-labs-ai/caracal-1/issues) abertas com label `sprint-0`
 2. Comentar `claim` na que voce vai pegar
 3. Olhar [SCHEDULE.md](SCHEDULE.md): tem slot livre? quer bookar?
 
@@ -17,18 +17,22 @@
 
 ### Pra rodar treino (na sua sessao)
 
-1. Abrir [Kaggle](https://www.kaggle.com) novo notebook
-2. Importar `train/notebooks/kaggle_continued_pretrain.ipynb`
-3. Editar variaveis topo (SESSION_NUMBER, RESUME_REVISION, OUTPUT_REVISION)
-4. Configurar Kaggle Secrets: HF_TOKEN + WANDB_API_KEY (so primeira vez)
-5. Run all
-6. Sair · ~9h depois push automatico via SIGTERM handler
+1. Abrir https://www.kaggle.com/code · novo notebook
+2. Copiar codigo de `train/notebooks/kaggle_continued_pretrain.ipynb`
+3. Editar 5 variaveis topo:
+   - SESSION (1-5)
+   - RESUME_DATASET (None se sessao 1, senao 'usuario_anterior/caracal-base-stepXXXX')
+   - OUTPUT_DATASET_SLUG ('caracal-base-stepYYYY')
+   - STEPS (4000 default)
+   - FOUNDER_HANDLE (seu username Kaggle)
+4. Run all
+5. ~5 horas depois publica Kaggle Dataset publico
 
 ### Apos terminar sessao
 
-1. Confirmar revision no HF Hub: <https://huggingface.co/iterate-labs/caracal-base-3b-v0>
-2. PR pequena editando SCHEDULE.md: trocar `in-progress` por `done · revision step-XXXX`
-3. Sinalizar no grupo do time
+1. Confirmar dataset em https://www.kaggle.com/datasets/SEU_USUARIO/caracal-base-stepXXXX
+2. PR pequena editando SCHEDULE.md: trocar `in-progress` por `done · dataset USUARIO/SLUG`
+3. Sinalizar grupo do time
 
 ### Pra fazer mudanca de codigo
 
@@ -45,6 +49,7 @@
 |---|---|
 | `main` | release estavel (futuro) |
 | `dev` | branch de trabalho default |
+| `t1-work` a `t10-work` | pre-criadas por tarefa |
 | `book-slot-N` | bookar slot SCHEDULE.md |
 | `cN-fix-Y` | feature branches |
 
@@ -53,10 +58,10 @@
 | Situacao | Acao |
 |---|---|
 | Treino travou | screenshot + sinaliza grupo |
-| HF Hub push falhou | log + sinaliza grupo |
+| Kaggle Dataset push falhou | log + sinaliza grupo |
 | Slot conflict | primeiro book wins, perdedor re-book proximo |
 | Bug codigo critico | issue urgente + 2 founders debug |
-| Sessao Kaggle morreu | SIGTERM handler ja salvou. Confirmar revision no HF Hub.|
+| Sessao Kaggle morreu | confirmar ultimo checkpoint salvo · proximo retoma da save mais recente |
 
 ## Docs importantes
 

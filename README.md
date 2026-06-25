@@ -4,28 +4,28 @@ Modelo especialista em ciberseguranca de 3 bilhoes de parametros. Base Qwen2.5-C
 
 ## Primeira vez aqui?
 
-**Setup 30 minutos:** [SETUP.md](SETUP.md)
+**Setup 15 minutos:** [SETUP.md](SETUP.md) · so Kaggle, sem HF, sem W&B, sem Secrets.
 
 ## Sprint 0 ativo · Caracal Base 3B v0
 
-Treinando agora. Plano enxuto, gratis (so Kaggle T4 + HuggingFace + W&B).
+5 sessoes de 5h, uma por fundador. Cada um faz a sua. Pesos vivem em Kaggle Datasets publicos.
 
-10 issues abertas no [milestone v0](https://github.com/iterate-labs-ai/caracal-1/milestone/1) (T1-T10).
+| Sessao | Fundador | Quando BRT | Steps | Issue |
+|---|---|---|---|---|
+| 1 | Pedro (PAMF2) | seg 24 jun 14h-19h | 0 → 4000 | [T7](https://github.com/iterate-labs-ai/caracal-1/issues/21) |
+| 2 | Arthur (arturpn1) | seg 24 jun 20h-01h | 4000 → 8000 | [T8](https://github.com/iterate-labs-ai/caracal-1/issues/19) |
+| 3 | Vitor (VitorScrt) | ter 25 jun 09h-14h | 8000 → 12000 | [T9](https://github.com/iterate-labs-ai/caracal-1/issues/26) |
+| 4 | Kevin (dev-knz) | ter 25 jun 15h-20h | 12000 → 16000 | T11 (nova) |
+| 5 | Alexandre (aletlucas) | ter 25 jun 21h-02h | 16000 → 20000 (FINAL) | T12 (nova) |
+| Avaliacao | qualquer livre | quarta 26 jun | — | [T10](https://github.com/iterate-labs-ai/caracal-1/issues/17) |
 
-| Sessao | Quem | Quando |
-|---|---|---|
-| [T7](https://github.com/iterate-labs-ai/caracal-1/issues/21) Sessao 1 (0 -> 7000) | Pedro (PAMF2) | seg 24 jun 14h-23h BRT |
-| [T8](https://github.com/iterate-labs-ai/caracal-1/issues/19) Sessao 2 (7000 -> 14000) | Arthur (arturpn1) | ter 25 jun 09h-18h |
-| [T9](https://github.com/iterate-labs-ai/caracal-1/issues/26) Sessao 3 (14000 -> final) | Vitor (VitorScrt) | ter 25 jun 19h-04h |
-| [T10](https://github.com/iterate-labs-ai/caracal-1/issues/17) Avaliacao + debug | Kevin + Alexandre | rolling |
-
-Datasets: PrimeVul + BigVul + DiverseVul (HuggingFace publicos, ~500M tokens).
+Datasets de treino: PrimeVul + BigVul + DiverseVul (HuggingFace publicos, ~500M tokens).
 
 Schedule completo: [SCHEDULE.md](SCHEDULE.md) · Issues: [pool](https://github.com/iterate-labs-ai/caracal-1/issues)
 
 ## Milestones
 
-- [v0 · Caracal Base 3B (Sprint 0)](https://github.com/iterate-labs-ai/caracal-1/milestone/1) · ate 8 jul · 10 issues
+- [v0 · Caracal Base 3B (Sprint 0)](https://github.com/iterate-labs-ai/caracal-1/milestone/1) · ate 8 jul
 - [v1 · 5 modulos LoRA + protocolo](https://github.com/iterate-labs-ai/caracal-1/milestone/2) · ate 22 jul
 - [v2 · Sandbox + RL](https://github.com/iterate-labs-ai/caracal-1/milestone/3) · ate 12 ago
 - [v3 · Recursive harness + ship](https://github.com/iterate-labs-ai/caracal-1/milestone/4) · ate 31 ago
@@ -34,7 +34,7 @@ Schedule completo: [SCHEDULE.md](SCHEDULE.md) · Issues: [pool](https://github.c
 
 | Acao | Onde |
 |---|---|
-| Setup | [SETUP.md](SETUP.md) (30 min) |
+| Setup | [SETUP.md](SETUP.md) (15 min · so Kaggle) |
 | Workflow diario | [HOWTO.md](HOWTO.md) |
 | Bookar slot Kaggle | [SCHEDULE.md](SCHEDULE.md) |
 | Pegar tarefa | [issues](https://github.com/iterate-labs-ai/caracal-1/issues) |
@@ -46,17 +46,17 @@ Schedule completo: [SCHEDULE.md](SCHEDULE.md) · Issues: [pool](https://github.c
 |---|---|
 | `main` | Release estavel (futuro) |
 | `dev` | Default · onde tudo mergeia |
-| `t1-work` ... `t10-work` | Pre-criadas por tarefa Sprint 0 (10 branches) |
+| `t1-work` ... `t10-work` | Pre-criadas por tarefa Sprint 0 |
 | `book-slot-N` | PR pequena pra bookar slot |
 | `tN-curta-descricao` | Feature branches livres |
 
 ## Como rodar treino (na sua sessao)
 
-1. Abrir [train/notebooks/kaggle_continued_pretrain.ipynb](train/notebooks/kaggle_continued_pretrain.ipynb) no Kaggle
-2. Editar 5 variaveis no topo (SESSION, RESUME, OUTPUT, STEPS, HANDLE)
-3. Configurar Kaggle Secrets: HF_TOKEN + WANDB_API_KEY
+1. Abrir https://www.kaggle.com/code · novo notebook
+2. Copiar codigo de [train/notebooks/kaggle_continued_pretrain.ipynb](train/notebooks/kaggle_continued_pretrain.ipynb)
+3. Editar 5 variaveis topo (SESSION, RESUME_DATASET, OUTPUT_DATASET_SLUG, STEPS, FOUNDER_HANDLE)
 4. Run all
-5. ~9h depois push automatico HF Hub
+5. ~5h depois publica Kaggle Dataset publico
 6. PR atualizando SCHEDULE.md trocando pending -> done
 
 ## Roteiro v0 -> v1 -> v2 -> v3
@@ -80,11 +80,11 @@ caracal-1/
 ├── modules/    5 LoRA specialists stubs (pra v1)
 ├── harness/    kernel-D, sandbox, state_machine, stop_pattern (pra v2)
 ├── archive/    Darwin Godel + MAP-Elites (pra v2)
-├── train/      continued_pretrain (funcional), sft_module, rl_grpo + configs + notebooks
-├── eval/       run_probe, run_cybergym, check_decontamination (funcional)
+├── train/      continued_pretrain, sft_module, rl_grpo + configs + notebooks
+├── eval/       run_probe, run_cybergym, check_decontamination
 ├── data/       corpus_manifest
 ├── infra/      compute_inventory
-├── scripts/    preflight, sigterm_handler, push_checkpoint, plot_loss
+├── scripts/    preflight, sigterm_handler, plot_loss
 └── tests/
 ```
 

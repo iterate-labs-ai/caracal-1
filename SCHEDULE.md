@@ -1,10 +1,10 @@
 # SCHEDULE · revezamento de placa de video
 
-## Inventario de contas
+## Inventario de contas Kaggle
 
-### Kaggle · 5 contas · 100h/sem T4 (20h cada)
+5 contas Kaggle, 1 por fundador, ~20h/sem T4 cada = 100h/sem garantido.
 
-| Conta Kaggle | Fundador | Phone verified | GPU T4 ativada |
+| Conta Kaggle | Fundador | Phone verified | T4 ativada |
 |---|---|---|---|
 | 1 | Pedro (PAMF2) | pendente | pendente |
 | 2 | Arthur (arturpn1) | pendente | pendente |
@@ -12,71 +12,59 @@
 | 4 | Kevin (dev-knz) | pendente | pendente |
 | 5 | Alexandre (aletlucas) | pendente | pendente |
 
-### Colab · 5 contas Google free · ~105h/sem T4 esporadico
+## Sprint 0 · Caracal Base 3B v0 · 5 sessoes de 5h cada (25h total)
 
-| Conta Google Colab | Fundador | Status |
-|---|---|---|
-| 1 | Pedro | pendente |
-| 2 | Arthur | pendente |
-| 3 | Vitor | pendente |
-| 4 | Kevin | pendente |
-| 5 | Alexandre | pendente |
+Cada fundador faz 1 sessao. Sem ninguem observando. Cada um salva checkpoint como Kaggle Dataset.
 
-Pedro tem adicionalmente **4 contas Colab extras** = pode rodar ate 5 sessoes Colab paralelas no Pedro sozinho. Overflow capacity.
+| Sessao | Conta | Quando BRT | Steps | Resume Kaggle Dataset | Output Kaggle Dataset |
+|---|---|---|---|---|---|
+| 1 | Pedro (PAMF2) | seg 24 jun 14h-19h | 0 -> 4000 | (do zero) | `pamf2/caracal-base-step4000` |
+| 2 | Arthur (arturpn1) | seg 24 jun 20h-01h | 4000 -> 8000 | `pamf2/caracal-base-step4000` | `arturpn1/caracal-base-step8000` |
+| 3 | Vitor (VitorScrt) | ter 25 jun 09h-14h | 8000 -> 12000 | `arturpn1/caracal-base-step8000` | `vitorscrt/caracal-base-step12000` |
+| 4 | Kevin (dev-knz) | ter 25 jun 15h-20h | 12000 -> 16000 | `vitorscrt/caracal-base-step12000` | `dev-knz/caracal-base-step16000` |
+| 5 | Alexandre (aletlucas) | ter 25 jun 21h-02h | 16000 -> 20000 | `dev-knz/caracal-base-step16000` | `aletlucas/caracal-base-3b-v0` (FINAL) |
 
-### Capacidade total v0
+5 fundadores, 5 sessoes, 25h total. Cada um pega 5h da quota 20h/sem (sobra muito).
 
-- Kaggle T4: 100h/sem garantido
-- Colab T4: ~105h/sem esporadico + 84h/sem extras do Pedro
-- Total: ~290h/sem T4
+**Apos final:** Alexandre publica dataset `aletlucas/caracal-base-3b-v0` como nosso modelo v0. Qualquer fundador baixa pra avaliar.
 
-## Sprint 0 · Caracal Base 3B v0 · 25h em 3 sessoes Kaggle
+## Sprint 0.5 · Avaliacao (T10)
 
-Treino MVP: Qwen2.5-Coder-3B + PrimeVul + BigVul + DiverseVul. ~20000 passos.
+Qualquer fundador, ~6h Kaggle T4:
 
-| Sessao | Conta | Inicio BRT | Fim BRT | Resume | Output | Status |
-|---|---|---|---|---|---|---|
-| 1 | Pedro (PAMF2) | seg 24 jun 14h00 | seg 24 jun 23h00 | (do zero) | step-7000 | pending |
-| 2 | Arthur (arturpn1) | ter 25 jun 09h00 | ter 25 jun 18h00 | step-7000 | step-14000 | pending |
-| 3 | Vitor (VitorScrt) | ter 25 jun 19h00 | qua 26 jun 04h00 | step-14000 | **caracal-base-3b-v0 (final)** | pending |
-
-**Kevin e Alexandre observam, debugam se quebrar, ajudam revisao.**
-
-## Sprint 0.5 · Avaliacao basica
-
-Apos sessao 3 terminar, qualquer fundador disponivel:
-
-| Tarefa | Conta | Tempo estimado | Quem pega |
+| Tarefa | Conta | Tempo | Quem pega |
 |---|---|---|---|
-| Avaliar Caracal Base 3B v0 vs Qwen base zero-shot em 50 vulns CyberGym | Kaggle (qualquer) | 4h T4 | livre |
-| Documentar resultados em `infra/baselines/v0_eval.md` | local | 1h | livre |
-| Decidir: continuar caminho ou repensar | reuniao | 30min | todos |
+| Avaliar Caracal Base 3B v0 vs Qwen base zero-shot em 50 vulns CyberGym | Kaggle (qualquer) | ~4h T4 | livre |
+| Rodar HumanEval+ regression em ambos | Kaggle | ~2h T4 | livre |
+| Documentar em `infra/baselines/v0_eval.md` + abrir reuniao | local | 1h | livre |
 
-## Apos v0 funcionar · decisao do time
+## Apos v0 · decisao do time
 
-Possibilidades:
+Reuniao quarta 26 jun manha. Baseado no numero:
 
 | Cenario | Proximo passo |
 |---|---|
-| Score sobe vs Qwen base | Adicionar mais datasets (scraping NVD/Project Zero) · v1 |
-| Score nao move | Repensar hyperparams ou abordagem |
-| Score cai | Debug contaminacao ou hyperparam |
-| Treino quebra | Bug no script · debug + retry |
+| Score sobe vs Qwen base | Continuar v1 · 5 modulos LoRA |
+| Score nao move | Repensar: hyperparams, dataset, learning rate |
+| Score cai | Debug contaminacao + hyperparam |
+| Treino quebrou em alguma sessao | Bug no script · debug + retry |
 
-## Como bookar slot futuro
+## Como bookar slot
 
 1. Editar este arquivo na branch `dev`
 2. Trocar `pending` por `in-progress · seu_handle · timestamp`
-3. PR pequena
-4. Self-merge se nao conflito
-5. Apos terminar: trocar para `done · revision step-XXXX`
+3. PR pequena `book slot N`
+4. Self-merge
+5. Apos terminar: trocar por `done · dataset XXX`
 
-## HF Hub revisions
+## Como compartilhar checkpoint entre contas Kaggle
 
-Todos checkpoints vao como revisions em `iterate-labs/caracal-base-3b-v0`:
+No final da sua sessao, o notebook automaticamente faz `kaggle datasets create` do output. Sem auth extra · cada conta cria datasets publicos da org Kaggle.
 
-- step-7000 (pos sessao 1)
-- step-14000 (pos sessao 2)
-- main / final (pos sessao 3)
+Proximo no relay roda no notebook:
+```python
+import kaggle
+kaggle.api.dataset_download_files('username/caracal-base-stepXXXX', path='./ckpt-in', unzip=True)
+```
 
-Audit: `huggingface-cli list-revisions iterate-labs/caracal-base-3b-v0`
+Datasets sao publicos pra fundadores acessarem entre si sem auth.
