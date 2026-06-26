@@ -45,12 +45,18 @@ def load_model(adapter, base):
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    dtype = torch.bfloat16 if device == "cuda" else torch.float32
+    if device == "cuda":
+        major, _ = torch.cuda.get_device_capability()
+        dtype = torch.bfloat16 if major >= 8 else torch.float16
+    else:
+        dtype = torch.float32
 
-    tokenizer = AutoTokenizer.from_pretrained(adapter or base)
+    has_adapter = bool(adapter) and (Path(adapter) / "adapter_config.json").exists()
+    tokenizer_path = adapter if (adapter and (Path(adapter) / "tokenizer.json").exists()) else base
+    tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
+
     base_model = AutoModelForCausalLM.from_pretrained(base, torch_dtype=dtype, device_map=device)
-
-    if adapter and (Path(adapter) / "adapter_config.json").exists():
+    if has_adapter:
         from peft import PeftModel
 
         model = PeftModel.from_pretrained(base_model, adapter)

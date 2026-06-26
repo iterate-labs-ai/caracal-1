@@ -21,14 +21,15 @@ training:
   learning_rate: 5.0e-5
   lr_scheduler: cosine
   warmup_ratio: 0.03
-  per_device_train_batch_size: 4
-  gradient_accumulation_steps: 4
-  max_seq_length: 4096
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 16
+  max_seq_length: 2048
   packing: true
-  bf16: true
+  bf16: false
+  fp16: true
   optim: adamw_8bit
   gradient_checkpointing: true
-  save_every: 500
+  save_every: 50
   seed: 42
 
 dataset:

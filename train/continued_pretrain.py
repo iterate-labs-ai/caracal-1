@@ -239,6 +239,10 @@ def train(args):
         dataset = dataset.select(range(min(100, len(dataset))))
         args.steps_to_run = 5
 
+    Path(args.output).mkdir(parents=True, exist_ok=True)
+    tokenizer.save_pretrained(args.output)
+    logger.info(f"Tokenizer pre-saved to {args.output}")
+
     trainer = build_trainer(model, tokenizer, dataset, args)
     n = sum(p.numel() for p in model.parameters() if p.requires_grad)
     logger.info(f"Trainable: {n:,} | steps: {args.steps_to_run}")
@@ -253,13 +257,13 @@ def parse_args():
     p.add_argument("--resume-from", default=None)
     p.add_argument("--steps-to-run", type=int, required=True)
     p.add_argument("--output", required=True)
-    p.add_argument("--max-seq-length", type=int, default=4096)
+    p.add_argument("--max-seq-length", type=int, default=2048)
     p.add_argument("--lora-r", type=int, default=32)
     p.add_argument("--lora-alpha", type=int, default=64)
     p.add_argument("--learning-rate", type=float, default=5e-5)
-    p.add_argument("--batch-size", type=int, default=4)
-    p.add_argument("--grad-accum", type=int, default=4)
-    p.add_argument("--save-every", type=int, default=500)
+    p.add_argument("--batch-size", type=int, default=1)
+    p.add_argument("--grad-accum", type=int, default=16)
+    p.add_argument("--save-every", type=int, default=50)
     p.add_argument("--decontam", action="store_true", default=True)
     p.add_argument("--no-decontam", dest="decontam", action="store_false")
     p.add_argument("--max-per-dataset", type=int, default=None)
