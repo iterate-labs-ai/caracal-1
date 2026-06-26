@@ -253,7 +253,7 @@ def train(args):
 def parse_args():
     p = argparse.ArgumentParser()
     p.add_argument("--resume-from", default=None)
-    p.add_argument("--steps-to-run", type=int, required=True)
+    p.add_argument("--steps-to-run", type=int, default=900)
     p.add_argument("--output", required=True)
     p.add_argument("--max-seq-length", type=int, default=2048)
     p.add_argument("--lora-r", type=int, default=32)
@@ -264,7 +264,7 @@ def parse_args():
     p.add_argument("--save-every", type=int, default=50)
     p.add_argument("--decontam", action="store_true", default=True)
     p.add_argument("--no-decontam", dest="decontam", action="store_false")
-    p.add_argument("--max-per-dataset", type=int, default=None)
+    p.add_argument("--max-per-dataset", type=int, default=50000)
     p.add_argument("--smoke", action="store_true")
     return p.parse_args()
 

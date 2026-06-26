@@ -2,69 +2,76 @@
 
 ## Inventario de contas Kaggle
 
-5 contas Kaggle, 1 por fundador, ~20h/sem T4 cada = 100h/sem garantido.
+5 contas Kaggle, 1 por fundador. Cada conta tem quota de 30h GPU/sem.
 
-| Conta Kaggle | Fundador | Phone verified | T4 ativada |
+| Conta Kaggle | Fundador | Phone verified | T4 x2 ativado |
 |---|---|---|---|
-| 1 | Pedro (PAMF2) | pendente | pendente |
-| 2 | Arthur (arturpn1) | pendente | pendente |
-| 3 | Vitor (VitorScrt) | pendente | pendente |
-| 4 | Kevin (dev-knz) | pendente | pendente |
-| 5 | Alexandre (aletlucas) | pendente | pendente |
+| pedroafonso2 | Pedro | sim | sim |
+| arturpn1 | Arthur | pendente | pendente |
+| vitorscrt | Vitor | pendente | pendente |
+| dev-knz | Kevin | pendente | pendente |
+| aletlucas | Alexandre | pendente | pendente |
 
-## Sprint 0 · Caracal Base 3B v0 · 5 sessoes de 5h cada (25h total)
+## Sprint 0 · Caracal Base 3B v0 · 5 sessoes de 900 steps cada
 
-Cada fundador faz 1 sessao. Sem ninguem observando. Cada um salva checkpoint como Kaggle Dataset.
+Limite Kaggle: 12h por kernel. Cada sessao ~10h em T4 x2 (~40s/step com fp16 + LoRA r=32 + seq 2048).
 
-| Sessao | Conta | Quando BRT | Steps | Resume Kaggle Dataset | Output Kaggle Dataset |
-|---|---|---|---|---|---|
-| 1 | Pedro (PAMF2) | seg 24 jun 14h-19h | 0 -> 4000 | (do zero) | `pamf2/caracal-base-step4000` |
-| 2 | Arthur (arturpn1) | seg 24 jun 20h-01h | 4000 -> 8000 | `pamf2/caracal-base-step4000` | `arturpn1/caracal-base-step8000` |
-| 3 | Vitor (VitorScrt) | ter 25 jun 09h-14h | 8000 -> 12000 | `arturpn1/caracal-base-step8000` | `vitorscrt/caracal-base-step12000` |
-| 4 | Kevin (dev-knz) | ter 25 jun 15h-20h | 12000 -> 16000 | `vitorscrt/caracal-base-step12000` | `dev-knz/caracal-base-step16000` |
-| 5 | Alexandre (aletlucas) | ter 25 jun 21h-02h | 16000 -> 20000 | `dev-knz/caracal-base-step16000` | `aletlucas/caracal-base-3b-v0` (FINAL) |
+Cada fundador faz 1 sessao. Salva checkpoint como Kaggle Dataset publico. Proximo pull-a do anterior.
 
-5 fundadores, 5 sessoes, 25h total. Cada um pega 5h da quota 20h/sem (sobra muito).
+| Sessao | Conta Kaggle | Steps | Resume Dataset | Output Dataset |
+|---|---|---|---|---|
+| 1 | pedroafonso2 | 0 -> 900 | (cold start) | `pedroafonso2/caracal-base-3b-s01` |
+| 2 | arturpn1 | 900 -> 1800 | `pedroafonso2/caracal-base-3b-s01` | `arturpn1/caracal-base-3b-s02` |
+| 3 | vitorscrt | 1800 -> 2700 | `arturpn1/caracal-base-3b-s02` | `vitorscrt/caracal-base-3b-s03` |
+| 4 | dev-knz | 2700 -> 3600 | `vitorscrt/caracal-base-3b-s03` | `dev-knz/caracal-base-3b-s04` |
+| 5 | aletlucas | 3600 -> 4500 | `dev-knz/caracal-base-3b-s04` | `aletlucas/caracal-base-3b-v0` (FINAL) |
 
-**Apos final:** Alexandre publica dataset `aletlucas/caracal-base-3b-v0` como nosso modelo v0. Qualquer fundador baixa pra avaliar.
+Total: **4500 steps** = ~95M tokens treinados em PrimeVul + BigVul + DiverseVul.
 
-## Sprint 0.5 · Avaliacao (T10)
+Apos final: Alexandre publica `aletlucas/caracal-base-3b-v0` como release v0. Qualquer fundador baixa pra avaliar.
 
-Qualquer fundador, ~6h Kaggle T4:
+## Sprint 0.5 · Avaliacao
 
-| Tarefa | Conta | Tempo | Quem pega |
-|---|---|---|---|
-| Avaliar Caracal Base 3B v0 vs Qwen base zero-shot em 50 vulns CyberGym | Kaggle (qualquer) | ~4h T4 | livre |
-| Rodar HumanEval+ regression em ambos | Kaggle | ~2h T4 | livre |
-| Documentar em `infra/baselines/v0_eval.md` + abrir reuniao | local | 1h | livre |
+Qualquer fundador, ~3h Kaggle T4 x2:
+
+| Tarefa | Comando | Output |
+|---|---|---|
+| Probe set (51 prompts) | `python eval/run_probe.py --adapter ./ckpt-out --out probe.json` | ppl + CWE hit rate |
+| CyberGym slice-50 | `python eval/run_cybergym.py --subset slice-50 --adapter ./ckpt-out` | pass@1 |
+| Baseline vs Qwen | `python eval/compare_baseline.py --adapter ./ckpt-out --out baseline.json` | win_rate, v0_pass bool |
+
+Sucesso v0 = `win_rate >= 80%` no `compare_baseline.py` (Caracal melhor ppl que Qwen em >=80% dos probes).
+
+## Como rodar SUA sessao
+
+1. Abrir https://www.kaggle.com/code · novo notebook
+2. Copiar codigo de [train/notebooks/kaggle_continued_pretrain.ipynb](train/notebooks/kaggle_continued_pretrain.ipynb)
+3. Editar 5 variaveis topo:
+   ```python
+   SESSION = 2                                     # numero da sua sessao
+   FOUNDER_HANDLE = "arturpn1"                     # seu handle Kaggle
+   RESUME_DATASET = "pedroafonso2/caracal-base-3b-s01"  # output da sessao anterior
+   OUTPUT_DATASET_SLUG = "caracal-base-3b-s02"
+   STEPS = 900
+   ```
+4. Settings: **GPU T4 x2** + Internet ON + Persistence
+5. Save & Run All
+6. ~10h depois dataset publicado automaticamente
+7. PR atualizando este SCHEDULE.md sua linha pending -> done
 
 ## Apos v0 · decisao do time
 
-Reuniao quarta 26 jun manha. Baseado no numero:
+Reuniao quando final terminar. Baseado nas metricas:
 
 | Cenario | Proximo passo |
 |---|---|
-| Score sobe vs Qwen base | Continuar v1 · 5 modulos LoRA |
-| Score nao move | Repensar: hyperparams, dataset, learning rate |
-| Score cai | Debug contaminacao + hyperparam |
-| Treino quebrou em alguma sessao | Bug no script · debug + retry |
+| Win rate >= 80% vs Qwen base | Continuar v1 · 5 modulos LoRA |
+| Win rate 50-80% | Investigar: ajustar lr, mais steps, melhor decontam |
+| Win rate < 50% | Debug serio: contaminacao, schema, eval bug |
 
 ## Como bookar slot
 
-1. Editar este arquivo na branch `dev`
-2. Trocar `pending` por `in-progress · seu_handle · timestamp`
-3. PR pequena `book slot N`
-4. Self-merge
-5. Apos terminar: trocar por `done · dataset XXX`
-
-## Como compartilhar checkpoint entre contas Kaggle
-
-No final da sua sessao, o notebook automaticamente faz `kaggle datasets create` do output. Sem auth extra · cada conta cria datasets publicos da org Kaggle.
-
-Proximo no relay roda no notebook:
-```python
-import kaggle
-kaggle.api.dataset_download_files('username/caracal-base-stepXXXX', path='./ckpt-in', unzip=True)
-```
-
-Datasets sao publicos pra fundadores acessarem entre si sem auth.
+1. Branch `book-slot-N` a partir de `dev`
+2. Editar este arquivo trocando linha vazia por `in-progress · seu_handle · timestamp`
+3. PR contra `dev` · self-merge
+4. Apos terminar: trocar por `done · dataset_slug · timestamp`

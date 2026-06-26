@@ -36,33 +36,33 @@ dataset:
   decontam: true
   blocklist_path: data/decontamination/cve_blocklist.json
   manifest: data/corpus_manifest.yaml
-  total_steps_target: 25000
-  steps_per_session: 5000   # 5h Kaggle T4 = ~5k steps
+  total_steps_target: 4500
+  steps_per_session: 900   # ~12h Kaggle T4 x2 (limite real)
 
 relay:
   sessions:
     - session: 1
       founder: pedro
-      steps: 5000
+      steps: 900
       input_dataset: null
       output_dataset: caracal-base-3b-s01
     - session: 2
       founder: arthur
-      steps: 5000
+      steps: 900
       input_dataset: caracal-base-3b-s01
       output_dataset: caracal-base-3b-s02
     - session: 3
       founder: vitor
-      steps: 5000
+      steps: 900
       input_dataset: caracal-base-3b-s02
       output_dataset: caracal-base-3b-s03
     - session: 4
       founder: kevin
-      steps: 5000
+      steps: 900
       input_dataset: caracal-base-3b-s03
       output_dataset: caracal-base-3b-s04
     - session: 5
       founder: alexandre
-      steps: 5000
+      steps: 900
       input_dataset: caracal-base-3b-s04
       output_dataset: caracal-base-3b-final

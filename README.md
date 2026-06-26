@@ -11,26 +11,28 @@ Modelo especialista em ciberseguranca de 3 bilhoes de parametros. Base **Qwen2.5
 
 - **Base:** Qwen2.5-Coder-3B-Instruct (Transformer decoder-only · 36 layers · GQA 16/2 · SwiGLU · RMSNorm · RoPE base 1M · 32K context)
 - **Adapter:** LoRA r=32 alpha=64 em q/k/v/o + gate/up/down
-- **Treino:** Unsloth + TRL SFTTrainer · BF16 · packing · cosine lr=5e-5
-- **Datasets:** PrimeVul + BigVul + DiverseVul (HF publicos, ~500M tokens, decontam CVE-ID)
-- **Stack v0:** so Kaggle T4. Sem HuggingFace Hub. Sem Weights and Biases. Sem Secrets. Custo $0.
-- **Eval:** probe set 50 + CyberGym (Berkeley ICLR 2026, 1507 vulns) + baseline vs Qwen puro
+- **Treino:** Unsloth + TRL SFTTrainer · FP16 (T4 sem bf16) · packing · cosine lr=5e-5
+- **Datasets:** PrimeVul + BigVul + DiverseVul (HF publicos · decontam CVE-ID antes do load)
+- **Stack v0:** so Kaggle T4 x2. Sem HuggingFace Hub, sem Weights and Biases, sem Secrets. Custo $0.
+- **Eval:** probe set 51 + CyberGym (Berkeley ICLR 2026, 1507 vulns) + baseline vs Qwen puro
 - **Pool aberto:** todos treinam tudo. Sem dono fixo de modulo.
 
 ---
 
 ## Estado atual · Sprint 0 (v0)
 
-5 sessoes de 5h, uma por fundador. Pesos vivem em Kaggle Datasets publicos (cada sessao publica, proxima pull-a).
+5 sessoes de ~10h em Kaggle T4 x2, uma por fundador. Pesos vivem em Kaggle Datasets publicos (cada sessao publica, proxima pull-a).
 
-| Sessao | Fundador | Quando BRT | Steps | Issue |
-|---|---|---|---|---|
-| 1 | Pedro (PAMF2) | seg 24 jun 14h-19h | 0 -> 5000 | [T7](https://github.com/iterate-labs-ai/caracal-1/issues/21) |
-| 2 | Arthur (arturpn1) | seg 24 jun 20h-01h | 5000 -> 10000 | [T8](https://github.com/iterate-labs-ai/caracal-1/issues/19) |
-| 3 | Vitor (VitorScrt) | ter 25 jun 09h-14h | 10000 -> 15000 | [T9](https://github.com/iterate-labs-ai/caracal-1/issues/26) |
-| 4 | Kevin (dev-knz) | ter 25 jun 15h-20h | 15000 -> 20000 | T11 |
-| 5 | Alexandre (aletlucas) | ter 25 jun 21h-02h | 20000 -> 25000 (FINAL) | T12 |
-| Avaliacao | qualquer livre | qua 26 jun | - | [T10](https://github.com/iterate-labs-ai/caracal-1/issues/17) |
+| Sessao | Fundador | Steps | Issue |
+|---|---|---|---|
+| 1 | Pedro (pedroafonso2) | 0 -> 900 | [T7](https://github.com/iterate-labs-ai/caracal-1/issues/21) |
+| 2 | Arthur (arturpn1) | 900 -> 1800 | [T8](https://github.com/iterate-labs-ai/caracal-1/issues/19) |
+| 3 | Vitor (vitorscrt) | 1800 -> 2700 | [T9](https://github.com/iterate-labs-ai/caracal-1/issues/26) |
+| 4 | Kevin (dev-knz) | 2700 -> 3600 | T11 |
+| 5 | Alexandre (aletlucas) | 3600 -> 4500 (FINAL) | T12 |
+| Avaliacao | qualquer livre | - | [T10](https://github.com/iterate-labs-ai/caracal-1/issues/17) |
+
+Limite Kaggle 12h por kernel. 900 steps a ~40s/step = ~10h, dentro do limite.
 
 Schedule completo: [SCHEDULE.md](SCHEDULE.md) · Issues: [pool](https://github.com/iterate-labs-ai/caracal-1/issues)
 
@@ -75,24 +77,24 @@ gh pr create --base dev --title "tN: ..."
 2. Copiar codigo de [train/notebooks/kaggle_continued_pretrain.ipynb](train/notebooks/kaggle_continued_pretrain.ipynb)
 3. Editar 5 variaveis topo:
    ```python
-   SESSION = 2                       # numero da sua sessao
-   FOUNDER_HANDLE = "arturpn1"       # seu handle Kaggle
-   RESUME_DATASET = "pamf2/caracal-base-3b-s01"  # output da sessao anterior
+   SESSION = 2                                          # numero da sua sessao
+   FOUNDER_HANDLE = "arturpn1"                          # seu handle Kaggle
+   RESUME_DATASET = "pedroafonso2/caracal-base-3b-s01"  # output da sessao anterior
    OUTPUT_DATASET_SLUG = "caracal-base-3b-s02"
-   STEPS = 5000
+   STEPS = 900
    ```
 4. Settings: GPU T4 x2 + Internet ON + Persistence
-5. Run All (~5h)
+5. Save & Run All (~10h)
 6. Dataset publicado automaticamente no fim
-7. PR atualizando SCHEDULE.md trocando sua linha `pending` -> `done <slug>`
+7. PR atualizando SCHEDULE.md sua linha pending -> done
 
 ---
 
 ## Como rodar EVAL
 
 ```bash
-# Probe set rapido (50 prompts, mede ppl + CWE hit)
-python eval/run_probe.py --adapter ./ckpt-out --out eval/reports/probe-step5000.json
+# Probe set rapido (51 prompts, mede ppl + CWE hit)
+python eval/run_probe.py --adapter ./ckpt-out --out eval/reports/probe.json
 
 # CyberGym subset
 python eval/run_cybergym.py --subset slice-50 --adapter ./ckpt-out
@@ -141,13 +143,13 @@ python eval/check_decontamination.py --strict --report data/decontamination/last
 | LR | 5e-5 |
 | LR scheduler | cosine |
 | Warmup | 3% |
-| Batch | 4 |
-| Grad accum | 4 |
-| Max seq | 4096 |
+| Per-device batch | 1 |
+| Grad accum | 16 (batch global 16) |
+| Max seq | 2048 |
 | Packing | true |
-| BF16 | true |
-| Grad ckpt | true (unsloth) |
-| Steps total | 25000 (5 sessoes x 5000) |
+| Precision | FP16 (T4 Turing nao tem BF16 nativo) |
+| Grad ckpt | true (unsloth offload) |
+| Steps total | 4500 (5 sessoes x 900) |
 
 ---
 
@@ -155,8 +157,8 @@ python eval/check_decontamination.py --strict --report data/decontamination/last
 
 ### v0 · Caracal Base 3B (Sprint 0, 2 semanas) · ATIVO
 
-Continued pretrain via SFT. So Kaggle T4. Pool aberto.
-Output: 1 adapter LoRA mergeavel, eval probe + CyberGym subset.
+Continued pretrain via SFT. So Kaggle T4 x2. Pool aberto.
+Output: 1 adapter LoRA mergeavel, eval probe + CyberGym subset + baseline vs Qwen.
 
 ### v1 · 5 modulos LoRA + protocolo · ate 22 jul
 
