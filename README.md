@@ -71,26 +71,98 @@ gh pr create --base dev --title "tN: ..."
 
 ---
 
-## Como rodar SUA sessao de treino
+## Como rodar SUA sessao de treino (passo a passo)
+
+Cada founder pega 1 sessao de ~10h em Kaggle T4 x2.
+
+### Passo 1 · Confirmar que a sessao anterior terminou
+
+Ver [SCHEDULE.md](SCHEDULE.md). Sua sessao so pode comecar quando a anterior estiver `done`.
+
+Conferir Kaggle Dataset publicado da sessao anterior:
+```bash
+kaggle datasets list -s "caracal-base-3b"
+```
+
+Deve ter `pedroafonso2/caracal-base-3b-s01` (sessao 1), `arturpn1/caracal-base-3b-s02` (sessao 2), etc.
+
+### Passo 2 · Criar notebook no Kaggle
 
 1. Abrir https://www.kaggle.com/code · novo notebook
-2. Copiar codigo de [train/notebooks/kaggle_continued_pretrain.ipynb](train/notebooks/kaggle_continued_pretrain.ipynb)
-3. Editar 5 variaveis topo:
-   ```python
-   SESSION = 2                                          # numero da sua sessao
-   FOUNDER_HANDLE = "arturpn1"                          # seu handle Kaggle
-   RESUME_DATASET = "pedroafonso2/caracal-base-3b-s01"  # output da sessao anterior
-   OUTPUT_DATASET_SLUG = "caracal-base-3b-s02"
-   STEPS = 900
-   ```
-4. Settings: GPU T4 x2 + Internet ON + Persistence
-5. Save & Run All (~10h)
-6. Dataset publicado automaticamente no fim
-7. PR atualizando SCHEDULE.md sua linha pending -> done
+2. Copiar codigo de [train/notebooks/kaggle_continued_pretrain.ipynb](train/notebooks/kaggle_continued_pretrain.ipynb) - cell por cell
+3. Settings sidebar direita:
+   - Accelerator: **GPU T4 x2**
+   - Internet: **ON**
+   - Persistence: **Variables and Files**
+
+### Passo 3 · Editar 5 variaveis no topo
+
+Exemplo sessao 2 (Arthur pegando de Pedro):
+```python
+SESSION = 2                                          # numero da sua sessao
+FOUNDER_HANDLE = "arturpn1"                          # seu handle Kaggle
+RESUME_DATASET = "pedroafonso2/caracal-base-3b-s01"  # output da sessao anterior
+OUTPUT_DATASET_SLUG = "caracal-base-3b-s02"          # como vai chamar seu output
+STEPS = 900                                          # padrao, nao mudar
+```
+
+Tabela de resume completa:
+
+| Sessao | Founder | RESUME_DATASET | OUTPUT_DATASET_SLUG |
+|---|---|---|---|
+| 1 | pedroafonso2 | `None` | `caracal-base-3b-s01` |
+| 2 | arturpn1 | `pedroafonso2/caracal-base-3b-s01` | `caracal-base-3b-s02` |
+| 3 | vitorscrt | `arturpn1/caracal-base-3b-s02` | `caracal-base-3b-s03` |
+| 4 | dev-knz | `vitorscrt/caracal-base-3b-s03` | `caracal-base-3b-s04` |
+| 5 | aletlucas | `dev-knz/caracal-base-3b-s04` | `caracal-base-3b-v0` |
+
+### Passo 4 · Save & Run All
+
+Clica "Save Version" -> "Save & Run All (Commit)". Comeca a rodar. ~10h depois publica seu dataset automaticamente.
+
+Acompanha pela aba "Output" do notebook ou pelo Kaggle Dataset.
+
+### Passo 5 · Apos terminar
+
+1. Confirmar dataset em `https://www.kaggle.com/datasets/SEU_HANDLE/caracal-base-3b-sNN`
+2. PR pequena editando [SCHEDULE.md](SCHEDULE.md): trocar `in-progress` por `done · dataset_slug`
+3. Avisar grupo
 
 ---
 
-## Como rodar EVAL
+## Shadow eval (TPU paralelo, opcional)
+
+Aproveita as 20h TPU/sem do Kaggle pra rodar eval continuo enquanto outros founders treinam em GPU.
+
+### Quando faz sentido
+
+Apos a sessao 1 publicar. Ai shadow loop pode polar sessoes 1-5 a medida que terminam, sem bloquear quem ta treinando.
+
+### Como dispatchar
+
+1. Abrir https://www.kaggle.com/code · novo notebook
+2. Copiar codigo de [train/notebooks/kaggle_shadow_eval.ipynb](train/notebooks/kaggle_shadow_eval.ipynb)
+3. Editar topo:
+   ```python
+   SHADOW_OUTPUT_SLUG = "SEU_HANDLE/caracal-shadow-eval"
+   POLL_INTERVAL_SEC = 1800   # 30 min entre polls
+   MAX_WAIT_HOURS = 60        # tempo total maximo
+   ```
+4. Settings: **TPU VM v3-8** (ou v5e-8) + Internet ON
+5. Save & Run All
+
+### O que ele faz
+
+- Polla a cada 30min procurando `caracal-base-3b-sNN` dos 5 founders
+- Quando achar uma sessao nova, pull adapter, roda probe (51 prompts) + CyberGym slice-50
+- Posta resultado JSON em `SHADOW_OUTPUT_SLUG` (Kaggle Dataset publico)
+- Continua ate as 5 sessoes serem avaliadas
+
+Founders veem delta entre sessoes consecutivas em real-time. Detecta overfit/divergencia cedo.
+
+---
+
+## Como rodar EVAL local (ad-hoc)
 
 ```bash
 # Probe set rapido (51 prompts, mede ppl + CWE hit)
