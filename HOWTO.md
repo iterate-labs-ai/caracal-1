@@ -69,6 +69,7 @@
 ## Docs importantes
 
 - [SETUP.md](SETUP.md) · primeira vez
+- [PROXIMA_SESSAO.md](PROXIMA_SESSAO.md) · quickstart visual pra pegar a proxima sessao do relay
 - [SCHEDULE.md](SCHEDULE.md) · slot booking + tabela sessoes
 - [CONTRIBUTING.md](CONTRIBUTING.md) · PR style
 - [README.md](README.md) · overview tecnico
