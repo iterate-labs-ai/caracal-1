@@ -91,6 +91,18 @@ def filter_decontam(dataset, blocklist):
     return dataset
 
 
+def flatten_conversation(sample):
+    parts = []
+    for turn in sample.get("conversations") or []:
+        if not isinstance(turn, dict):
+            continue
+        val = turn.get("value") or turn.get("content") or ""
+        if isinstance(val, str) and val.strip():
+            role = turn.get("role") or turn.get("from") or "user"
+            parts.append(f"<|{role}|>\n{val}")
+    return {"text": "\n\n".join(parts)}
+
+
 def load_one_dataset(name, hf_id, data_files, decontam, max_n, blocklist):
     from datasets import load_dataset
 
@@ -105,10 +117,14 @@ def load_one_dataset(name, hf_id, data_files, decontam, max_n, blocklist):
     if decontam:
         ds = filter_decontam(ds, blocklist)
 
-    field = detect_text_field(ds[0])
-    if field != "text":
-        ds = ds.rename_column(field, "text")
-    ds = ds.remove_columns([c for c in ds.column_names if c != "text"])
+    if "conversations" in ds.column_names:
+        logger.info(f"  {name}: schema=conversations, flattening")
+        ds = ds.map(flatten_conversation, remove_columns=ds.column_names)
+    else:
+        field = detect_text_field(ds[0])
+        if field != "text":
+            ds = ds.rename_column(field, "text")
+        ds = ds.remove_columns([c for c in ds.column_names if c != "text"])
     ds = ds.filter(lambda s: isinstance(s["text"], str) and len(s["text"]) >= 50)
     logger.info(f"  {name}: {len(ds)} examples")
     return ds
