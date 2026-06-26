@@ -34,9 +34,9 @@ LORA_TARGETS = [
 ]
 
 HF_DATASETS = [
-    ("PrimeVul", "secmlr/PrimeVul"),
-    ("BigVul", "bstee615/bigvul"),
-    ("DiverseVul", "bstee615/diversevul"),
+    ("PrimeVul", "ussooraj/PrimeVul", "train.jsonl"),
+    ("BigVul", "bstee615/bigvul", None),
+    ("DiverseVul", "bstee615/diversevul", None),
 ]
 
 TEXT_FIELDS = ["func", "func_before", "code", "text", "function", "source"]
@@ -91,11 +91,14 @@ def filter_decontam(dataset, blocklist):
     return dataset
 
 
-def load_one_dataset(name, hf_id, decontam, max_n, blocklist):
+def load_one_dataset(name, hf_id, data_files, decontam, max_n, blocklist):
     from datasets import load_dataset
 
-    logger.info(f"Loading {name} ({hf_id})")
-    ds = load_dataset(hf_id, split="train")
+    logger.info(f"Loading {name} ({hf_id} files={data_files})")
+    if data_files:
+        ds = load_dataset(hf_id, data_files=data_files, split="train")
+    else:
+        ds = load_dataset(hf_id, split="train")
 
     if max_n:
         ds = ds.select(range(min(max_n, len(ds))))
@@ -116,7 +119,8 @@ def load_all_datasets(decontam, max_per_dataset):
 
     blocklist = load_cve_blocklist() if decontam else set()
     parts = [
-        load_one_dataset(name, hf, decontam, max_per_dataset, blocklist) for name, hf in HF_DATASETS
+        load_one_dataset(name, hf, files, decontam, max_per_dataset, blocklist)
+        for name, hf, files in HF_DATASETS
     ]
     combined = concatenate_datasets(parts)
     logger.info(f"Combined: {len(combined)} examples")
