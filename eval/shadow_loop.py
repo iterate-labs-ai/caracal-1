@@ -29,9 +29,9 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 SESSIONS = [
     ("pedroafonso2", "caracal-base-3b-s01", 1),
-    ("arturpn1", "caracal-base-3b-s02", 2),
-    ("vitorscrt", "caracal-base-3b-s03", 3),
-    ("dev-knz", "caracal-base-3b-s04", 4),
+    ("dev-knz", "caracal-base-3b-s02", 2),
+    ("arturpn1", "caracal-base-3b-s03", 3),
+    ("vitorscrt", "caracal-base-3b-s04", 4),
     ("aletlucas", "caracal-base-3b-v0", 5),
 ]
 

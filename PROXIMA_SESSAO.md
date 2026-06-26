@@ -2,7 +2,7 @@
 
 Quando voce vai entrar pro relay (sessao 2, 3, 4 ou 5).
 
-**Cenario:** Pedro (s01) acabou de publicar `pedroafonso2/caracal-base-3b-s01`. Agora Arthur (s02) entra. Mesmo passo a passo vale pra Vitor, Kevin e Alexandre.
+**Cenario:** Pedro (s01) acabou de publicar `pedroafonso2/caracal-base-3b-s01`. Agora Kevin (s02) entra. Mesmo passo a passo vale pra Arthur, Vitor e Alexandre.
 
 ---
 
@@ -46,16 +46,16 @@ Esta e a UNICA cell que voce mexe. Olha o seu numero na tabela abaixo:
 | Sessao | Founder | RESUME_DATASET | OUTPUT_DATASET_SLUG |
 |---|---|---|---|
 | 1 | pedroafonso2 | `None` | `caracal-base-3b-s01` |
-| 2 | arturpn1 | `"pedroafonso2/caracal-base-3b-s01"` | `caracal-base-3b-s02` |
-| 3 | vitorscrt | `"arturpn1/caracal-base-3b-s02"` | `caracal-base-3b-s03` |
-| 4 | dev-knz | `"vitorscrt/caracal-base-3b-s03"` | `caracal-base-3b-s04` |
-| 5 | aletlucas | `"dev-knz/caracal-base-3b-s04"` | `caracal-base-3b-v0` |
+| 2 | dev-knz | `"pedroafonso2/caracal-base-3b-s01"` | `caracal-base-3b-s02` |
+| 3 | arturpn1 | `"dev-knz/caracal-base-3b-s02"` | `caracal-base-3b-s03` |
+| 4 | vitorscrt | `"arturpn1/caracal-base-3b-s03"` | `caracal-base-3b-s04` |
+| 5 | aletlucas | `"vitorscrt/caracal-base-3b-s04"` | `caracal-base-3b-v0` |
 
-**Exemplo Arthur (sessao 2):**
+**Exemplo Kevin (sessao 2):**
 
 ```python
 SESSION = 2
-FOUNDER_HANDLE = "arturpn1"
+FOUNDER_HANDLE = "dev-knz"
 RESUME_DATASET = "pedroafonso2/caracal-base-3b-s01"
 OUTPUT_DATASET_SLUG = "caracal-base-3b-s02"
 STEPS = 900

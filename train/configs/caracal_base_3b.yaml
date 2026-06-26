@@ -47,17 +47,17 @@ relay:
       input_dataset: null
       output_dataset: caracal-base-3b-s01
     - session: 2
-      founder: arthur
+      founder: kevin
       steps: 900
       input_dataset: caracal-base-3b-s01
       output_dataset: caracal-base-3b-s02
     - session: 3
-      founder: vitor
+      founder: arthur
       steps: 900
       input_dataset: caracal-base-3b-s02
       output_dataset: caracal-base-3b-s03
     - session: 4
-      founder: kevin
+      founder: vitor
       steps: 900
       input_dataset: caracal-base-3b-s03
       output_dataset: caracal-base-3b-s04

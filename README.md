@@ -26,9 +26,9 @@ Modelo especialista em ciberseguranca de 3 bilhoes de parametros. Base **Qwen2.5
 | Sessao | Fundador | Steps | Issue |
 |---|---|---|---|
 | 1 | Pedro (pedroafonso2) | 0 -> 900 | [T7](https://github.com/iterate-labs-ai/caracal-1/issues/21) |
-| 2 | Arthur (arturpn1) | 900 -> 1800 | [T8](https://github.com/iterate-labs-ai/caracal-1/issues/19) |
-| 3 | Vitor (vitorscrt) | 1800 -> 2700 | [T9](https://github.com/iterate-labs-ai/caracal-1/issues/26) |
-| 4 | Kevin (dev-knz) | 2700 -> 3600 | T11 |
+| 2 | Kevin (dev-knz) | 900 -> 1800 | T11 |
+| 3 | Arthur (arturpn1) | 1800 -> 2700 | [T8](https://github.com/iterate-labs-ai/caracal-1/issues/19) |
+| 4 | Vitor (vitorscrt) | 2700 -> 3600 | [T9](https://github.com/iterate-labs-ai/caracal-1/issues/26) |
 | 5 | Alexandre (aletlucas) | 3600 -> 4500 (FINAL) | T12 |
 | Avaliacao | qualquer livre | - | [T10](https://github.com/iterate-labs-ai/caracal-1/issues/17) |
 
@@ -84,7 +84,7 @@ Conferir Kaggle Dataset publicado da sessao anterior:
 kaggle datasets list -s "caracal-base-3b"
 ```
 
-Deve ter `pedroafonso2/caracal-base-3b-s01` (sessao 1), `arturpn1/caracal-base-3b-s02` (sessao 2), etc.
+Deve ter `pedroafonso2/caracal-base-3b-s01` (sessao 1), `dev-knz/caracal-base-3b-s02` (sessao 2), etc.
 
 ### Passo 2 · Criar notebook no Kaggle
 
@@ -97,10 +97,10 @@ Deve ter `pedroafonso2/caracal-base-3b-s01` (sessao 1), `arturpn1/caracal-base-3
 
 ### Passo 3 · Editar 5 variaveis no topo
 
-Exemplo sessao 2 (Arthur pegando de Pedro):
+Exemplo sessao 2 (Kevin pegando de Pedro):
 ```python
 SESSION = 2                                          # numero da sua sessao
-FOUNDER_HANDLE = "arturpn1"                          # seu handle Kaggle
+FOUNDER_HANDLE = "dev-knz"                           # seu handle Kaggle
 RESUME_DATASET = "pedroafonso2/caracal-base-3b-s01"  # output da sessao anterior
 OUTPUT_DATASET_SLUG = "caracal-base-3b-s02"          # como vai chamar seu output
 STEPS = 900                                          # padrao, nao mudar
@@ -111,10 +111,10 @@ Tabela de resume completa:
 | Sessao | Founder | RESUME_DATASET | OUTPUT_DATASET_SLUG |
 |---|---|---|---|
 | 1 | pedroafonso2 | `None` | `caracal-base-3b-s01` |
-| 2 | arturpn1 | `pedroafonso2/caracal-base-3b-s01` | `caracal-base-3b-s02` |
-| 3 | vitorscrt | `arturpn1/caracal-base-3b-s02` | `caracal-base-3b-s03` |
-| 4 | dev-knz | `vitorscrt/caracal-base-3b-s03` | `caracal-base-3b-s04` |
-| 5 | aletlucas | `dev-knz/caracal-base-3b-s04` | `caracal-base-3b-v0` |
+| 2 | dev-knz | `pedroafonso2/caracal-base-3b-s01` | `caracal-base-3b-s02` |
+| 3 | arturpn1 | `dev-knz/caracal-base-3b-s02` | `caracal-base-3b-s03` |
+| 4 | vitorscrt | `arturpn1/caracal-base-3b-s03` | `caracal-base-3b-s04` |
+| 5 | aletlucas | `vitorscrt/caracal-base-3b-s04` | `caracal-base-3b-v0` |
 
 ### Passo 4 · Save & Run All
 

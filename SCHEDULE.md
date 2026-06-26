@@ -21,10 +21,10 @@ Cada fundador faz 1 sessao. Salva checkpoint como Kaggle Dataset publico. Proxim
 | Sessao | Conta Kaggle | Steps | Resume Dataset | Output Dataset |
 |---|---|---|---|---|
 | 1 | pedroafonso2 | 0 -> 900 | (cold start) | `pedroafonso2/caracal-base-3b-s01` |
-| 2 | arturpn1 | 900 -> 1800 | `pedroafonso2/caracal-base-3b-s01` | `arturpn1/caracal-base-3b-s02` |
-| 3 | vitorscrt | 1800 -> 2700 | `arturpn1/caracal-base-3b-s02` | `vitorscrt/caracal-base-3b-s03` |
-| 4 | dev-knz | 2700 -> 3600 | `vitorscrt/caracal-base-3b-s03` | `dev-knz/caracal-base-3b-s04` |
-| 5 | aletlucas | 3600 -> 4500 | `dev-knz/caracal-base-3b-s04` | `aletlucas/caracal-base-3b-v0` (FINAL) |
+| 2 | dev-knz | 900 -> 1800 | `pedroafonso2/caracal-base-3b-s01` | `dev-knz/caracal-base-3b-s02` |
+| 3 | arturpn1 | 1800 -> 2700 | `dev-knz/caracal-base-3b-s02` | `arturpn1/caracal-base-3b-s03` |
+| 4 | vitorscrt | 2700 -> 3600 | `arturpn1/caracal-base-3b-s03` | `vitorscrt/caracal-base-3b-s04` |
+| 5 | aletlucas | 3600 -> 4500 | `vitorscrt/caracal-base-3b-s04` | `aletlucas/caracal-base-3b-v0` (FINAL) |
 
 Total: **4500 steps** = ~95M tokens treinados em PrimeVul + BigVul + DiverseVul.
 
