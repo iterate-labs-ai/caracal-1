@@ -14,9 +14,9 @@ import logging
 import random
 from pathlib import Path
 
+from _common import BASE_MODEL, load_model
+
 logger = logging.getLogger(__name__)
-REPO_ROOT = Path(__file__).resolve().parent.parent
-BASE_MODEL = "Qwen/Qwen2.5-Coder-3B-Instruct"
 
 
 SUBSET_SIZES = {
@@ -38,31 +38,6 @@ def load_cybergym(subset):
         ds = ds.select(sorted(idxs))
     logger.info(f"Subset '{subset}': {len(ds)} samples")
     return ds
-
-
-def load_model(adapter, base):
-    import torch
-    from transformers import AutoModelForCausalLM, AutoTokenizer
-
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    if device == "cuda":
-        major, _ = torch.cuda.get_device_capability()
-        dtype = torch.bfloat16 if major >= 8 else torch.float16
-    else:
-        dtype = torch.float32
-
-    has_adapter = bool(adapter) and (Path(adapter) / "adapter_config.json").exists()
-    tokenizer_path = adapter if (adapter and (Path(adapter) / "tokenizer.json").exists()) else base
-    tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
-
-    base_model = AutoModelForCausalLM.from_pretrained(base, torch_dtype=dtype, device_map=device)
-    if has_adapter:
-        from peft import PeftModel
-
-        model = PeftModel.from_pretrained(base_model, adapter)
-    else:
-        model = base_model
-    return model, tokenizer, device
 
 
 def gen_attempts(model, tokenizer, prompt, device, gen_cfg):

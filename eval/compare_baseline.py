@@ -16,8 +16,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+from _common import BASE_MODEL, REPO_ROOT
+
 logger = logging.getLogger(__name__)
-REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 def run_probe(adapter, base, out_path):
@@ -39,7 +40,7 @@ def run_probe(adapter, base, out_path):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--adapter", required=True)
-    parser.add_argument("--base", default="Qwen/Qwen2.5-Coder-3B-Instruct")
+    parser.add_argument("--base", default=BASE_MODEL)
     parser.add_argument("--out", required=True)
     args = parser.parse_args()
 

@@ -240,8 +240,6 @@ def train(args):
         args.steps_to_run = 5
 
     Path(args.output).mkdir(parents=True, exist_ok=True)
-    tokenizer.save_pretrained(args.output)
-    logger.info(f"Tokenizer pre-saved to {args.output}")
 
     trainer = build_trainer(model, tokenizer, dataset, args)
     n = sum(p.numel() for p in model.parameters() if p.requires_grad)

@@ -16,45 +16,16 @@ import math
 import re
 from pathlib import Path
 
+from _common import BASE_MODEL, REPO_ROOT, load_model
+
 logger = logging.getLogger(__name__)
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
-BASE_MODEL = "Qwen/Qwen2.5-Coder-3B-Instruct"
 CWE_RE = re.compile(r"CWE-\d{2,4}", re.IGNORECASE)
 
 
 def load_probes():
     p = REPO_ROOT / "eval" / "probe_set.jsonl"
     return [json.loads(line) for line in p.read_text().splitlines() if line.strip()]
-
-
-def load_model(adapter_path, base):
-    import torch
-    from transformers import AutoModelForCausalLM, AutoTokenizer
-
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    if device == "cuda":
-        major, _ = torch.cuda.get_device_capability()
-        dtype = torch.bfloat16 if major >= 8 else torch.float16
-    else:
-        dtype = torch.float32
-
-    has_adapter = bool(adapter_path) and (Path(adapter_path) / "adapter_config.json").exists()
-    tokenizer_path = (
-        adapter_path
-        if (adapter_path and (Path(adapter_path) / "tokenizer.json").exists())
-        else base
-    )
-    tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
-
-    base_model = AutoModelForCausalLM.from_pretrained(base, torch_dtype=dtype, device_map=device)
-    if has_adapter:
-        from peft import PeftModel
-
-        model = PeftModel.from_pretrained(base_model, adapter_path)
-    else:
-        model = base_model
-    return model, tokenizer, device
 
 
 def compute_perplexity(model, tokenizer, text, device):
