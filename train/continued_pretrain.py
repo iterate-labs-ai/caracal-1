@@ -1,78 +1,167 @@
 """Continued pretrain Caracal Base 3B usando Unsloth + TRL SFTTrainer.
 
-So Kaggle: sem HuggingFace, sem Weights and Biases, sem Secrets.
+Stack: Qwen2.5-Coder-3B-Instruct + LoRA r=32 alpha=64 em q/k/v/o + gate/up/down.
+Decontamination via CVE-ID blocklist (data/decontamination/cve_blocklist.json).
 Pesos vivem como Kaggle Datasets publicos.
 
-Usage (dentro do notebook Kaggle):
-
-    python train/continued_pretrain.py \
-        --resume-from ./ckpt-in \
-        --steps-to-run 4000 \
+Usage:
+    python train/continued_pretrain.py \\
+        --resume-from ./ckpt-in \\
+        --steps-to-run 4000 \\
         --output ./ckpt-out
 """
-from __future__ import annotations
+
 import argparse
+import json
 import logging
-import sys
+import re
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
+REPO_ROOT = Path(__file__).resolve().parent.parent
 
-def train(args):
+BASE_MODEL = "Qwen/Qwen2.5-Coder-3B-Instruct"
+
+LORA_TARGETS = [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj",
+]
+
+HF_DATASETS = [
+    ("PrimeVul", "secmlr/PrimeVul"),
+    ("BigVul", "bstee615/bigvul"),
+    ("DiverseVul", "bstee615/diversevul"),
+]
+
+TEXT_FIELDS = ["func", "func_before", "code", "text", "function", "source"]
+CVE_FIELDS = ["cve", "cve_id", "CVE", "cveid", "cve_list"]
+CVE_RE = re.compile(r"CVE-\d{4}-\d{4,7}", re.IGNORECASE)
+
+
+def detect_text_field(sample):
+    for f in TEXT_FIELDS:
+        v = sample.get(f)
+        if isinstance(v, str) and len(v) > 20:
+            return f
+    for k, v in sample.items():
+        if isinstance(v, str) and len(v) > 20:
+            return k
+    raise ValueError(f"No valid text field: {list(sample.keys())}")
+
+
+def extract_cve_ids(sample):
+    found = set()
+    for f in CVE_FIELDS:
+        v = sample.get(f)
+        if isinstance(v, str):
+            found.update(m.upper() for m in CVE_RE.findall(v))
+        elif isinstance(v, list):
+            for x in v:
+                if isinstance(x, str):
+                    found.update(m.upper() for m in CVE_RE.findall(x))
+    for v in sample.values():
+        if isinstance(v, str) and len(v) < 10000:
+            found.update(m.upper() for m in CVE_RE.findall(v))
+    return found
+
+
+def load_cve_blocklist():
+    p = REPO_ROOT / "data" / "decontamination" / "cve_blocklist.json"
+    if not p.exists():
+        logger.warning(f"Blocklist ausente em {p}. Decontam DISABLED.")
+        return set()
+    data = json.loads(p.read_text())
+    blocklist = {c.upper() for c in data.get("blocked", [])}
+    logger.info(f"Loaded {len(blocklist)} blocked CVE IDs")
+    return blocklist
+
+
+def filter_decontam(dataset, blocklist):
+    if not blocklist:
+        return dataset
+    before = len(dataset)
+    dataset = dataset.filter(lambda s: not (extract_cve_ids(s) & blocklist))
+    logger.info(f"Decontam: {before} -> {len(dataset)}")
+    return dataset
+
+
+def load_one_dataset(name, hf_id, decontam, max_n, blocklist):
+    from datasets import load_dataset
+
+    logger.info(f"Loading {name} ({hf_id})")
+    ds = load_dataset(hf_id, split="train")
+
+    if max_n:
+        ds = ds.select(range(min(max_n, len(ds))))
+    if decontam:
+        ds = filter_decontam(ds, blocklist)
+
+    field = detect_text_field(ds[0])
+    if field != "text":
+        ds = ds.rename_column(field, "text")
+    ds = ds.remove_columns([c for c in ds.column_names if c != "text"])
+    ds = ds.filter(lambda s: isinstance(s["text"], str) and len(s["text"]) >= 50)
+    logger.info(f"  {name}: {len(ds)} examples")
+    return ds
+
+
+def load_all_datasets(decontam, max_per_dataset):
+    from datasets import concatenate_datasets
+
+    blocklist = load_cve_blocklist() if decontam else set()
+    parts = [
+        load_one_dataset(name, hf, decontam, max_per_dataset, blocklist) for name, hf in HF_DATASETS
+    ]
+    combined = concatenate_datasets(parts)
+    logger.info(f"Combined: {len(combined)} examples")
+    return combined
+
+
+def build_model(args):
     from unsloth import FastLanguageModel
-    from datasets import load_dataset, concatenate_datasets
-    from trl import SFTTrainer
-    from transformers import TrainingArguments
 
-    MAX_SEQ = args.max_seq_length
-
-    # Base ou checkpoint anterior
     if args.resume_from and Path(args.resume_from).exists():
         base_path = args.resume_from
-        logger.info(f"Resume from {base_path}")
+        logger.info(f"Resume from local: {base_path}")
+        is_resume = True
     else:
-        base_path = "Qwen/Qwen2.5-Coder-3B-Instruct"
-        logger.info(f"Comecando do base {base_path}")
+        base_path = BASE_MODEL
+        logger.info(f"Cold start: {base_path}")
+        is_resume = False
 
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name=base_path,
-        max_seq_length=MAX_SEQ,
+        max_seq_length=args.max_seq_length,
         dtype=None,
         load_in_4bit=False,
     )
 
-    # Se for treino do zero (sem resume), cria adapter LoRA novo
-    if not args.resume_from:
+    if not is_resume:
+        logger.info(f"LoRA r={args.lora_r} alpha={args.lora_alpha}")
         model = FastLanguageModel.get_peft_model(
-            model, r=args.lora_r, lora_alpha=args.lora_alpha,
+            model,
+            r=args.lora_r,
+            lora_alpha=args.lora_alpha,
             lora_dropout=0.0,
-            target_modules=["q_proj", "k_proj", "v_proj", "o_proj",
-                            "gate_proj", "up_proj", "down_proj"],
-            bias="none", use_gradient_checkpointing=True,
+            target_modules=LORA_TARGETS,
+            bias="none",
+            use_gradient_checkpointing="unsloth",
+            random_state=42,
         )
 
-    # 3 datasets HF publicos · sem auth
-    logger.info("Carregando datasets...")
-    parts = []
-    for name in ["secmlr/PrimeVul", "bstee615/bigvul", "bstee615/diversevul"]:
-        try:
-            ds = load_dataset(name, split="train")
-            parts.append(ds)
-            logger.info(f"  {name}: {len(ds)} exemplos")
-        except Exception as e:
-            logger.warning(f"  {name} falhou: {e}")
-    dataset = concatenate_datasets(parts) if len(parts) > 1 else parts[0]
-    logger.info(f"Total {len(dataset)} exemplos")
+    return model, tokenizer
 
-    # Escolher campo de texto (PrimeVul/BigVul/DiverseVul usam diferente)
-    sample = dataset[0]
-    text_field = next((f for f in ["func", "code", "text", "func_before"] if f in sample), None)
-    if not text_field:
-        text_field = list(sample.keys())[0]
-    logger.info(f"Usando campo: {text_field}")
 
-    training_args = TrainingArguments(
+def build_trainer(model, tokenizer, dataset, args):
+    from trl import SFTConfig, SFTTrainer
+
+    cfg = SFTConfig(
         output_dir=args.output,
         max_steps=args.steps_to_run,
         learning_rate=args.learning_rate,
@@ -84,51 +173,83 @@ def train(args):
         optim="adamw_8bit",
         gradient_checkpointing=True,
         save_strategy="steps",
-        save_steps=500,
+        save_steps=args.save_every,
         save_total_limit=2,
         logging_steps=10,
         report_to="none",
         push_to_hub=False,
-    )
-
-    trainer = SFTTrainer(
-        model=model, tokenizer=tokenizer,
-        train_dataset=dataset,
-        args=training_args,
-        max_seq_length=MAX_SEQ,
-        dataset_text_field=text_field,
+        seed=42,
+        max_seq_length=args.max_seq_length,
+        dataset_text_field="text",
         packing=True,
+        dataset_num_proc=2,
     )
 
-    logger.info("Treinando...")
-    trainer.train()
+    return SFTTrainer(
+        model=model,
+        tokenizer=tokenizer,
+        train_dataset=dataset,
+        args=cfg,
+    )
 
-    logger.info("Salvando final...")
+
+def save_run_log(trainer, args):
+    log_path = Path(args.output) / "train_log.json"
+    log_path.write_text(
+        json.dumps(
+            {
+                "global_step": trainer.state.global_step,
+                "log_history": trainer.state.log_history[-50:],
+                "args": vars(args),
+            },
+            indent=2,
+            default=str,
+        )
+    )
+    logger.info(f"Log: {log_path}")
+
+
+def train(args):
+    model, tokenizer = build_model(args)
+    dataset = load_all_datasets(decontam=args.decontam, max_per_dataset=args.max_per_dataset)
+
+    if args.smoke:
+        logger.info("SMOKE: 100 samples + 5 steps")
+        dataset = dataset.select(range(min(100, len(dataset))))
+        args.steps_to_run = 5
+
+    trainer = build_trainer(model, tokenizer, dataset, args)
+    n = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    logger.info(f"Trainable: {n:,} | steps: {args.steps_to_run}")
+    trainer.train()
     trainer.save_model(args.output)
-    logger.info(f"Done · {args.output}")
+    tokenizer.save_pretrained(args.output)
+    save_run_log(trainer, args)
+
+
+def parse_args():
+    p = argparse.ArgumentParser()
+    p.add_argument("--resume-from", default=None)
+    p.add_argument("--steps-to-run", type=int, required=True)
+    p.add_argument("--output", required=True)
+    p.add_argument("--max-seq-length", type=int, default=4096)
+    p.add_argument("--lora-r", type=int, default=32)
+    p.add_argument("--lora-alpha", type=int, default=64)
+    p.add_argument("--learning-rate", type=float, default=5e-5)
+    p.add_argument("--batch-size", type=int, default=4)
+    p.add_argument("--grad-accum", type=int, default=4)
+    p.add_argument("--save-every", type=int, default=500)
+    p.add_argument("--decontam", action="store_true", default=True)
+    p.add_argument("--no-decontam", dest="decontam", action="store_false")
+    p.add_argument("--max-per-dataset", type=int, default=None)
+    p.add_argument("--smoke", action="store_true")
+    return p.parse_args()
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--resume-from", default=None,
-                        help="Local path com checkpoint anterior (./ckpt-in tipicamente)")
-    parser.add_argument("--steps-to-run", type=int, required=True)
-    parser.add_argument("--output", required=True)
-    parser.add_argument("--max-seq-length", type=int, default=4096)
-    parser.add_argument("--lora-r", type=int, default=32)
-    parser.add_argument("--lora-alpha", type=int, default=64)
-    parser.add_argument("--learning-rate", type=float, default=5e-5)
-    parser.add_argument("--batch-size", type=int, default=4)
-    parser.add_argument("--grad-accum", type=int, default=4)
-    args = parser.parse_args()
-
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-
-    try:
-        train(args)
-    except Exception as e:
-        logger.exception(f"Treino falhou: {e}")
-        sys.exit(1)
+    args = parse_args()
+    train(args)
 
 
 if __name__ == "__main__":

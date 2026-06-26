@@ -1,10 +1,8 @@
-# Continued pretrain Caracal Base 3B
-# Sprint 1, task C4
+# Caracal Base 3B continued pretrain config
+# Sprint 0 (v0) - Kaggle-only stack
 
 model:
   base: Qwen/Qwen2.5-Coder-3B-Instruct
-  # pin specific revision after C2 bake-off
-  pretrained_revision: null  # ex: "abc123def" hash
 
 lora:
   r: 32
@@ -25,22 +23,45 @@ training:
   warmup_ratio: 0.03
   per_device_train_batch_size: 4
   gradient_accumulation_steps: 4
-  num_epochs: 1
   max_seq_length: 4096
   packing: true
   bf16: true
-  optim: paged_adamw_8bit
+  optim: adamw_8bit
   gradient_checkpointing: true
+  save_every: 500
+  seed: 42
 
 dataset:
+  decontam: true
+  blocklist_path: data/decontamination/cve_blocklist.json
   manifest: data/corpus_manifest.yaml
-  total_tokens_target: 1500000000  # 1.5B
+  total_steps_target: 25000
+  steps_per_session: 5000   # 5h Kaggle T4 = ~5k steps
 
-hub:
-  repo_id: iterate-labs/caracal-base-pretrain
-  push_every_n_steps: 200
-  final_repo_id: iterate-labs/caracal-base-3b
-
-wandb:
-  project: caracal-base-pretrain
-  resume_id: caracal-base-pretrain-main
+relay:
+  sessions:
+    - session: 1
+      founder: pedro
+      steps: 5000
+      input_dataset: null
+      output_dataset: caracal-base-3b-s01
+    - session: 2
+      founder: arthur
+      steps: 5000
+      input_dataset: caracal-base-3b-s01
+      output_dataset: caracal-base-3b-s02
+    - session: 3
+      founder: vitor
+      steps: 5000
+      input_dataset: caracal-base-3b-s02
+      output_dataset: caracal-base-3b-s03
+    - session: 4
+      founder: kevin
+      steps: 5000
+      input_dataset: caracal-base-3b-s03
+      output_dataset: caracal-base-3b-s04
+    - session: 5
+      founder: alexandre
+      steps: 5000
+      input_dataset: caracal-base-3b-s04
+      output_dataset: caracal-base-3b-final

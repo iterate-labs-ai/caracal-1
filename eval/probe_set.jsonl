@@ -1,0 +1,51 @@
+{"id": "buffer_overflow_strcpy", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nvoid copy(char *src) {\n  char buf[10];\n  strcpy(buf, src);\n}", "expected_cwe": "CWE-120"}
+{"id": "format_string", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nvoid log_msg(char *user_input) {\n  printf(user_input);\n}", "expected_cwe": "CWE-134"}
+{"id": "sql_injection_php", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nfunction getUser($id) {\n  $q = 'SELECT * FROM users WHERE id = ' . $id;\n  return mysqli_query($conn, $q);\n}", "expected_cwe": "CWE-89"}
+{"id": "use_after_free", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nvoid handle(struct node *p) {\n  free(p);\n  p->next = NULL;\n}", "expected_cwe": "CWE-416"}
+{"id": "null_deref", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nvoid process(struct data *d) {\n  printf('%s', d->name);\n}", "expected_cwe": "CWE-476"}
+{"id": "int_overflow", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nvoid alloc(int n) {\n  size_t size = n * sizeof(int);\n  int *arr = malloc(size);\n}", "expected_cwe": "CWE-190"}
+{"id": "path_traversal_py", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\ndef read_file(filename):\n  with open('/var/www/' + filename) as f:\n    return f.read()", "expected_cwe": "CWE-22"}
+{"id": "command_injection_py", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\ndef ping(host):\n  os.system('ping ' + host)", "expected_cwe": "CWE-78"}
+{"id": "xss_js", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nfunction render(name) {\n  document.getElementById('greet').innerHTML = 'Hello ' + name;\n}", "expected_cwe": "CWE-79"}
+{"id": "csrf_flask", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\n@app.route('/delete', methods=['POST'])\ndef delete_account():\n  db.delete(session['user_id'])\n  return 'ok'", "expected_cwe": "CWE-352"}
+{"id": "weak_random_token", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nimport random\ndef token():\n  return random.randint(0, 1000000)", "expected_cwe": "CWE-338"}
+{"id": "toctou", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nif (access(filename, R_OK) == 0) {\n  FILE *f = fopen(filename, 'r');\n  process(f);\n}", "expected_cwe": "CWE-367"}
+{"id": "open_redirect", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\n@app.route('/r')\ndef red():\n  return redirect(request.args.get('next'))", "expected_cwe": "CWE-601"}
+{"id": "info_disclosure", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\ntry:\n  process_payment(card)\nexcept Exception as e:\n  return str(e)", "expected_cwe": "CWE-209"}
+{"id": "hardcoded_creds", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nDB_PASSWORD = 'admin123'\nconn = psycopg2.connect(password=DB_PASSWORD)", "expected_cwe": "CWE-798"}
+{"id": "weak_crypto_md5", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nimport hashlib\ndef hash_pw(pw):\n  return hashlib.md5(pw.encode()).hexdigest()", "expected_cwe": "CWE-327"}
+{"id": "xxe", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nfrom xml.etree import ElementTree as ET\ntree = ET.parse(user_xml_file)", "expected_cwe": "CWE-611"}
+{"id": "deserialization_pickle", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nimport pickle\ndef load(data):\n  return pickle.loads(data)", "expected_cwe": "CWE-502"}
+{"id": "ssrf", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\n@app.route('/fetch')\ndef fetch():\n  return requests.get(request.args.get('url')).text", "expected_cwe": "CWE-918"}
+{"id": "ldap_injection", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nfunction findUser(name) {\n  return ldap.search('cn=' + name + ',ou=users');\n}", "expected_cwe": "CWE-90"}
+{"id": "oob_read", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nint get(int *arr, int i) {\n  return arr[i];\n}", "expected_cwe": "CWE-125"}
+{"id": "oob_write", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nvoid set(int *arr, int i, int v) {\n  arr[i] = v;\n}", "expected_cwe": "CWE-787"}
+{"id": "type_confusion", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nstruct Base *b = malloc(sizeof(struct Base));\nstruct Derived *d = (struct Derived *)b;\nd->extra = 1;", "expected_cwe": "CWE-704"}
+{"id": "missing_authn", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\n@app.route('/admin')\ndef admin_panel():\n  return render_template('admin.html')", "expected_cwe": "CWE-306"}
+{"id": "missing_authz", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\n@app.route('/user/<id>/delete', methods=['POST'])\ndef delete(id):\n  User.query.get(id).delete()", "expected_cwe": "CWE-862"}
+{"id": "session_fixation", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\ndef login(user, pw):\n  if check(user, pw):\n    return redirect('/')", "expected_cwe": "CWE-384"}
+{"id": "weak_password_hash", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nimport hashlib\ndef hash_pw(pw, salt):\n  return hashlib.sha1(salt + pw).hexdigest()", "expected_cwe": "CWE-916"}
+{"id": "xpath_injection", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nq = '//user[name=' + name + ']'\nxml.xpath(q)", "expected_cwe": "CWE-643"}
+{"id": "eval_injection", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nresult = eval(user_expression)", "expected_cwe": "CWE-95"}
+{"id": "regex_dos", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nre.match(r'(a+)+$', user_input)", "expected_cwe": "CWE-1333"}
+{"id": "zip_slip", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nz = zipfile.ZipFile(uploaded)\nz.extractall('/var/www/')", "expected_cwe": "CWE-22"}
+{"id": "missing_secure_flag", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nresponse.set_cookie('session', token, httponly=True)", "expected_cwe": "CWE-614"}
+{"id": "uncontrolled_format_fprintf", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nfprintf(file, user_input);", "expected_cwe": "CWE-134"}
+{"id": "race_check_use", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nif (stat(file, &st) == 0 && S_ISREG(st.st_mode)) {\n  fp = fopen(file, 'r');\n}", "expected_cwe": "CWE-367"}
+{"id": "untrusted_pointer_jump", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nvoid jump(uintptr_t addr) {\n  void (*f)() = (void(*)())addr;\n  f();\n}", "expected_cwe": "CWE-822"}
+{"id": "double_free", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nvoid cleanup(struct buf *b) {\n  free(b->data);\n  free(b->data);\n}", "expected_cwe": "CWE-415"}
+{"id": "uninitialized_use", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nint compute() {\n  int x;\n  return x + 1;\n}", "expected_cwe": "CWE-457"}
+{"id": "stack_overflow_recursion", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nint f(int n) { return f(n + 1); }", "expected_cwe": "CWE-674"}
+{"id": "infinite_loop_attacker", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nfor (int i = 0; i < user_n; i++) { process(i); }", "expected_cwe": "CWE-606"}
+{"id": "improper_input_validation", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nvoid set_index(int i) {\n  buffer[i] = 0;\n}", "expected_cwe": "CWE-20"}
+{"id": "missing_csrf_token", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\n<form action='/transfer' method='POST'>\n  <input name='amount'>\n</form>", "expected_cwe": "CWE-352"}
+{"id": "cleartext_password_storage", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\ndb.execute('INSERT INTO users (name, password) VALUES (?, ?)', (name, plaintext_pw))", "expected_cwe": "CWE-256"}
+{"id": "insecure_jwt_none", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\njwt.decode(token, options={'verify_signature': False})", "expected_cwe": "CWE-347"}
+{"id": "log_injection", "prompt": "Qual a vulnerabilidade? Cite o CWE.\n\nlogger.info('user login: ' + user_input)", "expected_cwe": "CWE-117"}
+{"id": "patch_buffer_overflow", "prompt": "Escreva um unified diff que corrige este buffer overflow:\n\nvoid copy(char *src) {\n  char buf[10];\n  strcpy(buf, src);\n}", "expected_field": "patch"}
+{"id": "patch_null_check", "prompt": "Escreva um unified diff que corrige este null deref:\n\nvoid process(struct data *d) {\n  printf('%s', d->name);\n}", "expected_field": "patch"}
+{"id": "patch_int_overflow", "prompt": "Escreva um unified diff que corrige este integer overflow:\n\nvoid alloc(int n) {\n  size_t size = n * sizeof(int);\n  int *arr = malloc(size);\n}", "expected_field": "patch"}
+{"id": "poc_buffer_overflow", "prompt": "Escreva um PoC em C que dispara este buffer overflow:\n\nvoid copy(char *src) {\n  char buf[10];\n  strcpy(buf, src);\n}", "expected_field": "poc"}
+{"id": "concept_aslr", "prompt": "Explique o que e ASLR e como funciona em 3 frases.", "expected_field": "concept"}
+{"id": "concept_canary", "prompt": "Explique o que e stack canary em 3 frases.", "expected_field": "concept"}
+{"id": "concept_rop", "prompt": "Explique return-oriented programming (ROP) em 3 frases.", "expected_field": "concept"}
