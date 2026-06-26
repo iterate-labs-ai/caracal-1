@@ -1,4 +1,5 @@
 """Test kernel-D integrity check."""
+
 from pathlib import Path
 
 from harness.stop_pattern_detector import compute_kernel_hashes

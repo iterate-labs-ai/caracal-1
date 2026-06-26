@@ -27,6 +27,7 @@ ACTIONS = {
     # ... mais ate 50
 }
 
+
 def emit_action(action_name: str, **kwargs) -> str:
     """Emit gdb/mi command string from action name and args."""
     spec = ACTIONS.get(action_name)

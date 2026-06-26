@@ -2,10 +2,12 @@
 
 Usage:
     python data/inspect_datasets.py
-    
+
 Salva resultado em data/dataset_inspection.md
 """
+
 from __future__ import annotations
+
 import logging
 from pathlib import Path
 
@@ -41,14 +43,16 @@ def inspect():
 
         report_lines.append(f"## {name} (`{hf_id}`)\n")
         report_lines.append(f"- Total exemplos: {len(ds):,}")
-        report_lines.append(f"- Campos: `{', '.join(fields[:8])}`{'...' if len(fields) > 8 else ''}")
+        report_lines.append(
+            f"- Campos: `{', '.join(fields[:8])}`{'...' if len(fields) > 8 else ''}"
+        )
         report_lines.append(f"- Tamanho medio (primeiro campo): {avg_chars:.0f} chars")
         report_lines.append(f"- Tokens estimados: ~{est_tokens // 1_000_000}M")
-        report_lines.append(f"- Sample primeiro exemplo (truncado):")
-        report_lines.append(f"  ```")
+        report_lines.append("- Sample primeiro exemplo (truncado):")
+        report_lines.append("  ```")
         first_val = str(sample.get(fields[0], ""))[:300]
         report_lines.append(f"  {first_val}")
-        report_lines.append(f"  ```\n")
+        report_lines.append("  ```\n")
 
     report = "\n".join(report_lines)
     Path("data/dataset_inspection.md").write_text(report)

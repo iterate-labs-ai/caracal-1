@@ -2,9 +2,12 @@
 
 Nao-greedy. Preserve diversidade. Originario Sakana DGM 2025.
 """
+
 from __future__ import annotations
+
 import math
 import random
+
 from .schema import Checkpoint
 
 
@@ -24,10 +27,7 @@ def sample_parents(
     if not candidates:
         return []
 
-    weights = [
-        c.scores.cybergym_pass_at_5 / (1 + c.children_with_edit_cap)
-        for c in candidates
-    ]
+    weights = [c.scores.cybergym_pass_at_5 / (1 + c.children_with_edit_cap) for c in candidates]
     # Softmax com temperature
     max_w = max(weights)
     exp_w = [math.exp((w - max_w) / temperature) for w in weights]

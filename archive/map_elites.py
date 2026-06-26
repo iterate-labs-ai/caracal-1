@@ -2,9 +2,12 @@
 
 30 CWE x 5 primitives x 3 langs = 450 cells.
 """
+
 from __future__ import annotations
+
 from collections import defaultdict
-from .schema import Checkpoint, BehaviorCell, CWE_CLASSES, EXPLOIT_PRIMITIVES, LANGUAGES
+
+from .schema import CWE_CLASSES, EXPLOIT_PRIMITIVES, LANGUAGES, BehaviorCell, Checkpoint
 
 
 class MAPElites:

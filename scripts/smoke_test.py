@@ -35,7 +35,10 @@ def main():
 
     logger.info("[3/6] Load datasets (100 each, decontam ON)")
     import runpy
-    train_mod = runpy.run_path(str(REPO_ROOT / "train" / "continued_pretrain.py"), run_name="__smoke__")
+
+    train_mod = runpy.run_path(
+        str(REPO_ROOT / "train" / "continued_pretrain.py"), run_name="__smoke__"
+    )
     load_all = train_mod["load_all_datasets"]
     dataset = load_all(decontam=True, max_per_dataset=100)
     assert len(dataset) > 0, "Dataset vazio!"
@@ -52,6 +55,7 @@ def main():
     probe_path = REPO_ROOT / "eval" / "probe_set.jsonl"
     assert probe_path.exists(), "probe_set.jsonl ausente"
     import json
+
     probes = [json.loads(line) for line in probe_path.read_text().splitlines() if line.strip()]
     assert len(probes) >= 30, f"Probe set muito pequeno: {len(probes)}"
     logger.info(f"  OK: {len(probes)} probes")

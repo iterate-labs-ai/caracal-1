@@ -6,7 +6,9 @@ sobre Caracal Base usando dataset proprio.
 Usage:
     python train/sft_module.py --module recon --config modules/recon/config.yaml
 """
+
 from __future__ import annotations
+
 import argparse
 import logging
 from pathlib import Path
@@ -18,7 +20,11 @@ logger = logging.getLogger(__name__)
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--module", required=True, choices=["recon", "hypothesizer", "crafter", "validator", "patcher"])
+    parser.add_argument(
+        "--module",
+        required=True,
+        choices=["recon", "hypothesizer", "crafter", "validator", "patcher"],
+    )
     parser.add_argument("--config", required=True)
     parser.add_argument("--resume-from", default=None)
     parser.add_argument("--output", default="./ckpt-out")

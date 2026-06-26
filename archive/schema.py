@@ -1,7 +1,10 @@
 """Schema do arquivo evolutivo Darwin Godel + MAP-Elites."""
+
 from __future__ import annotations
+
 from datetime import datetime
 from uuid import UUID, uuid4
+
 from pydantic import BaseModel, Field
 
 
@@ -31,6 +34,7 @@ class Checkpoint(BaseModel):
 
 class BehaviorCell(BaseModel):
     """MAP-Elites cell · 30 CWE x 5 primitives x 3 langs = 450 cells."""
+
     cwe_class: str
     exploit_primitive: str
     language: str
@@ -42,6 +46,7 @@ class BehaviorCell(BaseModel):
 
 class HarnessConfig(BaseModel):
     """Mutavel via Loop D scaffold mutation."""
+
     prompt_scaffold_id: str
     tool_budget: int
     retrieval_depth: int
@@ -51,26 +56,37 @@ class HarnessConfig(BaseModel):
 
 class TripletEntry(BaseModel):
     """Entrada do archive: checkpoint + harness + primitives."""
+
     checkpoint: Checkpoint
     harness_config: HarnessConfig
     primitive_library_version: str  # vetorial Qdrant snapshot id
 
 
 CWE_CLASSES = [
-    "CWE-119", "CWE-120", "CWE-125", "CWE-787",  # buffer overflows
-    "CWE-415", "CWE-416",  # double-free, UAF
-    "CWE-190", "CWE-191",  # integer over/underflow
+    "CWE-119",
+    "CWE-120",
+    "CWE-125",
+    "CWE-787",  # buffer overflows
+    "CWE-415",
+    "CWE-416",  # double-free, UAF
+    "CWE-190",
+    "CWE-191",  # integer over/underflow
     "CWE-476",  # null deref
     "CWE-369",  # divide by zero
     "CWE-787",  # OOB write
     "CWE-22",  # path traversal
-    "CWE-78", "CWE-77",  # command/code injection
-    "CWE-89", "CWE-94",  # SQL/code injection
-    "CWE-79", "CWE-80",  # XSS
+    "CWE-78",
+    "CWE-77",  # command/code injection
+    "CWE-89",
+    "CWE-94",  # SQL/code injection
+    "CWE-79",
+    "CWE-80",  # XSS
     "CWE-352",  # CSRF
     "CWE-269",  # priv esc
-    "CWE-200", "CWE-209",  # info disclosure
-    "CWE-362", "CWE-367",  # race conditions, TOCTOU
+    "CWE-200",
+    "CWE-209",  # info disclosure
+    "CWE-362",
+    "CWE-367",  # race conditions, TOCTOU
     "CWE-674",  # uncontrolled recursion
     "CWE-704",  # type confusion
     "CWE-787",  # uninit memory

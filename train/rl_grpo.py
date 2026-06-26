@@ -5,7 +5,9 @@ Sprint 3+. Roda sobre 5 modulos coordenados via protocolo de mensagens.
 Usage:
     python train/rl_grpo.py --config train/configs/rl_dapo_v1.yaml
 """
+
 from __future__ import annotations
+
 import argparse
 import logging
 from pathlib import Path

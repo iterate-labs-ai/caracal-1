@@ -15,7 +15,9 @@ Usage:
     python eval/check_decontamination.py --corpus data/raw/ --report data/decontamination/report.json
     python eval/check_decontamination.py --strict  # exit 1 se qualquer overlap
 """
+
 from __future__ import annotations
+
 import argparse
 import hashlib
 import json
@@ -23,7 +25,6 @@ import logging
 import re
 import sys
 from pathlib import Path
-from typing import Iterator
 
 import yaml
 
@@ -38,6 +39,7 @@ MIN_TEXT_LEN = 50  # ignora textos muito curtos
 # ============================================================================
 # Layer 1: SHA256 hash exato
 # ============================================================================
+
 
 def normalize_text(text: str) -> str:
     """Normaliza pra hash: lowercase, whitespace colapso, remove comentarios."""
@@ -66,11 +68,12 @@ def check_hash_overlap(corpus_texts: list[str], eval_hashes: set[str]) -> list[i
 # Layer 2: Jaccard 8-gram
 # ============================================================================
 
+
 def text_to_ngrams(text: str, n: int = JACCARD_NGRAM) -> set[str]:
     """Tokeniza e gera n-grams de palavras."""
     text = normalize_text(text)
     tokens = re.findall(r"\w+", text)
-    return set(" ".join(tokens[i:i + n]) for i in range(len(tokens) - n + 1))
+    return set(" ".join(tokens[i : i + n]) for i in range(len(tokens) - n + 1))
 
 
 def jaccard(a: set[str], b: set[str]) -> float:
@@ -99,23 +102,28 @@ def check_ngram_overlap(
 # Layer 3: Cosseno embedding
 # ============================================================================
 
-def compute_embeddings(texts: list[str], model_name: str = "sentence-transformers/all-MiniLM-L6-v2"):
+
+def compute_embeddings(
+    texts: list[str], model_name: str = "sentence-transformers/all-MiniLM-L6-v2"
+):
     """Computa embeddings via sentence-transformers."""
     from sentence_transformers import SentenceTransformer
+
     model = SentenceTransformer(model_name)
     return model.encode(texts, show_progress_bar=True, batch_size=32, convert_to_numpy=True)
 
 
-def check_cosine_overlap(corpus_texts: list[str], eval_texts: list[str]) -> list[tuple[int, int, float]]:
+def check_cosine_overlap(
+    corpus_texts: list[str], eval_texts: list[str]
+) -> list[tuple[int, int, float]]:
     """Embedding cosseno > threshold."""
-    import numpy as np
     from sklearn.metrics.pairwise import cosine_similarity
 
     valid_corpus = [(i, t) for i, t in enumerate(corpus_texts) if len(t) >= MIN_TEXT_LEN]
     if not valid_corpus:
         return []
 
-    corpus_indices, corpus_filtered = zip(*valid_corpus)
+    corpus_indices, corpus_filtered = zip(*valid_corpus, strict=True)
 
     logger.info(f"Computing embeddings for {len(corpus_filtered)} corpus + {len(eval_texts)} eval")
     corpus_emb = compute_embeddings(list(corpus_filtered))
@@ -153,6 +161,7 @@ def check_cve_overlap(corpus_texts: list[str], eval_cve_ids: set[str]) -> list[i
 # ============================================================================
 # Loaders
 # ============================================================================
+
 
 def load_corpus_texts(corpus_path: Path) -> list[str]:
     """Carrega textos do corpus (todos os .txt, .md, .py, .c, .cpp, .json em corpus_path)."""
@@ -200,6 +209,7 @@ def load_eval_texts() -> tuple[list[str], set[str], set[str]]:
     # 2. CyberGym (carrega de HF se possivel)
     try:
         from datasets import load_dataset
+
         ds = load_dataset("sunblaze-ucb/cybergym", split="train", streaming=False)
         for item in ds:
             for field in ["description", "poc", "patch"]:
@@ -213,13 +223,16 @@ def load_eval_texts() -> tuple[list[str], set[str], set[str]]:
     except Exception as e:
         logger.warning(f"Couldnt load CyberGym from HF: {e}. Skipping layer 1 against CyberGym.")
 
-    logger.info(f"Eval set: {len(eval_texts)} texts, {len(eval_hashes)} hashes, {len(eval_cve_ids)} CVE IDs")
+    logger.info(
+        f"Eval set: {len(eval_texts)} texts, {len(eval_hashes)} hashes, {len(eval_cve_ids)} CVE IDs"
+    )
     return eval_texts, eval_hashes, eval_cve_ids
 
 
 # ============================================================================
 # Main
 # ============================================================================
+
 
 def run_check(corpus_path: Path, report_path: Path, strict: bool = False) -> int:
     """Run 3-layer check. Return exit code."""

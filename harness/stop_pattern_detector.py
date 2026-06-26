@@ -2,7 +2,9 @@
 
 Roda em cada gate de eval. Detecta tentativas do loop de violar boundary kernel-D.
 """
+
 from __future__ import annotations
+
 import hashlib
 import json
 import logging
@@ -36,7 +38,9 @@ def check_kernel_integrity(root: Path, expected_hashes: dict[str, str]) -> tuple
     for path, expected in expected_hashes.items():
         actual = current.get(path)
         if actual != expected:
-            mismatches.append(f"{path}: expected {expected[:8]}.. got {actual[:8] if actual else 'MISSING'}")
+            mismatches.append(
+                f"{path}: expected {expected[:8]}.. got {actual[:8] if actual else 'MISSING'}"
+            )
     return len(mismatches) == 0, mismatches
 
 
@@ -66,6 +70,7 @@ def flag_incident(root: Path, trajectory_id: str, detected: list[str]) -> None:
     incidents_dir = root / "harness" / "incidents"
     incidents_dir.mkdir(exist_ok=True)
     from datetime import datetime
+
     today = datetime.now().strftime("%Y-%m-%d")
     report = {
         "trajectory_id": trajectory_id,
@@ -74,7 +79,9 @@ def flag_incident(root: Path, trajectory_id: str, detected: list[str]) -> None:
         "action": "trajectory_discarded",
     }
     incident_file = incidents_dir / f"{today}-{trajectory_id}.md"
-    incident_file.write_text(f"# STOP-pattern incident\n\n```json\n{json.dumps(report, indent=2)}\n```\n")
+    incident_file.write_text(
+        f"# STOP-pattern incident\n\n```json\n{json.dumps(report, indent=2)}\n```\n"
+    )
     logger.warning(f"STOP-pattern flagged: {detected}")
 
 
