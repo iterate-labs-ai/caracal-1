@@ -2,7 +2,7 @@
 # Publica checkpoint como Kaggle Dataset publico.
 #
 # Usage: bash scripts/publish_kaggle_dataset.sh <local_dir> <username> <dataset_slug>
-# Exemplo: bash scripts/publish_kaggle_dataset.sh ./ckpt-out pamf2 caracal-base-step4000
+# Exemplo: bash scripts/publish_kaggle_dataset.sh ./ckpt-out pedroafonso2 caracal-base-3b-s01
 
 set -e
 

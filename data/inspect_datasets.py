@@ -6,8 +6,6 @@ Usage:
 Salva resultado em data/dataset_inspection.md
 """
 
-from __future__ import annotations
-
 import logging
 from pathlib import Path
 
@@ -18,17 +16,20 @@ def inspect():
     from datasets import load_dataset
 
     datasets_specs = [
-        ("PrimeVul", "secmlr/PrimeVul"),
-        ("BigVul", "bstee615/bigvul"),
-        ("DiverseVul", "bstee615/diversevul"),
+        ("PrimeVul", "ussooraj/PrimeVul", "train.jsonl"),
+        ("BigVul", "bstee615/bigvul", None),
+        ("DiverseVul", "bstee615/diversevul", None),
     ]
 
     report_lines = ["# Inspecao dos 3 datasets HF\n"]
 
-    for name, hf_id in datasets_specs:
+    for name, hf_id, data_files in datasets_specs:
         logger.info(f"Carregando {name}...")
         try:
-            ds = load_dataset(hf_id, split="train")
+            if data_files:
+                ds = load_dataset(hf_id, data_files=data_files, split="train")
+            else:
+                ds = load_dataset(hf_id, split="train")
         except Exception as e:
             report_lines.append(f"## {name} · ERRO\n\n{e}\n")
             continue
@@ -36,10 +37,9 @@ def inspect():
         sample = ds[0]
         fields = list(sample.keys())
 
-        # Estimar tokens
         n_samples = min(100, len(ds))
         avg_chars = sum(len(str(ds[i].get(fields[0], ""))) for i in range(n_samples)) / n_samples
-        est_tokens = int(avg_chars * len(ds) / 4)  # ~4 chars/token
+        est_tokens = int(avg_chars * len(ds) / 4)
 
         report_lines.append(f"## {name} (`{hf_id}`)\n")
         report_lines.append(f"- Total exemplos: {len(ds):,}")
