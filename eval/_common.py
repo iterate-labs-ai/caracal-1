@@ -50,10 +50,9 @@ def load_model(adapter, base=BASE_MODEL):
 
     adapter_dir = Path(adapter) if adapter else None
     has_adapter = adapter_dir is not None and (adapter_dir / "adapter_config.json").exists()
-    tokenizer_path = (
-        adapter if (adapter_dir and (adapter_dir / "tokenizer.json").exists()) else base
-    )
-    tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
+    tokenizer = AutoTokenizer.from_pretrained(
+        base
+    )  # LoRA nao muda vocab; evita quirk extra_special_tokens list/dict
 
     if kind == "cuda":
         base_model = AutoModelForCausalLM.from_pretrained(
