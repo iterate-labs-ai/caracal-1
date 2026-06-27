@@ -18,6 +18,11 @@ tiktoken>=0.7.0
 # Inferencia
 vllm>=0.6.0
 
+# Eval em TPU (Kaggle TPU v3-8). Optional - so instala em ambiente TPU,
+# nao tem wheel pra GPU/CPU. Eval scripts em _common.py detectam runtime.
+# Kaggle TPU images ja vem com torch_xla pre-installed.
+# torch_xla>=2.4.0  ; platform_machine == "x86_64" and sys_platform == "linux"
+
 # Sandbox + verificacao
 z3-solver>=4.13.0
 modal>=0.66.0

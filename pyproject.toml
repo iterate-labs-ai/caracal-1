@@ -7,6 +7,11 @@ license = {text = "Apache-2.0"}
 readme = "README.md"
 requires-python = ">=3.11"
 
+[project.optional-dependencies]
+# TPU runtime (Kaggle TPU kernels). pip install ".[tpu]" so faz sentido em TPU env.
+# torch_xla nao tem wheel pra GPU/CPU - eval scripts detectam via find_spec.
+tpu = ["torch_xla>=2.4.0"]
+
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
