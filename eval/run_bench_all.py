@@ -17,15 +17,21 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from eval._common import load_model  # noqa: E402
+from eval.run_cti_bench import run as run_cti  # noqa: E402
+from eval.run_cybermetric import run as run_cybermetric  # noqa: E402
 from eval.run_humaneval import run as run_humaneval  # noqa: E402
 from eval.run_mmlu_security import run as run_mmlu  # noqa: E402
 from eval.run_probe import run as run_probe  # noqa: E402
+from eval.run_secqa import run as run_secqa  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
 EVALS = {
     "probe": lambda m, t, d, o, args: run_probe(m, t, d),
     "mmlu_security": lambda m, t, d, o, args: run_mmlu(m, t, d),
+    "secqa": lambda m, t, d, o, args: run_secqa(m, t, d),
+    "cybermetric": lambda m, t, d, o, args: run_cybermetric(m, t, d, tier=args.cybermetric_tier),
+    "cti_bench": lambda m, t, d, o, args: run_cti(m, t, d, max_n=args.cti_max_n),
     "humaneval": lambda m, t, d, o, args: run_humaneval(m, t, d, limit=args.humaneval_limit),
 }
 
@@ -60,8 +66,15 @@ def main():
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--skip-probe", action="store_true")
     parser.add_argument("--skip-mmlu", action="store_true")
+    parser.add_argument("--skip-secqa", action="store_true")
+    parser.add_argument("--skip-cybermetric", action="store_true")
+    parser.add_argument("--skip-cti-bench", action="store_true")
     parser.add_argument("--skip-humaneval", action="store_true")
     parser.add_argument("--humaneval-limit", type=int, default=None)
+    parser.add_argument(
+        "--cybermetric-tier", type=int, default=2000, choices=[80, 500, 2000, 10000]
+    )
+    parser.add_argument("--cti-max-n", type=int, default=None, help="Limit n per CTI subset")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -78,6 +91,9 @@ def main():
     skips = {
         "probe": args.skip_probe,
         "mmlu_security": args.skip_mmlu,
+        "secqa": args.skip_secqa,
+        "cybermetric": args.skip_cybermetric,
+        "cti_bench": args.skip_cti_bench,
         "humaneval": args.skip_humaneval,
     }
     for name, eval_fn in EVALS.items():
