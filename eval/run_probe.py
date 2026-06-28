@@ -14,9 +14,11 @@ import json
 import logging
 import math
 import re
+import sys
 from pathlib import Path
 
-from _common import BASE_MODEL, REPO_ROOT, load_model
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from eval._common import BASE_MODEL, REPO_ROOT, load_model  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -56,57 +58,30 @@ def score_cwe(expected_cwe, response):
     return 1.0 if expected_cwe.upper() in found else 0.0
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--adapter", default=None, help="Path para adapter LoRA. Vazio = base puro."
-    )
-    parser.add_argument("--base", default=BASE_MODEL)
-    parser.add_argument("--out", required=True)
-    parser.add_argument("--max-new", type=int, default=128)
-    args = parser.parse_args()
-
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-
+def run(model, tokenizer, device, max_new=128):
+    """Roda probe set. Retorna dict de metrics. Reutilizado por run_bench_all."""
     probes = load_probes()
-    logger.info(f"Loaded {len(probes)} probes")
-
-    model, tokenizer, device = load_model(args.adapter, args.base)
-    model.eval()
-
-    results = []
-    cwe_hits = 0
-    cwe_total = 0
-    ppls = []
-
+    results, ppls, cwe_hits, cwe_total = [], [], 0, 0
     for i, probe in enumerate(probes):
-        prompt = probe["prompt"]
-        expected_cwe = probe.get("expected_cwe")
-        response = generate(model, tokenizer, prompt, device, args.max_new)
-        full = prompt + response
-        ppl = compute_perplexity(model, tokenizer, full[:2048], device)
+        response = generate(model, tokenizer, probe["prompt"], device, max_new)
+        ppl = compute_perplexity(model, tokenizer, (probe["prompt"] + response)[:2048], device)
         ppls.append(ppl)
-
         score = None
-        if expected_cwe:
-            score = score_cwe(expected_cwe, response)
+        if probe.get("expected_cwe"):
+            score = score_cwe(probe["expected_cwe"], response)
             cwe_hits += score
             cwe_total += 1
-
         results.append(
             {
                 "id": probe["id"],
-                "expected_cwe": expected_cwe,
+                "expected_cwe": probe.get("expected_cwe"),
                 "response": response[:512],
                 "ppl": ppl,
                 "cwe_hit": score,
             }
         )
         logger.info(f"[{i + 1}/{len(probes)}] {probe['id']} ppl={ppl:.2f} cwe_hit={score}")
-
-    report = {
-        "adapter": args.adapter,
-        "base": args.base,
+    return {
         "n_probes": len(probes),
         "mean_ppl": sum(ppls) / len(ppls) if ppls else 0.0,
         "cwe_hit_rate": cwe_hits / cwe_total if cwe_total else None,
@@ -114,11 +89,25 @@ def main():
         "results": results,
     }
 
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--adapter", default=None, help="Path adapter LoRA (default base puro)")
+    parser.add_argument("--base", default=BASE_MODEL)
+    parser.add_argument("--out", required=True)
+    parser.add_argument("--max-new", type=int, default=128)
+    args = parser.parse_args()
+
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    model, tokenizer, device = load_model(args.adapter, args.base)
+    report = run(model, tokenizer, device, args.max_new)
+    report["adapter"] = args.adapter
+    report["base"] = args.base
+
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(report, indent=2))
-    logger.info(f"Wrote {out}")
-    logger.info(f"mean_ppl={report['mean_ppl']:.2f} cwe_hit={report['cwe_hit_rate']}")
+    logger.info(f"mean_ppl={report['mean_ppl']:.2f} cwe_hit={report['cwe_hit_rate']} -> {out}")
 
 
 if __name__ == "__main__":

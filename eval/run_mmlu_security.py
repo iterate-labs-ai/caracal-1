@@ -56,30 +56,16 @@ def pick_answer(model, tokenizer, prompt, device, letter_token_ids):
     return int(torch.argmax(letter_logits).item())
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--adapter", default=None, help="LoRA adapter dir (omit pra base puro)")
-    parser.add_argument("--no-adapter", action="store_true", help="Forca base sem adapter")
-    parser.add_argument("--out", required=True, help="JSON output path")
-    args = parser.parse_args()
+def letter_token_ids(tokenizer):
+    return [tokenizer.encode(c, add_special_tokens=False)[0] for c in ["A", "B", "C", "D"]]
 
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
-    adapter = None if args.no_adapter else args.adapter
-    model, tokenizer, device = load_model(adapter)
-    logger.info(f"loaded model device={device} adapter={adapter}")
-
-    letter_token_ids = [
-        tokenizer.encode(c, add_special_tokens=False)[0] for c in ["A", "B", "C", "D"]
-    ]
-    logger.info(f"letter token ids: {letter_token_ids}")
-
-    questions = load_mmlu_security()
-    logger.info(f"loaded {len(questions)} questions")
-
-    results = []
-    n_correct = 0
-    for i, q in enumerate(questions):
+def run(model, tokenizer, device):
+    """Roda MMLU computer_security. Retorna dict de metrics. Reutilizado em run_bench_all."""
+    ids = letter_token_ids(tokenizer)
+    qs = load_mmlu_security()
+    results, n_correct = [], 0
+    for i, q in enumerate(qs):
         prompt = PROMPT_TEMPLATE.format(
             question=q["question"],
             a=q["choices"][0],
@@ -87,23 +73,33 @@ def main():
             c=q["choices"][2],
             d=q["choices"][3],
         )
-        pred = pick_answer(model, tokenizer, prompt, device, letter_token_ids)
+        pred = pick_answer(model, tokenizer, prompt, device, ids)
         correct = pred == q["answer"]
         n_correct += int(correct)
         results.append({"i": i, "pred": pred, "gold": q["answer"], "correct": correct})
         if (i + 1) % 20 == 0:
-            logger.info(f"[{i + 1}/{len(questions)}] running acc = {n_correct / (i + 1):.3f}")
-
-    summary = {
-        "n_total": len(questions),
+            logger.info(f"[{i + 1}/{len(qs)}] running acc = {n_correct / (i + 1):.3f}")
+    return {
+        "n_total": len(qs),
         "n_correct": n_correct,
-        "accuracy": n_correct / len(questions) if questions else 0.0,
-        "adapter": adapter,
+        "accuracy": n_correct / len(qs) if qs else 0.0,
         "results": results,
     }
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--adapter", default=None, help="LoRA adapter dir (default base puro)")
+    parser.add_argument("--out", required=True, help="JSON output path")
+    args = parser.parse_args()
+
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    model, tokenizer, device = load_model(args.adapter)
+    summary = run(model, tokenizer, device)
+    summary["adapter"] = args.adapter
     Path(args.out).write_text(json.dumps(summary, indent=2))
     logger.info(
-        f"accuracy = {summary['accuracy']:.3f} ({n_correct}/{len(questions)}) -> {args.out}"
+        f"accuracy = {summary['accuracy']:.3f} ({summary['n_correct']}/{summary['n_total']}) -> {args.out}"
     )
 
 

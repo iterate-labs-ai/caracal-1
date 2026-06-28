@@ -87,29 +87,14 @@ def check_solution(problem, completion, timeout=5):
     return status == "pass", reason
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--adapter", default=None, help="LoRA adapter dir (omit pra base puro)")
-    parser.add_argument("--no-adapter", action="store_true", help="Forca base sem adapter")
-    parser.add_argument("--out", required=True, help="JSON output path")
-    parser.add_argument("--max-new", type=int, default=384, help="Max new tokens por solucao")
-    parser.add_argument("--limit", type=int, default=None, help="Limit n problems (debug)")
-    args = parser.parse_args()
-
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-
-    adapter = None if args.no_adapter else args.adapter
-    model, tokenizer, device = load_model(adapter)
-    logger.info(f"loaded model device={device} adapter={adapter}")
-
+def run(model, tokenizer, device, max_new=384, limit=None):
+    """Roda HumanEval pass@1. Retorna dict de metrics. Reutilizado em run_bench_all."""
     problems = load_humaneval()
-    if args.limit:
-        problems = problems[: args.limit]
-
-    results = []
-    n_pass = 0
+    if limit:
+        problems = problems[:limit]
+    results, n_pass = [], 0
     for i, prob in enumerate(problems):
-        completion = generate_completion(model, tokenizer, prob["prompt"], device, args.max_new)
+        completion = generate_completion(model, tokenizer, prob["prompt"], device, max_new)
         passed, reason = check_solution(prob, completion)
         n_pass += int(passed)
         results.append(
@@ -120,16 +105,30 @@ def main():
             }
         )
         logger.info(f"[{i + 1}/{len(problems)}] {prob['task_id']}: {'PASS' if passed else 'FAIL'}")
-
-    summary = {
+    return {
         "n_total": len(problems),
         "n_pass": n_pass,
         "pass_at_1": n_pass / len(problems) if problems else 0.0,
-        "adapter": adapter,
         "results": results,
     }
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--adapter", default=None, help="LoRA adapter dir (default base puro)")
+    parser.add_argument("--out", required=True, help="JSON output path")
+    parser.add_argument("--max-new", type=int, default=384, help="Max new tokens por solucao")
+    parser.add_argument("--limit", type=int, default=None, help="Limit n problems (debug)")
+    args = parser.parse_args()
+
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    model, tokenizer, device = load_model(args.adapter)
+    summary = run(model, tokenizer, device, args.max_new, args.limit)
+    summary["adapter"] = args.adapter
     Path(args.out).write_text(json.dumps(summary, indent=2))
-    logger.info(f"pass@1 = {summary['pass_at_1']:.3f} ({n_pass}/{len(problems)}) -> {args.out}")
+    logger.info(
+        f"pass@1 = {summary['pass_at_1']:.3f} ({summary['n_pass']}/{summary['n_total']}) -> {args.out}"
+    )
 
 
 if __name__ == "__main__":
