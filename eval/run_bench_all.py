@@ -36,19 +36,20 @@ def _step(name, fn, summary):
 
 
 def run_probe(model, tokenizer, device, out_dir):
-    from eval.run_probe import CWE_RE, compute_perplexity, generate, load_probes
+    from eval.run_probe import compute_perplexity, generate, load_probes, score_cwe
 
     probes = load_probes()
-    ppls, cwe_hits = [], 0
+    ppls, cwe_hits, cwe_total = [], 0, 0
     for p in probes:
-        ppl = compute_perplexity(model, tokenizer, p["prompt"] + p["completion"], device)
+        response = generate(model, tokenizer, p["prompt"], device, max_new=64)
+        ppl = compute_perplexity(model, tokenizer, (p["prompt"] + response)[:2048], device)
         ppls.append(ppl)
-        gen = generate(model, tokenizer, p["prompt"], device, max_new=64)
-        if p.get("expected_cwe") and CWE_RE.search(gen):
-            cwe_hits += 1
+        if p.get("expected_cwe"):
+            cwe_hits += score_cwe(p["expected_cwe"], response)
+            cwe_total += 1
     out = {
         "mean_ppl": sum(ppls) / len(ppls),
-        "cwe_hit_rate": cwe_hits / len(probes),
+        "cwe_hit_rate": cwe_hits / cwe_total if cwe_total else None,
         "n_probes": len(probes),
     }
     (out_dir / "probe.json").write_text(json.dumps(out, indent=2))
