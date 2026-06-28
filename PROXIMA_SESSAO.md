@@ -2,7 +2,7 @@
 
 Quando voce vai entrar pro relay (sessao 2, 3, 4 ou 5).
 
-**Cenario:** Pedro (s01) acabou de publicar `pedroafonso2/caracal-base-3b-s01`. Agora Kevin (s02) entra. Mesmo passo a passo vale pra Arthur, Vitor e Alexandre.
+**Cenario (06-28):** Pedro s01, Kevin s02, Arthur s03 ja rodaram. Agora **Vitor (s04)** entra. Mesmo passo a passo vale pra Alexandre depois.
 
 ---
 
@@ -43,21 +43,21 @@ Na sidebar direita (clica **"Notebook options"** se estiver fechada):
 
 Esta e a UNICA cell que voce mexe. Olha o seu numero na tabela abaixo:
 
-| Sessao | Founder | RESUME_DATASET | OUTPUT_DATASET_SLUG |
-|---|---|---|---|
-| 1 | pedroafonso2 | `None` | `caracal-base-3b-s01` |
-| 2 | dev-knz | `"pedroafonso2/caracal-base-3b-s01"` | `caracal-base-3b-s02` |
-| 3 | arturpn1 | `"dev-knz/caracal-base-3b-s02"` | `caracal-base-3b-s03` |
-| 4 | vitorscrt | `"arturpn1/caracal-base-3b-s03"` | `caracal-base-3b-s04` |
-| 5 | aletlucas | `"vitorscrt/caracal-base-3b-s04"` | `caracal-base-3b-v0` |
+| Sessao | Founder | RESUME_DATASET | OUTPUT_DATASET_SLUG | Status |
+|---|---|---|---|---|
+| 1 | pedroafonso2 | `None` | `caracal-base-3b-s01` | done |
+| 2 | devknz | `"pedroafonso2/caracal-base-3b-s01"` | `caracal-base-3b-s02` | done |
+| 3 | arturpn | `"devknz/caracal-base-3b-s02"` | `arturpn` (slug nao-padrao) | done |
+| 4 | vitorscrt | `"arturpn/arturpn"` | `caracal-base-3b-s04` | pending |
+| 5 | aletlucas | `"vitorscrt/caracal-base-3b-s04"` | `caracal-base-3b-v0` | pending |
 
-**Exemplo Kevin (sessao 2):**
+**Exemplo Vitor (sessao 4, proxima):**
 
 ```python
-SESSION = 2
-FOUNDER_HANDLE = "dev-knz"
-RESUME_DATASET = "pedroafonso2/caracal-base-3b-s01"
-OUTPUT_DATASET_SLUG = "caracal-base-3b-s02"
+SESSION = 4
+FOUNDER_HANDLE = "vitorscrt"
+RESUME_DATASET = "arturpn/arturpn"  # slug nao-padrao: Arthur subiu como arturpn/arturpn em vez de arturpn/caracal-base-3b-s03
+OUTPUT_DATASET_SLUG = "caracal-base-3b-s04"
 STEPS = 900
 ```
 
@@ -95,8 +95,8 @@ Checkpoint salvo a cada 50 steps em `/kaggle/working/ckpt-out`. Se kernel cair a
 O notebook ao fim publica seu Kaggle Dataset automaticamente:
 
 ```
-pedroafonso2/caracal-shadow-eval  <- atualizado pelo shadow eval TPU (se rodando)
-arturpn1/caracal-base-3b-s02      <- voce publicou
+pedroafonso2/caracal-bench-s0X    <- atualizado pelo TPU bench (se rodando)
+SEU_HANDLE/caracal-base-3b-sNN    <- voce publicou
 ```
 
 ### 6a. Confirmar dataset publicado

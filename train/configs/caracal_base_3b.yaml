@@ -43,26 +43,31 @@ relay:
   sessions:
     - session: 1
       founder: pedro
+      kaggle_handle: pedroafonso2
       steps: 900
       input_dataset: null
-      output_dataset: caracal-base-3b-s01
+      output_dataset: pedroafonso2/caracal-base-3b-s01
     - session: 2
       founder: kevin
+      kaggle_handle: devknz
       steps: 900
-      input_dataset: caracal-base-3b-s01
-      output_dataset: caracal-base-3b-s02
+      input_dataset: pedroafonso2/caracal-base-3b-s01
+      output_dataset: devknz/caracal-base-3b-s02
     - session: 3
       founder: arthur
+      kaggle_handle: arturpn
       steps: 900
-      input_dataset: caracal-base-3b-s02
-      output_dataset: caracal-base-3b-s03
+      input_dataset: devknz/caracal-base-3b-s02
+      output_dataset: arturpn/arturpn  # slug nao-padrao escolhido por Arthur
     - session: 4
       founder: vitor
+      kaggle_handle: vitorscrt
       steps: 900
-      input_dataset: caracal-base-3b-s03
-      output_dataset: caracal-base-3b-s04
+      input_dataset: arturpn/arturpn
+      output_dataset: vitorscrt/caracal-base-3b-s04
     - session: 5
       founder: alexandre
+      kaggle_handle: aletlucas
       steps: 900
-      input_dataset: caracal-base-3b-s04
-      output_dataset: caracal-base-3b-final
+      input_dataset: vitorscrt/caracal-base-3b-s04
+      output_dataset: aletlucas/caracal-base-3b-v0

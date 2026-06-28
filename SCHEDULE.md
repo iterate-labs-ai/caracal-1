@@ -7,9 +7,9 @@
 | Conta Kaggle | Fundador | Phone verified | T4 x2 ativado |
 |---|---|---|---|
 | pedroafonso2 | Pedro | sim | sim |
-| arturpn1 | Arthur | pendente | pendente |
+| arturpn | Arthur | sim | sim |
 | vitorscrt | Vitor | pendente | pendente |
-| dev-knz | Kevin | pendente | pendente |
+| devknz | Kevin | sim | sim |
 | aletlucas | Alexandre | pendente | pendente |
 
 ## Sprint 0 · Caracal Base 3B v0 · 5 sessoes de 900 steps cada
@@ -18,13 +18,13 @@ Limite Kaggle: 12h por kernel. Cada sessao ~10h em T4 x2 (~40s/step com fp16 + L
 
 Cada fundador faz 1 sessao. Salva checkpoint como Kaggle Dataset publico. Proximo pull-a do anterior.
 
-| Sessao | Conta Kaggle | Steps | Resume Dataset | Output Dataset |
-|---|---|---|---|---|
-| 1 | pedroafonso2 | 0 -> 900 | (cold start) | `pedroafonso2/caracal-base-3b-s01` |
-| 2 | dev-knz | 900 -> 1800 | `pedroafonso2/caracal-base-3b-s01` | `dev-knz/caracal-base-3b-s02` |
-| 3 | arturpn1 | 1800 -> 2700 | `dev-knz/caracal-base-3b-s02` | `arturpn1/caracal-base-3b-s03` |
-| 4 | vitorscrt | 2700 -> 3600 | `arturpn1/caracal-base-3b-s03` | `vitorscrt/caracal-base-3b-s04` |
-| 5 | aletlucas | 3600 -> 4500 | `vitorscrt/caracal-base-3b-s04` | `aletlucas/caracal-base-3b-v0` (FINAL) |
+| Sessao | Conta Kaggle | Steps | Resume Dataset | Output Dataset | Status |
+|---|---|---|---|---|---|
+| 1 | pedroafonso2 | 0 -> 900 | (cold start) | `pedroafonso2/caracal-base-3b-s01` | done |
+| 2 | devknz | 900 -> 1800 | `pedroafonso2/caracal-base-3b-s01` | `devknz/caracal-base-3b-s02` | done |
+| 3 | arturpn | 1800 -> 2700 | `devknz/caracal-base-3b-s02` | `arturpn/arturpn` (slug nao-padrao) | done |
+| 4 | vitorscrt | 2700 -> 3600 | `arturpn/arturpn` | `vitorscrt/caracal-base-3b-s04` | pending |
+| 5 | aletlucas | 3600 -> 4500 | `vitorscrt/caracal-base-3b-s04` | `aletlucas/caracal-base-3b-v0` (FINAL) | pending |
 
 Total: **4500 steps** = ~95M tokens treinados em PrimeVul + BigVul + DiverseVul.
 
@@ -48,10 +48,10 @@ Sucesso v0 = `win_rate >= 80%` no `compare_baseline.py` (Caracal melhor ppl que 
 2. Copiar codigo de [train/notebooks/kaggle_continued_pretrain.ipynb](train/notebooks/kaggle_continued_pretrain.ipynb)
 3. Editar 5 variaveis topo:
    ```python
-   SESSION = 2                                     # numero da sua sessao
-   FOUNDER_HANDLE = "arturpn1"                     # seu handle Kaggle
-   RESUME_DATASET = "pedroafonso2/caracal-base-3b-s01"  # output da sessao anterior
-   OUTPUT_DATASET_SLUG = "caracal-base-3b-s02"
+   SESSION = 4                                     # numero da sua sessao
+   FOUNDER_HANDLE = "vitorscrt"                    # seu handle Kaggle
+   RESUME_DATASET = "arturpn/arturpn"              # output da sessao anterior (slug nao-padrao!)
+   OUTPUT_DATASET_SLUG = "caracal-base-3b-s04"
    STEPS = 900
    ```
 4. Settings: **GPU T4 x2** + Internet ON + Persistence

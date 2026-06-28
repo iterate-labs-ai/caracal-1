@@ -29,8 +29,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 SESSIONS = [
     ("pedroafonso2", "caracal-base-3b-s01", 1),
-    ("dev-knz", "caracal-base-3b-s02", 2),
-    ("arturpn1", "caracal-base-3b-s03", 3),
+    ("devknz", "caracal-base-3b-s02", 2),
+    ("arturpn", "arturpn", 3),  # slug nao-padrao: Arthur subiu como arturpn/arturpn
     ("vitorscrt", "caracal-base-3b-s04", 4),
     ("aletlucas", "caracal-base-3b-v0", 5),
 ]
