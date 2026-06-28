@@ -6,6 +6,9 @@
 Dataset: AI4Sec/cti-bench (HuggingFace, public, no auth).
 Generate-based mas max_new=20 + greedy = rapido em T4 (~30min total).
 
+NAO RODAR EM TPU: usa .generate() iterativo, XLA recompila por shape novo.
+Em TPU vira >5h e estoura limite. Skip com --skip-cti-bench em notebooks TPU.
+
 Usage:
     python eval/run_cti_bench.py --adapter ./ckpt --out cti.json
 """
