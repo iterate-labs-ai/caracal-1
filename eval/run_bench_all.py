@@ -71,10 +71,8 @@ def main():
     parser.add_argument("--skip-cti-bench", action="store_true")
     parser.add_argument("--skip-humaneval", action="store_true")
     parser.add_argument("--humaneval-limit", type=int, default=None)
-    parser.add_argument(
-        "--cybermetric-tier", type=int, default=2000, choices=[80, 500, 2000, 10000]
-    )
-    parser.add_argument("--cti-max-n", type=int, default=None, help="Limit n per CTI subset")
+    parser.add_argument("--cybermetric-tier", type=int, default=500, choices=[80, 500, 2000, 10000])
+    parser.add_argument("--cti-max-n", type=int, default=500, help="Limit n per CTI subset")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
