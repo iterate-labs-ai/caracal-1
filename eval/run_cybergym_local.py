@@ -17,7 +17,6 @@ Usage:
 
 import argparse
 import base64
-import io
 import json
 import logging
 import os
@@ -110,32 +109,59 @@ def get_manifest(repo, tag, token, timeout=30):
     return r.json()
 
 
-def stream_layer(repo, digest, token, dest_dir, timeout=600):
-    """Download e extrai layer .tar.gz em dest_dir. Aplica whiteout (.wh.X = delete)."""
+def _download_blob(repo, digest, token, tmp_path, timeout):
     headers = {"Authorization": f"Bearer {token}"}
-    r = requests.get(
-        f"{REGISTRY_BASE}/{repo}/blobs/{digest}", headers=headers, stream=True, timeout=timeout
-    )
-    r.raise_for_status()
-    blob = r.content
-    with tarfile.open(fileobj=io.BytesIO(blob), mode="r:gz") as tar:
-        for member in tar.getmembers():
-            name = member.name
-            base = os.path.basename(name)
-            if base.startswith(".wh."):
-                target = dest_dir / name.replace(".wh.", "", 1)
-                if target.exists() or target.is_symlink():
-                    if target.is_dir() and not target.is_symlink():
-                        shutil.rmtree(target, ignore_errors=True)
-                    else:
-                        target.unlink(missing_ok=True)
-                continue
-            try:
-                tar.extract(member, dest_dir, filter="data")
-            except (PermissionError, OSError, tarfile.TarError) as e:
-                # Layers podem ter device nodes/setuid bits que filter="data" rejeita.
-                # Esses arquivos nao sao necessarios pra rodar /arvo - skip seguro.
-                logger.debug(f"extract skip {name}: {e}")
+    with requests.get(
+        f"{REGISTRY_BASE}/{repo}/blobs/{digest}",
+        headers=headers,
+        stream=True,
+        timeout=timeout,
+    ) as r:
+        r.raise_for_status()
+        with open(tmp_path, "wb") as f:
+            for chunk in r.iter_content(chunk_size=8 * 1024 * 1024):
+                if chunk:
+                    f.write(chunk)
+
+
+def _apply_whiteout(name, dest_dir):
+    target = dest_dir / name.replace(".wh.", "", 1)
+    if not (target.exists() or target.is_symlink()):
+        return
+    if target.is_dir() and not target.is_symlink():
+        shutil.rmtree(target, ignore_errors=True)
+    else:
+        target.unlink(missing_ok=True)
+
+
+def _extract_member(tar, member, dest_dir):
+    try:
+        tar.extract(member, dest_dir, filter="data")
+    except (PermissionError, OSError, tarfile.TarError) as e:
+        # Layers podem ter device nodes/setuid bits que filter="data" rejeita.
+        # Esses arquivos nao sao necessarios pra rodar /arvo - skip seguro.
+        logger.debug(f"extract skip {member.name}: {e}")
+
+
+def stream_layer(repo, digest, token, dest_dir, timeout=1200):
+    """Download streaming + extrai layer .tar.gz em dest_dir. Aplica whiteout (.wh.X = delete).
+
+    Streaming via tempfile evita pico RAM em layers grandes (algumas ARVO chegam 500MB+).
+    """
+    fd, tmp_path = tempfile.mkstemp(suffix=".tar.gz")
+    os.close(fd)
+    try:
+        _download_blob(repo, digest, token, tmp_path, timeout)
+        with tarfile.open(tmp_path, mode="r:gz") as tar:
+            for member in tar.getmembers():
+                base = os.path.basename(member.name)
+                if base.startswith(".wh."):
+                    _apply_whiteout(member.name, dest_dir)
+                    continue
+                _extract_member(tar, member, dest_dir)
+    finally:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
 
 
 def pull_image_rootfs(repo, tag, dest_dir):

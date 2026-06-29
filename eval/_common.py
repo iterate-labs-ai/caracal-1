@@ -48,9 +48,9 @@ def load_model(adapter, base=BASE_MODEL):
     log.info(f"[load_model] device={device} dtype={dtype} base={base}")
     tokenizer = AutoTokenizer.from_pretrained(base)
     log.info("[load_model] tokenizer loaded, loading base model...")
-    base_model = AutoModelForCausalLM.from_pretrained(
-        base, torch_dtype=dtype, low_cpu_mem_usage=True
-    ).to(device)
+    base_model = AutoModelForCausalLM.from_pretrained(base, dtype=dtype, low_cpu_mem_usage=True).to(
+        device
+    )
     log.info(f"[load_model] base model on {device}, adapter={adapter}")
     if adapter and (Path(adapter) / "adapter_config.json").exists():
         from peft import PeftModel
