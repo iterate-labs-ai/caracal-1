@@ -47,11 +47,15 @@ def load_model(adapter, base=BASE_MODEL):
     device, dtype = pick_device()
     log.info(f"[load_model] device={device} dtype={dtype} base={base}")
     tokenizer = AutoTokenizer.from_pretrained(base)
-    log.info("[load_model] tokenizer loaded, loading base model...")
-    base_model = AutoModelForCausalLM.from_pretrained(base, dtype=dtype, low_cpu_mem_usage=True).to(
-        device
+    log.info("[load_model] tokenizer loaded, loading base model via device_map=auto...")
+    # device_map="auto" evita .to(device) que materializa weights lento apos meta init.
+    # Accelerate handles placement direto no GPU.
+    base_model = AutoModelForCausalLM.from_pretrained(
+        base, dtype=dtype, device_map="auto" if device.type == "cuda" else None
     )
-    log.info(f"[load_model] base model on {device}, adapter={adapter}")
+    if device.type != "cuda":
+        base_model = base_model.to(device)
+    log.info(f"[load_model] base model loaded, adapter={adapter}")
     if adapter and (Path(adapter) / "adapter_config.json").exists():
         from peft import PeftModel
 
