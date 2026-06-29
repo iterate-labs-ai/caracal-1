@@ -23,16 +23,40 @@ def pick_device():
 
 
 def load_model(adapter, base=BASE_MODEL):
-    """Carrega base + opcionalmente attach LoRA adapter. Tokenizer sempre do base."""
+    """Carrega base + opcionalmente attach LoRA adapter. Tokenizer sempre do base.
+
+    low_cpu_mem_usage=True evita pico RAM (T4 Kaggle = 14GB, sem isso 3B fp16
+    estoura no transfer host->device).
+    """
+    import logging
+    import os
+    import sys
+
+    os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
+    os.environ.setdefault("HF_HUB_DOWNLOAD_TIMEOUT", "120")
+    os.environ.setdefault("TRANSFORMERS_NO_ADVISORY_WARNINGS", "1")
+    log = logging.getLogger(__name__)
+    if not log.handlers:
+        h = logging.StreamHandler(sys.stdout)
+        h.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
+        log.addHandler(h)
+        log.setLevel(logging.INFO)
+    logging.getLogger("transformers").setLevel(logging.ERROR)
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
     device, dtype = pick_device()
+    log.info(f"[load_model] device={device} dtype={dtype} base={base}")
     tokenizer = AutoTokenizer.from_pretrained(base)
-    base_model = AutoModelForCausalLM.from_pretrained(base, torch_dtype=dtype).to(device)
+    log.info("[load_model] tokenizer loaded, loading base model...")
+    base_model = AutoModelForCausalLM.from_pretrained(
+        base, torch_dtype=dtype, low_cpu_mem_usage=True
+    ).to(device)
+    log.info(f"[load_model] base model on {device}, adapter={adapter}")
     if adapter and (Path(adapter) / "adapter_config.json").exists():
         from peft import PeftModel
 
         model = PeftModel.from_pretrained(base_model, adapter)
+        log.info("[load_model] adapter attached")
     else:
         model = base_model
     model.eval()
