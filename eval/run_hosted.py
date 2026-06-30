@@ -203,6 +203,9 @@ def main():
     parser.add_argument("--bench", required=True, choices=list(BENCHES.keys()))
     parser.add_argument("--llm", required=True, help="kbench llm tag e.g. google/gemini-2.5-flash")
     parser.add_argument("--out", required=True, help="JSON output path")
+    parser.add_argument(
+        "--max-n", type=int, default=None, help="Limit n samples (cti_bench, humaneval)"
+    )
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -214,7 +217,12 @@ def main():
     llm = kbench.llms[args.llm]
 
     runner = BENCHES[args.bench]
-    summary = runner(llm)
+    kw = {}
+    if args.bench == "cti_bench" and args.max_n:
+        kw["max_n"] = args.max_n
+    elif args.bench == "humaneval" and args.max_n:
+        kw["limit"] = args.max_n
+    summary = runner(llm, **kw)
     summary["llm"] = args.llm
     summary["bench"] = args.bench
     Path(args.out).write_text(json.dumps(summary, indent=2))
