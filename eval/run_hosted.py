@@ -116,7 +116,7 @@ def run_cybermetric(llm, tier=500):
 
 
 def run_cti_bench(llm, max_n=500):
-    from eval.run_cti_bench import CWE_RE, RCM_PROMPT, load_subset
+    from eval.run_cti_bench import CWE_RE, load_subset
 
     rows = load_subset("cti-rcm")[:max_n]
     n_correct, results = 0, []
@@ -126,8 +126,8 @@ def run_cti_bench(llm, max_n=500):
         return f"CWE-{int(m.group(1))}" if m else None
 
     for i, r in enumerate(rows):
-        prompt = RCM_PROMPT.format(description=r["Prompt"])
-        text = prompt_hosted(llm, prompt, max_chars=64)
+        # Prompt oficial CTI-Bench ja vem na coluna - sem wrap
+        text = prompt_hosted(llm, r["Prompt"], max_chars=256)
         pred = norm(text)
         gold = norm(r["GT"])
         correct = pred is not None and pred == gold

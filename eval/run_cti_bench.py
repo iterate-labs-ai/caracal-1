@@ -33,12 +33,9 @@ logger = logging.getLogger(__name__)
 CWE_RE = re.compile(r"CWE-?(\d{1,4})", re.IGNORECASE)
 HF_BASE = "https://huggingface.co/datasets/AI4Sec/cti-bench/resolve/main"
 
-RCM_PROMPT = (
-    "Map the following CVE description to the most appropriate CWE identifier. "
-    "Output ONLY the CWE in format CWE-NNN.\n\n"
-    "CVE description: {description}\n"
-    "CWE:"
-)
+# Dataset coluna "Prompt" ja vem com instrucao oficial CTI-Bench
+# ("Analyze... last line of your response contains only the CWE ID").
+# NAO envolver em template proprio - duplicaria instrucao e quebraria parse.
 
 
 def load_subset(subset):
@@ -57,19 +54,25 @@ def load_subset(subset):
 
 
 def normalize_cwe(s):
+    """Extrai CWE-NNN. Prioriza ultima linha (prompt oficial pede ultima linha = CWE ID)."""
+    for line in reversed(s.splitlines()):
+        m = CWE_RE.search(line)
+        if m:
+            return f"CWE-{int(m.group(1))}"
     m = CWE_RE.search(s)
     return f"CWE-{int(m.group(1))}" if m else None
 
 
-def run_rcm(model, tokenizer, device, max_n=None):
+def run(model, tokenizer, device, max_n=None):
+    """RCM = CVE description -> CWE-NNN. Unica subtask viavel sem CVSS vector gen."""
     rows = load_subset("cti-rcm")
     if max_n:
         rows = rows[:max_n]
     n_correct = 0
     results = []
     for i, r in enumerate(rows):
-        prompt = RCM_PROMPT.format(description=r["Prompt"])
-        resp = generate(model, tokenizer, prompt, device, max_new=20)
+        # max_new=64 pra permitir "justification" + CWE final como pede prompt oficial
+        resp = generate(model, tokenizer, r["Prompt"], device, max_new=64)
         pred = normalize_cwe(resp)
         gold = normalize_cwe(r["GT"])
         correct = pred is not None and pred == gold
@@ -85,10 +88,6 @@ def run_rcm(model, tokenizer, device, max_n=None):
     }
 
 
-def run(model, tokenizer, device, max_n=None):
-    return {"rcm": run_rcm(model, tokenizer, device, max_n)}
-
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--adapter", default=None, help="LoRA adapter dir (default base puro)")
@@ -101,9 +100,7 @@ def main():
     summary = run(model, tokenizer, device, args.max_n)
     summary["adapter"] = args.adapter
     Path(args.out).write_text(json.dumps(summary, indent=2))
-    logger.info(
-        f"rcm acc={summary['rcm']['accuracy']:.3f} vsp acc={summary['vsp']['accuracy']:.3f} -> {args.out}"
-    )
+    logger.info(f"rcm acc={summary['accuracy']:.3f} -> {args.out}")
 
 
 if __name__ == "__main__":
