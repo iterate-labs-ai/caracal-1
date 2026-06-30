@@ -47,11 +47,14 @@ def load_model(adapter, base=BASE_MODEL):
     device, dtype = pick_device()
     log.info(f"[load_model] device={device} dtype={dtype} base={base}")
     tokenizer = AutoTokenizer.from_pretrained(base)
-    log.info("[load_model] tokenizer loaded, loading base model (no device_map)...")
-    # device_map="auto" trava PEFT.from_pretrained em modelos distributed. Voltamos
-    # pra carga direta cuda:0 com low_cpu_mem_usage. Qwen-3B fp16 = 6GB cabe T4 16GB.
-    base_model = AutoModelForCausalLM.from_pretrained(base, dtype=dtype, low_cpu_mem_usage=True)
-    base_model = base_model.to(device)
+    log.info("[load_model] tokenizer loaded, loading base model via device_map=auto...")
+    # device_map="auto" funciona (CyberMetric V1 commit 82c6a4b rodou 9min).
+    # .to(device) com low_cpu_mem_usage trava silencioso em 40-90% materializing.
+    base_model = AutoModelForCausalLM.from_pretrained(
+        base, dtype=dtype, device_map="auto" if device.type == "cuda" else None
+    )
+    if device.type != "cuda":
+        base_model = base_model.to(device)
     log.info(f"[load_model] base model on {device}, adapter={adapter}")
     if adapter and (Path(adapter) / "adapter_config.json").exists():
         from peft import PeftModel
