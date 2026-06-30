@@ -47,12 +47,12 @@ def load_model(adapter, base=BASE_MODEL):
     device, dtype = pick_device()
     log.info(f"[load_model] device={device} dtype={dtype} base={base}")
     tokenizer = AutoTokenizer.from_pretrained(base)
-    log.info("[load_model] tokenizer loaded, loading base model via device_map=auto...")
-    # device_map="auto" funciona (CyberMetric V1 commit 82c6a4b rodou 9min).
-    # .to(device) com low_cpu_mem_usage trava silencioso em 40-90% materializing.
-    base_model = AutoModelForCausalLM.from_pretrained(
-        base, dtype=dtype, device_map="auto" if device.type == "cuda" else None
-    )
+    log.info("[load_model] tokenizer loaded, loading base model...")
+    # device_map={"":"cuda:0"} forca single GPU - device_map="auto" race em T4 x2,
+    # trava intermittent em load weights ~40%. CyberMetric+SecQA pegaram race-free,
+    # CTI V3 com generate() iterativo expoz mais o bug.
+    dmap = {"": "cuda:0"} if device.type == "cuda" else None
+    base_model = AutoModelForCausalLM.from_pretrained(base, dtype=dtype, device_map=dmap)
     if device.type != "cuda":
         base_model = base_model.to(device)
     log.info(f"[load_model] base model on {device}, adapter={adapter}")
