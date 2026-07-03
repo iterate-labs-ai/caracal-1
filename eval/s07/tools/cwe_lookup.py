@@ -1,5 +1,7 @@
 """CWE tools - lookup, tree path, keyword search, view filter."""
 
+import numpy as np
+
 from eval.s07.cwe_tree_parser import CWEParser
 
 _TREE: CWEParser | None = None
@@ -38,10 +40,42 @@ def cwe_tree_path(cwe_id: str) -> dict:
     return {"cwe_id": f"CWE-{cwe}", "ancestors": [f"CWE-{a}" for a in ancestors]}
 
 
+_KW_INDEX: dict[str, str] | None = None
+_KW_EMBEDDINGS = None
+
+
+def _kw_index() -> tuple[dict[str, str], "np.ndarray"]:
+    """Build keyword -> CWE-ID index via micro_rubric + top-25 view."""
+    global _KW_INDEX, _KW_EMBEDDINGS
+    if _KW_INDEX is not None:
+        return _KW_INDEX, _KW_EMBEDDINGS
+    from .cwe_micro_rubric import MICRO_RUBRICS
+
+    _KW_INDEX = MICRO_RUBRICS
+    from sentence_transformers import SentenceTransformer
+
+    model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+    texts = list(MICRO_RUBRICS.values())
+    _KW_EMBEDDINGS = model.encode(texts, normalize_embeddings=True)
+    return _KW_INDEX, _KW_EMBEDDINGS
+
+
 def cwe_search_kw(text: str, top_k: int = 5) -> dict:
-    """Keyword search - retorna top-K candidates."""
-    # TODO Vitor implement BM25 or sentence-transformers semantic search
-    raise NotImplementedError("cwe_search_kw - implement em s07.D")
+    """Semantic search: text -> top-K CWE candidates (from top-25 rubrics)."""
+    from sentence_transformers import SentenceTransformer
+
+    index, embeddings = _kw_index()
+    ids = list(index.keys())
+    model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+    query = model.encode([text], normalize_embeddings=True)[0]
+    scores = embeddings @ query
+    top = scores.argsort()[::-1][:top_k]
+    return {
+        "candidates": [
+            {"cwe_id": ids[i], "score": float(scores[i]), "rubric": index[ids[i]][:120]}
+            for i in top
+        ]
+    }
 
 
 def cwe_view_filter(cwe_id: str, view: str = "1003") -> dict:
