@@ -32,7 +32,10 @@ def build_requests(rows: list[dict]) -> list[dict]:
                 "max_tokens": 512,
                 "temperature": 0.0,
                 "messages": [
-                    {"role": "user", "content": PROMPT_TEMPLATE.format(cve_description=r["description"])}
+                    {
+                        "role": "user",
+                        "content": PROMPT_TEMPLATE.format(cve_description=r["description"]),
+                    }
                 ],
             },
         }
@@ -84,7 +87,9 @@ def main():
     from datasets import load_dataset
 
     ds = load_dataset("xamxte/cve-to-cwe", split=args.split).select(range(args.n_samples))
-    rows = [{"cve_id": r["cve_id"], "description": r["description"], "cwe_id": r["cwe_id"]} for r in ds]
+    rows = [
+        {"cve_id": r["cve_id"], "description": r["description"], "cwe_id": r["cwe_id"]} for r in ds
+    ]
 
     client = Anthropic()
     requests = build_requests(rows)

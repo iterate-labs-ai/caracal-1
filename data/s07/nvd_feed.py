@@ -12,7 +12,9 @@ RATE_LIMIT_KEY_SEC = 0.6
 RATE_LIMIT_NO_KEY_SEC = 6.0
 
 
-def fetch_recent_cves(start_date: str = "2025-01-01T00:00:00.000", limit: int = 10_000, api_key: str | None = None) -> list[dict]:
+def fetch_recent_cves(
+    start_date: str = "2025-01-01T00:00:00.000", limit: int = 10_000, api_key: str | None = None
+) -> list[dict]:
     """Fetch CVEs after start_date via NVD API v2."""
     headers = {"apiKey": api_key} if api_key else {}
     sleep = RATE_LIMIT_KEY_SEC if api_key else RATE_LIMIT_NO_KEY_SEC
