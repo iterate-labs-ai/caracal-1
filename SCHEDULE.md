@@ -8,9 +8,9 @@
 |---|---|---|---|
 | pedroafonso2 | Pedro | sim | sim |
 | arturpn | Arthur | sim | sim |
-| vitorscrt | Vitor | pendente | pendente |
+| vitorscrt | Vitor | sim | pendente |
 | devknz | Kevin | sim | sim |
-| aletlucas | Alexandre | pendente | pendente |
+| alexandretorreslucas | Alexandre | sim | sim |
 
 ## Sprint 0 · Caracal Base 3B v0 · 5 sessoes de 900 steps cada
 
