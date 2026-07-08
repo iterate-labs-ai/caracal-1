@@ -7,18 +7,27 @@ def eval_seceval(model, tok, n: int = 500) -> dict:
     from datasets import load_dataset
 
     try:
-        ds = load_dataset("XuanwuAI/SecEval", split="test").select(range(n))
+        ds = load_dataset("XuanwuAI/SecEval", split="train").select(range(n))
     except (FileNotFoundError, ValueError) as e:
         return {"error": f"secval_load_failed: {e}"}
     per, correct = [], []
     system = "You are a cybersecurity expert. Answer the multiple choice question."
 
     for i, r in enumerate(ds):
-        choices = r.get("choices") or {}
-        if isinstance(choices, list):
-            choices = {
-                letter: choices[idx] for idx, letter in enumerate("ABCD") if idx < len(choices)
-            }
+        raw = r.get("choices") or {}
+        if isinstance(raw, list):
+            choices = {}
+            for idx, letter in enumerate("ABCD"):
+                if idx >= len(raw):
+                    break
+                text = raw[idx]
+                for prefix in (f"{letter}: ", f"{letter}. ", f"{letter}) "):
+                    if text.startswith(prefix):
+                        text = text[len(prefix) :]
+                        break
+                choices[letter] = text
+        else:
+            choices = raw
         q = r.get("question") or ""
         if not choices or not q:
             continue

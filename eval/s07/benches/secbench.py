@@ -3,10 +3,19 @@
 from ._common import bootstrap_ci, generate, mcq_chat_prompt, normalize_mcq_letter
 
 
+SUBSET_FILE = {"mcq": "data/MCQs_2730.jsonl", "saq": "data/SAQs_270.jsonl"}
+
+
 def _load(subset: str, n: int) -> list[dict]:
     from datasets import load_dataset
+    from huggingface_hub import hf_hub_download
 
-    ds = load_dataset("secbench-hf/SecBench", split=subset)
+    path = hf_hub_download(
+        repo_id="secbench-hf/SecBench",
+        filename=SUBSET_FILE[subset],
+        repo_type="dataset",
+    )
+    ds = load_dataset("json", data_files=path, split="train")
     return list(ds.select(range(min(n, len(ds)))))
 
 

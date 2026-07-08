@@ -23,7 +23,7 @@ def eval_primevul(model, tok, n: int = 500) -> dict:
     try:
         from datasets import load_dataset
 
-        ds = load_dataset("PrimeVul/PrimeVul", split="test").select(range(n))
+        ds = load_dataset("ASSERT-KTH/PrimeVul", split="test_paired").select(range(n))
     except (FileNotFoundError, ValueError, ConnectionError) as e:
         return {"error": f"primevul_load_failed: {e}"}
     per, correct = [], []
@@ -31,7 +31,7 @@ def eval_primevul(model, tok, n: int = 500) -> dict:
 
     for i, r in enumerate(ds):
         code = r.get("func") or r.get("code") or ""
-        gold = int(r.get("target", 0))
+        gold = int(r.get("is_vulnerable", r.get("target", 0)))
         prompt = tok.apply_chat_template(
             [
                 {"role": "system", "content": system},
