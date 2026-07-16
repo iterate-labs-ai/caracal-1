@@ -52,30 +52,46 @@ verifiable rewards e statistical rigor pra provar asymptotic improvement.**
 Testable falsification: if asymptotic gain 95% CI includes zero, or if entropy
 collapse triggers (RL-PLUS 2508.00222 detector), we reject H1.
 
-## Task suite (locked, general-purpose)
+## Deliverable primário: **modelo RSI-3B**
 
-Three verifiable-reward domains chosen for L1/L2/L3 gate discriminability + Kaggle T4 x2 feasibility + non-saturation @ 3B:
+Não é só paper — o deliverable é um **modelo público em HF** que passa L1 gate
+em math + coding, produzido por same-model RSI. Nome tentativo: **`Ignite-3B`**
+(referência a Weco Level 2 "Ignition" - aspiracional).
+
+- Base: `Qwen/Qwen2.5-3B-Instruct` (ou Qwen2.5-Coder-3B-Instruct)
+- Method: same-model RSI + RLVR + N=8 generations
+- Release: `iterate-labs-ai/ignite-3b-v1` HF checkpoint público
+- Paper: side deliverable (methodology write-up)
+
+## Task suite (locked: math + coding)
+
+**Foco math + coding** (Pedro): MLE-Bench excluído por T4 infeasibility (Kaggle
+comps precisam >24h GPU-days/task, T4 x2 insuficiente).
 
 | Domain | Task | Role | RLVR | 3B baseline | Frontier ceiling |
 |---|---|---|---|---|---|
 | **Code** | LiveCodeBench monthly (2403.07974) | Held-in code reasoning; rolling window = built-in temporal decontamination | Unit test exec | ~15% | ~70% |
 | **Math** | AIME 2024 (train) / AIME 2025 (held-out) | Math generalization gate; integer answers = pure RLVR | Integer exact match | ~10% | ~85% (reasoners) |
-| **OOD arithmetic** | Self-Improving Transformers style (2502.01612), N→N+k digits | Synthetic; zero contamination; continuous difficulty knob | Deterministic | Controllable | N/A synthetic |
 
-**Descartados** (com razão):
+**Optional bonus (não core)**:
+- **OOD arithmetic** (2502.01612 style, N→N+k digits): synthetic zero-contamination
+  scaffold pra L3 detection. Roda em paralelo se sobrar compute, não é gate.
+
+**Descartados**:
+- **MLE-Bench** (2410.07095) — T4 infeasible, precisa 70B+ scale (Pedro confirmou)
+- **SWE-Bench Verified** — repo-scale context blow T4 memory, 3B baseline <5%
 - GSM8K, HumanEval, MBPP, MMLU-Pro — saturated + contaminados
-- ARC-AGI-2 — flatline risk @ 3B (3B ~0-3%, sem headroom)
-- OMNI, OMNI-EPIC, MLE-Bench — LLM-judge (Shafayat 2505.21444 collapse risk) ou T4 infeasible
-- SWE-Bench Verified — repo-scale context blow T4 memory
+- ARC-AGI-2 — flatline risk @ 3B (~0-3%, sem headroom)
+- OMNI, OMNI-EPIC — LLM-judge (Shafayat 2505.21444 collapse risk)
 - BIG-Bench-Hard — contaminado
 
-**Justificativa suite**:
-1. **RLVR purity**: All three verify via exact-match/unit-tests/deterministic — no LLM-judge, sidesteps Shafayat collapse
-2. **Kaggle T4 x2 budget**: 3B bf16 ~6GB, headroom pra QLoRA r=16-32 + vLLM inference no segundo T4
-3. **L2 gate**: LiveCodeBench + AIME admitem clean outer/inner swap (v_N scaffold applied to v_0 weights). Delta measurable no mesmo eval set
-4. **L3 signal**: OOD arithmetic tem monotone difficulty knob (digit count) — ideal pra power-law fit + Bayesian change-point (BOCPD 0710.3742). LiveCodeBench monthly = secondary temporal axis
-5. **Coverage**: code + math + synthetic-OOD spans os 3 modos da literatura RSI general (rStar-Math, AZR, Self-Improving Transformers), gains generalizam
-6. **Non-saturation**: All 3 têm >50pp de headroom @ 3B, evita ceiling artifacts
+**Justificativa suite math + code**:
+1. **RLVR purity**: unit-test exec + integer match, no LLM-judge → Shafayat-proof
+2. **Kaggle T4 x2 budget**: 3B bf16 ~6GB, headroom pra QLoRA r=16-32 + vLLM 2ª T4
+3. **L2 gate**: ambas admitem outer/inner swap (v_N scaffold applied to v_0 weights)
+4. **L3 signal**: LiveCodeBench monthly buckets = temporal axis natural pra BOCPD
+5. **Coverage**: code + math = 2 dos 3 modos da literatura RSI (rStar-Math + AZR + Self-Improving Transformers)
+6. **Non-saturation**: ambas >50pp headroom @ 3B, sem ceiling artifacts
 
 ## Study design
 
@@ -243,14 +259,15 @@ candidates × 5K tokens).
 | Overfitting single domain | 3 domains (math + code + reasoning) |
 | Weco 4-level classification disputed | Report multi-metric evidence, not single claim |
 
-## Deliverables
+## Deliverables (modelo é o produto principal)
 
-1. **Paper** (ICLR/NeurIPS 2027): 9 pages + appendix, focus on **method + machinery**
-2. **Open-source lib**: `same-model-rsi` (pip installable, task-agnostic)
-3. **RSI benchmark harness**: L0/L1/L2/L3 gate suite for any 3B model
-4. **HF checkpoints**: v_0...v_N for each condition (public release)
-5. **Data**: mutation logs + attribution analysis (public JSONL)
-6. **Ablation tables + power-law/sigmoid fit plots**
+1. **🎯 `iterate-labs-ai/ignite-3b-v1`** — HF modelo público, math + coding RSI-tuned (deliverable #1)
+2. **Paper** (ICLR/NeurIPS 2027): method + machinery + result table
+3. **Open-source lib**: `same-model-rsi` (pip, task-agnostic harness)
+4. **RSI benchmark**: L0/L1/L2/L3 gate suite reutilizável
+5. **HF checkpoints intermediários**: v_0...v_N ablation series
+6. **Data**: mutation logs + attribution JSONL público
+7. **Ablation tables + sigmoid/power-law fit plots**
 
 ## Timeline
 
@@ -271,11 +288,17 @@ candidates × 5K tokens).
 
 ## Success criteria (pre-registered)
 
+**Modelo `ignite-3b-v1` ships se atender**:
+- LiveCodeBench held-out delta v_8 vs v_0 >= +5pp com p < 0.01
+- AIME 2025 held-out delta v_8 vs v_0 >= +2pp com p < 0.05
+- Zero collapse detectable (RL-PLUS entropy check pass)
+
+**Paper claims**:
 - **Primary L1**: Cond C v_8 held-out >= Cond A + 2pp with p < 0.01 → **L1 confirmed**
 - **Primary L2**: Δ(sigmoid asymptote) 95% CI > 0 → **L2 candidate** (not certify)
 - **Aspirational L3**: exp fit BF > 10 vs power-law → **L3 candidate**
-- **Failure acceptable**: null result on L1 is publishable IF asymmetry ablation
-  (Cond B) shows lift → proves asymmetry is required
+- **Failure acceptable**: null result on L1 é publishable IF Cond B (asymmetric)
+  shows lift → prova asymmetry é required, honest negative result
 
 ## Open technical questions (research agenda)
 
