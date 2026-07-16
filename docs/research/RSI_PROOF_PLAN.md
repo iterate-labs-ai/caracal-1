@@ -1,53 +1,81 @@
-# Research Plan: Same-Model Recursive Self-Improvement in a 3B Cybersec Specialist
+# Research Plan: Same-Model Recursive Self-Improvement (foundational)
 
 ## Working title
-"Verifiable-Reward Recursive Self-Improvement in a Specialist Small Model:
-Empirical Evidence at Weco Level 1 with a Path to Level 2"
+"Closing the Asymmetry Gap: Empirical Same-Model Recursive Self-Improvement
+in Small Language Models with Verifiable Rewards"
+
+*(pivot: sai de cybersec specialist, entra em RSI foundational general-purpose)*
 
 ## Motivation
 
-Weco.ai definiu 4-level framework de RSI (L0-L3). Papers publicados atingem no
-máximo L1 candidate (DGM, HGM, SICA, AIDE²). Nenhum sistema published passa
-L2 (Weco recusou certificar próprio AIDE²).
+Weco.ai definiu 4-level framework de RSI (L0 Delegation → L1 Net Positive → L2 Ignition
+→ L3 Inflection). Papers publicados atingem no máximo L1 candidate. **Weco recusou
+certificar próprio AIDE² L2**. Nenhum sistema published passa L2 credibilmente.
 
-**Todos os sistemas L1-candidate hoje usam LLM externo grande no outer loop**:
+**Asymmetry problem**: Todos L1-candidates usam LLM externo grande no outer loop.
 
-| Sistema | Outer (improver) | Inner (improved) |
-|---|---|---|
-| AIDE² | Claude Opus 4.7 | Gemini 3 Flash |
-| DGM | Claude 3.5 API | Coding agents (API) |
-| HGM | GPT-5-mini | Coding agents |
-| SICA | Claude 3.5 API | Own code (API) |
+| Sistema | Outer (improver) | Inner (improved) | Domain |
+|---|---|---|---|
+| AIDE² | Claude Opus 4.7 | Gemini 3 Flash | ML eng |
+| DGM | Claude 3.5 API | Coding agents | SWE |
+| HGM | GPT-5-mini | Coding agents | SWE |
+| SICA | Claude 3.5 API | Own code (API) | SWE |
+| DARWIN | GPT-4-class | nanoGPT training | ML |
 
-**Model asymmetry**: outer é *sempre* maior/mais capaz que inner. Isso é **bootstrap**,
-não recursão verdadeira. Um sistema realmente recursivo teria o MESMO modelo
-fazendo ambos os papeis.
+**Isso é bootstrap**, não recursão. STOP paper (2310.02304) admite explicitamente:
+*"since the LM itself is not altered, this is not full recursive self-improvement."*
 
-Gap concreto: **zero papers testaram same-model RSI num specialist pequeno com verifiable reward** (RLVR).
+Gap concreto: **zero papers demonstram same-model RSI num modelo pequeno com
+verifiable rewards e statistical rigor pra provar asymptotic improvement.**
 
 ## Research questions
 
-- **RQ1** (viability): Can a single 3B specialist model achieve **L1 net-positive RSI**
-  on a cybersec task, using only itself as the outer-loop improver?
-- **RQ2** (asymmetry): Does same-model recursion **match or approach** the asymmetric
-  baseline (larger LLM as outer improver)?
-- **RQ3** (asymptotic): Is the improvement **asymptotic** (v_N > v_0 forever) or
-  **sample-efficient only** (fast start, plateaus)? This is the L2 gate.
-- **RQ4** (stability): Does RLVR (verifiable reward) **prevent mode collapse**
-  and reward hacking in same-model recursion? Weco AIDE² needed 3-layer defense.
-- **RQ5** (interpretability): Can we characterize *which operators* the model
-  discovers, addressing Weco AIDE²'s "very difficult to understand" limitation?
+- **RQ1** (viability): Can a small model (3B) achieve **L1 net-positive** using
+  only ITSELF as outer improver, without any larger LLM?
+- **RQ2** (collapse resistance): Does RLVR (verifiable reward) prevent the
+  Shafayat 2505.21444 collapse mode inherent in same-model self-training?
+- **RQ3** (asymptotic vs sample-efficient): Is improvement **asymptotic** (v_N
+  keeps growing) or **sample-efficient only** (fast start, plateaus)? L2 gate.
+- **RQ4** (asymmetry cost): How much lift is lost switching from asymmetric
+  outer (larger LLM) to same-model outer? Quantifies bootstrap contribution.
+- **RQ5** (generality): Does discovered improvement generalize across domain
+  (math → code → reasoning) or is it task-overfit?
 
 ## Central hypothesis
 
-> **H1**: A specialist small model (Caracal-3B) with hard-verifiable rewards
-> (CWE match, CTF flag) can drive its own scaffold+prompt+data optimization over
-> N ≥ 5 generations, producing gain-per-generation curves that fit a
-> non-degenerate power law `gain = a·gen^(-b)` with `b < 0.5` (evidence of
-> sustained learning, not immediate plateau).
+> **H1**: A specialist small model (3B, Qwen2.5-3B base) equipped with
+> verifiable-reward RLVR can drive its own scaffold+prompt+weight optimization
+> over N ≥ 8 generations, producing gain curves whose **asymptotic component**
+> (fit via ScaleRL 2510.13786 sigmoid decomposition) is significantly greater
+> than v_0 with p < 0.01, WITHOUT any external LLM in the outer loop.
 
-Testable falsification: if `b ≥ 0.9` (essentially plateau after gen 1) or the
-95% CI on `b` includes 1.0, we reject H1.
+Testable falsification: if asymptotic gain 95% CI includes zero, or if entropy
+collapse triggers (RL-PLUS 2508.00222 detector), we reject H1.
+
+## Task suite (locked, general-purpose)
+
+Three verifiable-reward domains chosen for L1/L2/L3 gate discriminability + Kaggle T4 x2 feasibility + non-saturation @ 3B:
+
+| Domain | Task | Role | RLVR | 3B baseline | Frontier ceiling |
+|---|---|---|---|---|---|
+| **Code** | LiveCodeBench monthly (2403.07974) | Held-in code reasoning; rolling window = built-in temporal decontamination | Unit test exec | ~15% | ~70% |
+| **Math** | AIME 2024 (train) / AIME 2025 (held-out) | Math generalization gate; integer answers = pure RLVR | Integer exact match | ~10% | ~85% (reasoners) |
+| **OOD arithmetic** | Self-Improving Transformers style (2502.01612), N→N+k digits | Synthetic; zero contamination; continuous difficulty knob | Deterministic | Controllable | N/A synthetic |
+
+**Descartados** (com razão):
+- GSM8K, HumanEval, MBPP, MMLU-Pro — saturated + contaminados
+- ARC-AGI-2 — flatline risk @ 3B (3B ~0-3%, sem headroom)
+- OMNI, OMNI-EPIC, MLE-Bench — LLM-judge (Shafayat 2505.21444 collapse risk) ou T4 infeasible
+- SWE-Bench Verified — repo-scale context blow T4 memory
+- BIG-Bench-Hard — contaminado
+
+**Justificativa suite**:
+1. **RLVR purity**: All three verify via exact-match/unit-tests/deterministic — no LLM-judge, sidesteps Shafayat collapse
+2. **Kaggle T4 x2 budget**: 3B bf16 ~6GB, headroom pra QLoRA r=16-32 + vLLM inference no segundo T4
+3. **L2 gate**: LiveCodeBench + AIME admitem clean outer/inner swap (v_N scaffold applied to v_0 weights). Delta measurable no mesmo eval set
+4. **L3 signal**: OOD arithmetic tem monotone difficulty knob (digit count) — ideal pra power-law fit + Bayesian change-point (BOCPD 0710.3742). LiveCodeBench monthly = secondary temporal axis
+5. **Coverage**: code + math + synthetic-OOD spans os 3 modos da literatura RSI general (rStar-Math, AZR, Self-Improving Transformers), gains generalizam
+6. **Non-saturation**: All 3 têm >50pp de headroom @ 3B, evita ceiling artifacts
 
 ## Study design
 
@@ -55,224 +83,219 @@ Testable falsification: if `b ≥ 0.9` (essentially plateau after gen 1) or the
 
 | Cond | Inner | Outer | RLVR | Purpose |
 |---|---|---|---|---|
-| **A** | Caracal-3B | (none) | n/a | Static baseline |
-| **B** | Caracal-3B | Claude Opus 4.8 API | Yes | Asymmetric bootstrap ceiling (AIDE² style) |
-| **C** | Caracal-3B | Caracal-3B (self) | Yes | **Main treatment: same-model RSI** |
-| **D** | Caracal-3B | Caracal-3B (self) | No (LLM-judge) | Ablation: RLVR necessity |
-| **E** | Caracal-3B (frozen) | Caracal-3B (self, trainable) | Yes | Ablation: outer-only recursion |
-
-### Task suite
-
-**Primary**: CTI-Bench RCM (CVE description → CWE-NNN, arxiv 2406.07599).
-- Objective: RLVR reward (exact CWE match = 1.0, ancestor = 0.5, sibling = 0.3, wrong = 0)
-- Held-out: 2025-2026 CVEs (train on 2024 subset, eval on 2025 subset - **temporal split**)
-
-**Secondary (generalization)**:
-- CyberMetric-500 (unseen MCQ)
-- Cybench-lite static CTF subset (unseen category shift)
-- LiveCodeBench monthly (**non-cyber generalization**, arxiv 2403.07974)
+| **A** | Qwen2.5-3B | (none) | n/a | Static baseline |
+| **B** | Qwen2.5-3B | Claude Opus 4.8 API | Yes | Asymmetric bootstrap ceiling |
+| **C** | Qwen2.5-3B | Qwen2.5-3B (self) | Yes | **Main treatment: same-model RSI** |
+| **D** | Qwen2.5-3B | Qwen2.5-3B (self) | No (LLM-judge only) | Ablation: RLVR necessity |
+| **E** | Qwen2.5-3B frozen | Qwen2.5-3B trainable | Yes | Ablation: outer-only recursion |
+| **F** | Qwen2.5-7B | Qwen2.5-7B (self) | Yes | Scale ablation (7B same-model) |
 
 ### Recursion protocol (Cond C)
 
 At generation `k`:
-1. **Inference phase**: Caracal-3B(k) solves training CVEs, collect trajectories
-2. **Introspection phase**: Same Caracal-3B(k) proposes N=8 candidate mutations to:
+
+1. **Inference phase**: v(k) solves training tasks across 3 domains, collect
+   trajectories + verifiable reward per task
+2. **Introspection phase**: Same v(k) proposes N=8 candidate mutations to:
    - System prompt / instruction template
    - Chain-of-thought scaffold
-   - Data augmentation strategy
-   - LoRA rank / lr schedule (bounded)
-3. **Evaluation phase**: Train N=8 candidate v(k+1) LoRAs (LoRA-mix cheap), eval each on held-in dev split with RLVR reward
-4. **Selection phase**: Top-2 by dev reward, verified on unseen validation slice (contamination gate)
-5. **Retention**: v(k+1) = argmax(unseen validation reward). If < v(k) + ε (ε=0.5pp), retain v(k).
-6. Log everything: mutation type, dev delta, val delta, wall-clock, tokens.
+   - Data augmentation strategy (curriculum, difficulty sampling)
+   - LoRA rank / lr schedule (bounded search)
+3. **Evaluation phase**: Train N=8 candidate v(k+1) LoRAs (cheap LoRA-mix), eval
+   each on dev split with RLVR reward
+4. **Selection phase**: Top-2 by dev reward, verified on unseen validation
+   slice (contamination gate: Shafayat 1.2-5% threshold)
+5. **Retention**: v(k+1) = argmax(val reward). If < v(k) + ε (ε=1pp
+   pre-registered), retain v(k). Log failure.
+6. Log everything: mutation type, dev delta, val delta, wall-clock, tokens,
+   entropy, KL(v_k+1 || v_k).
 
-**Total generations**: N=8 (Weco AIDE² used 7). Anchor v(0) = Caracal s05 checkpoint.
+**Total generations**: N=8. Anchor v(0) = Qwen2.5-3B-Instruct base.
 
-### Recursion protocol (Cond B - asymmetric baseline)
+## Metrics + statistical machinery
 
-Same as C but step 2 uses Claude Opus 4.8 API (not Caracal-3B). Compares
-same-model vs bigger-model outer.
+### Primary L1 gate
+- **Held-out reward at gen N**: R_val(v_N) - R_val(v_0), 3 domains × bootstrap 95% CI
 
-## Metrics
+### Primary L2 gate (asymptotic vs sample-efficient)
+- **ScaleRL sigmoid decomposition** (2510.13786): fit `R(compute) = R_∞ /
+  (1 + (C_50/C)^α)` per generation. L2 confirmed iff Δ(R_∞) 95% CI > 0.
+- **v_N as outer improver**: run v_N in step 2 of the recursion, applied to
+  fresh v_0. Compare v_1' (produced by v_N) vs v_1 (produced by v_0) on
+  held-out. McNemar paired test.
 
-### Primary
+### Primary L3 gate (inflection detection)
+- **Bayesian model selection** (marginal likelihood): power-law `gain = a·k^(-b)`
+  vs exponential `gain = c·exp(kt)`. L3 candidate iff exp wins with BF > 10.
+- **Online Bayesian change-point** on `d²(cum_gain)/dt²` (Adams-MacKay 0710.3742).
+  L3 candidate iff change-point posterior > 0.9 for gen ≥ 3.
 
-- **Held-out reward at generation N**: R_val(v_N) - R_val(v_0), bootstrap 95% CI
-- **Gain-per-generation curve**: fit `gain(k) = a·k^(-b)`, report (a, b, R²)
-- **v_N > v_0 as improver test (L2 gate)**: run v_N as outer on fresh v_0 candidate, does it produce better v_1 than v_0 does? McNemar paired test on held-out sample.
+### Nested-loop noise decomposition
+- **Variance-components ANOVA** over replicated runs:
+  `var(inner-gain) = σ²_seed + σ²_data + σ²_mutation + σ²_outer_eval`
+- Minimum 3 seeds per condition to isolate σ²_seed.
+- **Bregman-conforming metric** required (Heskes 2501.18581) - use RLVR reward
+  directly (not accuracy which is not Bregman).
 
-### Secondary
+### Stopping rule (outer loop)
+- **FIRMBOUND SPRT** (2501.18059) with overshoot correction (2410.16076).
+  Adaptive stopping when Δ posterior stabilizes.
 
-- **Generalization ratio**: gain on held-out non-cyber / gain on held-in cyber (should be > 0.5 for genuine recursion, not overfit)
-- **Wall-clock $ per generation**: canonical Weco budget (compute + API cost)
-- **Reward-hacking rate**: fraction of candidates that gamed dev reward but failed val
-- **Mode collapse detector**: entropy of generated trajectories per generation
-- **Operator attribution**: which mutation types contribute most gain?
+### Anti-hacking checks
+- **AIRA_2 Hidden Consistent Evaluation** (2603.26499) - reserved held-out slice
+  never seen by outer loop
+- **RL-PLUS entropy collapse detector** (2508.00222) - abort if per-token
+  entropy drops > 30% between generations
+- **Beyond Pass@1 detector** (2508.14029) - track pass@1 AND pass@k, flag if k
+  tanks while 1 grows
 
-### Statistical rigor
+### Statistical power
 
-- Bootstrap CI (n=10K resamples)
-- McNemar paired test (per sample, matched design)
-- Bonferroni correction across conditions (α = 0.05 / 5 = 0.01)
-- Power analysis: N=1000 samples yields 80% power to detect δ=2pp @ α=0.01
+- N=1000 held-out per domain × 3 domains = 3000 samples
+- Power to detect δ=1pp @ α=0.01 (Bonferroni for 6 conds): **~82%**
 
 ## Compute budget
 
-**Kaggle T4 x2 relay** (5 founders × 12h × 3-4 sessões = 180-240h total)
+**Kaggle T4 x2 relay** (5 founders × 12h × 4 sessions = 240h total)
 
-| Session | Owner | Task | Hours |
-|---|---|---|---|
-| S01 | Pedro | Cond A + B baseline | 12h |
-| S02 | Kevin | Cond C gen 0-2 | 12h |
-| S03 | Arthur | Cond C gen 3-5 | 12h |
-| S04 | Vitor | Cond C gen 6-8 | 12h |
-| S05 | Alexandre | Cond D ablation | 12h |
-| S06 | Pedro | Cond E ablation | 12h |
-| S07 | Kevin | Cond C L2 test (v_N as outer) | 12h |
-| S08 | Arthur | Held-out eval all conds | 12h |
-| S09 | Vitor | Ablations + interpretability | 12h |
-| S10 | Alexandre | Final writeup + figures | 12h |
+| Session | Cond covered |
+|---|---|
+| S01-S02 | Cond A + B baseline (2 sessions) |
+| S03-S06 | Cond C gen 0-8 (4 sessions, 2 gens each) |
+| S07-S08 | Cond D + E ablations |
+| S09 | Cond F 7B scale |
+| S10 | L2 test (v_N as outer) all conds |
+| S11-S12 | Interpretability + attribution + writeup |
 
-Total: **120h Kaggle** (dentro budget 5 founders × 30h/sem = 150h/sem).
-Anthropic API budget (Cond B only): **$300 estimado** (Opus 4.8 outer, 8 gens × 8 candidates × 5K tokens each).
+Total: **144h Kaggle** (dentro budget 5 founders × 30h/sem = 150h/sem).
+Anthropic API budget (Cond B only): **~$400** (Opus 4.8 outer, 8 gens × 8
+candidates × 5K tokens).
 
-## Novel contributions (sharpened after gap analysis)
+## Novel contributions (9)
 
-1. **First same-3B-weights RSI** as both cyber-solver AND scaffold-mutator. STOP/DGM/DARWIN
-   use frontier models as mutators; AZR/R-Zero share weights but only at task-policy
-   level, not scaffold-code level. No prior work at 3B in cyber domain.
+1. **First same-3B-weights RSI** — cyber, math, code, reasoning all removed from
+   this list. Weights recursion is the contribution.
+2. **Sigmoid-fit L2 gate** (ScaleRL 2510.13786) — separates asymptotic from
+   sample-efficient. No RSI paper reports this decomposition.
+3. **Nested-loop noise decomposition** — variance-components ANOVA. First formal
+   treatment for RSI.
+4. **Shape-agnostic L3 estimator** — Bayesian model select + change-point.
+   Nobody applied change-point tooling to RSI gain curves.
+5. **Direct empirical asymmetry test** — Shafayat 2505.21444 predicts collapse,
+   AZR shows RLVR can break it. Test at 3B.
+6. **Contraction-rate measurement** — Zenil 2601.05280 theory, first empirical.
+7. **Mutation-attribution tree** — Shapley + semantic-diff clustering, closes
+   AIDE² interpretability gap.
+8. **Failure catalog at 3B** — which mutations collapse, which extrapolate.
+9. **Scale ablation 3B → 7B** — does same-model RSI improve with scale, or
+   is asymmetry required at large scale?
 
-2. **Sigmoid-fit L2 gate** (ScaleRL 2510.13786 methodology) - separate *asymptotic reward*
-   from *sample efficiency parameter* per outer iteration. No RSI paper currently reports
-   this decomposition. Cleaner than Weco's ad-hoc "asymptotic" claim.
+## Related work positioning
 
-3. **Nested-loop noise decomposition** - variance-components ANOVA over replicated ignition
-   runs: `var(inner-gain) = σ²_seed + σ²_data + σ²_mutation + σ²_outer_eval`. First formal
-   treatment. Combined with FIRMBOUND SPRT (2501.18059) outer-loop stopping rule and
-   Bregman-conforming metric (Heskes 2501.18581) to guarantee decomposition holds.
-
-4. **Shape-agnostic L3 estimator** - Bayesian model selection between `gain = a·t^(-b)`
-   (power-law diminishing) and `gain = c·exp(kt)` (exponential accelerating) + online
-   Bayesian change-point (Adams-MacKay 0710.3742) on `d²(cum_gain)/dt²`. Preregister
-   b<0 / k>0 threshold *conditional on measured noise floor*.
-
-5. **Direct empirical test of asymmetry hypothesis**: does inner==outer capability
-   actually prevent lift (as Shafayat 2505.21444 predicts), or does verifiable cyber
-   reward break collapse (as AZR shows for code)?
-
-6. **Contraction-rate measurement** on outer-loop operator (Zenil 2601.05280 theory,
-   nobody measured on real system yet).
-
-7. **Mutation-attribution tree**: Shapley-value credit per operator on final gain +
-   semantic-diff clustering across generations. Addresses AIDE²'s stated open problem
-   "very difficult to understand how system works." No published equivalent.
-
-8. **Failure catalog at 3B**: which outer edits collapse the model (RL-PLUS-style),
-   which extrapolate (Lee/Papailiopoulos-style). Fills empirical gap under Zenil theory.
-
-9. **Cybersec first**: temporal CVE split (2024 train → 2025 held-out) - cleaner than
-   random split, no prior RSI in security domain.
-
-## Statistical machinery (locked in)
-
-| Component | Method | Reference |
+| Paper | Contribution | Our differential |
 |---|---|---|
-| L2 asymptotic vs sample-efficient | Sigmoid fit per outer iter, Δasymptote CI test | ScaleRL 2510.13786 |
-| L3 detection | Bayesian model selection power-law vs exponential | 2509.09677 + 0710.3742 |
-| Outer-loop stopping | SPRT with overshoot correction | FIRMBOUND 2501.18059 + 2410.16076 |
-| Mutation selection | UCB-style regret bounds | TextBO 2511.12063 + Evo-MAB 2205.10113 |
-| Nested-loop noise | Variance-components ANOVA (seed, data, mutation, eval) | Signal&Noise 2508.13144 |
-| Bootstrap CI | Cheap subsampling | 2501.10289 |
-| Metric choice | Bregman divergence required for bias-var split | Heskes 2501.18581 |
-| Hidden-consistent eval | AIRA_2 protocol to fight overfitting-to-val | 2603.26499 |
-| Per-operator attribution | Gradient fingerprints + Shapley values | 2604.16242 |
-| Contamination guard | Threshold 1.2-5% based on reward-hacking onset | 2505.21444 |
-
-## Related work positioning (refined)
-
-| Paper | Contribution | Vs Ours |
-|---|---|---|
-| **STOP** (2310.02304, COLM'24) | Single GPT-4 improves scaffold. Authors admit "not full RSI - LM itself not altered." | Ours: SEAL-style weight edits + scaffold mutations combined. |
-| **Gödel Agent** (2410.04444, ACL'25) | Single LLM rewrites own scaffold at runtime. Game-of-24 4→78%. | Closest architecture. Ours: weight recursion, cybersec RLVR. |
-| **AIDE²** (2502.13138) | Asymmetric outer (Opus 4.7 → Gemini-Flash inner). 7 versions, +0.053 MLE-Lite p=0.0024. | Ours: same-model, cybersec, RLVR, temporal split. |
-| **DGM** (2505.22954) | Archive-based, API models. SWE 20→50. | Ours: single trajectory, no external LLM. |
-| **HGM** (2510.21614, ICLR'26 oral) | CMP metric, GPT-5-mini. | Ours: power-law fit + explicit asymptotic test. |
-| **AZR** (2505.03335) | Same-model RLVR, general reasoning, zero data. | Ours: specialist domain + operator attribution. |
-| **R-Zero** (2508.05004, ICLR'26) | Challenger/Solver same base but *separate weights*. | Ours: single weight trajectory. |
-| **Self-Improving Transformers** (2502.01612) | OOD arithmetic, tiny model. Linearly-growing OOD generalization. | Ours: production 3B specialist, cyber. |
-| **rStar-Math** (2501.04519) | Phi3-mini 3.8B + Qwen2.5-Math-7B, 4 rounds MCTS+PRM. | Ours: no MCTS, direct scaffold+weight edits. |
-| **SEAL** (2506.10943, MIT) | Self-edits: LM emits SFT data + hparams. Weight-level. | Closest weight-level precedent. Ours: adds scaffold+prompt layer. |
+| **STOP** (2310.02304, COLM'24) | Scaffold-only self-mod, GPT-4 | Weight-level + smaller model |
+| **Gödel Agent** (2410.04444) | Runtime scaffold rewrite, single LLM | Weight recursion + 3 domains |
+| **AIDE²** (2502.13138) | Asymmetric outer, ML eng | Same-model, general RLVR domains |
+| **DGM** (2505.22954) | Archive-based, API models | Single trajectory, self-recursion |
+| **HGM** (2510.21614, ICLR'26 oral) | CMP metric, GPT-5-mini | Sigmoid + Bayesian L2/L3 gates |
+| **AZR** (2505.03335) | Same-model RLVR, general reasoning | Adds scaffold+weight recursion, not just policy |
+| **R-Zero** (2508.05004) | Same base but separate weights | Single weight trajectory |
+| **Self-Improving Transformers** (2502.01612) | Linear OOD, tiny model | Production 3B, multi-domain |
+| **rStar-Math** (2501.04519) | MCTS+PRM, math only | No MCTS, direct scaffold+weight |
+| **SEAL** (2506.10943, MIT) | Weight self-edits | Adds scaffold+prompt layer |
 
 ## Failure-mode papers to cite AND beat
 
-| Paper | Failure documented |
-|---|---|
-| **Can LRMs Self-Train?** (2505.21444, Shafayat) | Majority-vote self-reward → sudden complete collapse via reward hacking. Canonical failure paper. |
-| **RL-PLUS: Capability Boundary Collapse** (2508.00222) | Entropy collapse + support shrinkage under RLVR. |
-| **Beyond Pass@1** (2508.14029) | pass@1↑ / pass@k↓ tradeoff under self-play. |
-| **Zenil: Limits of Self-Improving** (2601.05280) | Formalizes RSI as dynamical system, proves 2 failure modes (entropy decay, variance amplification) when exogenous signal vanishes. **Theoretical grounding**. |
-| **Task-Centric Theory** (2602.10014) | Formal conditions under which iterative self-improvement is sustained. Closest to L3 predictor. |
+| Paper | Failure documented | Our defense |
+|---|---|---|
+| **Shafayat 2505.21444** | Majority-vote self-reward → collapse | RLVR exogenous reward, not LLM-judge |
+| **RL-PLUS 2508.00222** | Entropy collapse + support shrinkage | Entropy detector, abort mechanism |
+| **Beyond Pass@1 2508.14029** | pass@1↑ / pass@k↓ tradeoff | Track both, flag divergence |
+| **Zenil 2601.05280** | Entropy decay + variance amplification when exogenous signal vanishes | RLVR IS the exogenous signal, doesn't vanish |
+| **Task-Centric Theory 2602.10014** | Formal conditions for sustained RSI | Test empirically if satisfied |
 
-**Key rebuttal**: our RLVR reward (CWE match / CTF flag) is exogenous verifiable — Zenil's collapse conditions don't apply. Test empirically.
+## Compute + statistical machinery table
+
+| Component | Method | Reference |
+|---|---|---|
+| L1 gate | Held-out reward Δ + bootstrap CI | Standard |
+| L2 asymptotic vs sample-efficient | Sigmoid fit + Δasymptote CI | ScaleRL 2510.13786 |
+| L3 detection | Bayesian model selection power vs exp | 2509.09677 + 0710.3742 |
+| Outer-loop stopping | SPRT with overshoot correction | FIRMBOUND 2501.18059 + 2410.16076 |
+| Mutation selection | UCB-style regret bounds | TextBO 2511.12063 + Evo-MAB 2205.10113 |
+| Nested-loop noise | Variance-components ANOVA | Signal&Noise 2508.13144 |
+| Bootstrap CI | Cheap subsampling | 2501.10289 |
+| Metric choice | Bregman divergence required | Heskes 2501.18581 |
+| Hidden-consistent eval | AIRA_2 protocol | 2603.26499 |
+| Per-operator attribution | Gradient fingerprints + Shapley | 2604.16242 |
+| Contamination guard | 1.2-5% threshold reward-hacking onset | 2505.21444 |
 
 ## Risks + mitigations
 
 | Risk | Mitigation |
 |---|---|
-| 3B model too weak pra propor mutations úteis | Cond B (asymmetric) mostra ceiling; se gap grande, honest failure result |
-| Mode collapse / reward hacking | Cond D ablation isola RLVR contribution |
-| Contamination train/eval | Temporal split (CVE year), held-out non-cyber (LiveCodeBench monthly) |
-| Kaggle 12h kernel limit | Checkpoint per generation, 1 gen per session |
-| Statistical power insuficiente | Power analysis pre-registered, N=1000 held-out samples |
-| Overfitting a CTI-Bench | 4 held-out benches (CyberMetric, Cybench-lite, LiveCodeBench, temporal split) |
+| 3B too weak pra propor mutations úteis | Cond B ceiling honest failure |
+| Mode collapse / reward hacking | Cond D ablation isola RLVR, RL-PLUS detector |
+| Contamination train/eval | LiveCodeBench monthly rolling + AIRA_2 hidden slice |
+| Kaggle 12h limit | Checkpoint per generation, 2 gens per session |
+| Statistical power | Pre-registered power analysis, N=3000 held-out |
+| Overfitting single domain | 3 domains (math + code + reasoning) |
+| Weco 4-level classification disputed | Report multi-metric evidence, not single claim |
 
 ## Deliverables
 
-1. **Paper draft** (ICLR/NeurIPS 2027 submission target): 9 pages + appendix
-2. **Reproducible code** (branch `s07-hybrid-agentic` extended)
-3. **HF checkpoints** for v_0...v_N em cada condition
-4. **Data release**: mutation logs + attribution analysis (public JSONL)
-5. **Ablation tables + power-law fit plots** (matplotlib, seaborn)
+1. **Paper** (ICLR/NeurIPS 2027): 9 pages + appendix, focus on **method + machinery**
+2. **Open-source lib**: `same-model-rsi` (pip installable, task-agnostic)
+3. **RSI benchmark harness**: L0/L1/L2/L3 gate suite for any 3B model
+4. **HF checkpoints**: v_0...v_N for each condition (public release)
+5. **Data**: mutation logs + attribution analysis (public JSONL)
+6. **Ablation tables + power-law/sigmoid fit plots**
 
 ## Timeline
 
 | Semana | Milestone |
 |---|---|
-| W1 | Cond A + B baseline done, power analysis validated |
-| W2-W4 | Cond C gen 0-8, log everything |
+| W1 | Task suite fixed, RLVR verifiers implemented, Cond A + B baseline |
+| W2 | Cond C gen 0-2, stat machinery instrumented |
+| W3 | Cond C gen 3-5, noise ANOVA running |
+| W4 | Cond C gen 6-8, all logs frozen |
 | W5 | Cond D + E ablations |
-| W6 | Held-out eval all conditions |
-| W7 | L2 test (v_N as outer) |
-| W8 | Interpretability + writeup |
-| W9 | Reviewer pass (external), submit |
+| W6 | Cond F 7B scale ablation |
+| W7 | Held-out eval + L2 test (v_N as outer) |
+| W8 | Interpretability + attribution tree |
+| W9 | Writeup |
+| W10 | External reviewer pass, submit |
 
-**Total: 9 semanas** (~2.5 meses) do Sprint 1 start ao submission.
+**Total: 10 semanas** (~2.5 meses).
 
 ## Success criteria (pre-registered)
 
-- **Primary**: Cond C v_8 held-out RCM >= Cond A + 3pp with p < 0.01 → **L1 confirmed**
-- **Secondary**: Cond C generalization ratio > 0.5 → genuine recursion
-- **Aspirational**: v_N > v_0 as outer improver with p < 0.05 → **L2 candidate**
-- **Failure mode acceptable**: null result on L1 is publishable (asymmetry required)
+- **Primary L1**: Cond C v_8 held-out >= Cond A + 2pp with p < 0.01 → **L1 confirmed**
+- **Primary L2**: Δ(sigmoid asymptote) 95% CI > 0 → **L2 candidate** (not certify)
+- **Aspirational L3**: exp fit BF > 10 vs power-law → **L3 candidate**
+- **Failure acceptable**: null result on L1 is publishable IF asymmetry ablation
+  (Cond B) shows lift → proves asymmetry is required
 
 ## Open technical questions (research agenda)
 
 1. What's the minimal specialist model capacity for same-model RSI?
-2. How does verifier hardness (RLVR vs LLM-judge) affect stability?
+2. Does verifier hardness (RLVR vs LLM-judge) change stability curves?
 3. Do mutation operators discovered by 3B generalize to 8B / 70B?
-4. Can we detect L3 signal at Kaggle scale? (probably no - budget too small,
-   but publish the negative + noise bound)
+4. Can we detect L3 signal at Kaggle scale? (probably no - publish noise bound)
 5. What's the phase transition (if any) between L0 and L1 for specialist models?
+6. Is same-model RSI theoretically bounded by the model's own capability
+   ceiling? (Zenil 2601.05280 predicts yes; test empirically)
 
 ---
 
 ## References base
 
-Todas em `docs/research/RSI_2026.md` (papers catalog + open-source + eval metrics).
+Full catalog: `docs/research/RSI_2026.md`.
 
-Cite ordering priority (updated):
+Cite ordering priority:
 1. Weco 4-levels + first-evidence blog posts
-2. STOP 2310.02304 (gap statement: "not full RSI")
+2. STOP 2310.02304 (gap statement)
 3. Gödel Agent 2410.04444 (closest same-model precedent)
 4. DGM 2505.22954 + HGM 2510.21614 (L2 candidates asymmetric)
 5. AIDE² 2502.13138 (asymmetric baseline)
@@ -289,5 +312,6 @@ Cite ordering priority (updated):
 16. AIRA_2 2603.26499 (Hidden Consistent Evaluation)
 17. Illusion of Diminishing Returns 2509.09677 (long-horizon L3 signal)
 
-**UNVERIFIED (checar antes de citar)**: CyberEvolver 2605.26195 (cyber neighbor claim),
-Self-Reference Introspection 2607.04277, Self-Play Only Evolves 2603.02218.
+**UNVERIFIED (checar antes de citar)**: CyberEvolver 2605.26195 (not applicable
+now anyway), Self-Reference Introspection 2607.04277, Self-Play Only Evolves
+2603.02218.
