@@ -63,27 +63,78 @@ em math + coding, produzido por same-model RSI. Nome tentativo: **`Ignite-3B`**
 - Release: `iterate-labs-ai/ignite-3b-v1` HF checkpoint público
 - Paper: side deliverable (methodology write-up)
 
-## Task suite (locked: 5 core + 2 optional, math + coding)
+## Task suite v3 (locked: 5 core, math + coding + Lean tool)
 
-**Foco math + coding** (Pedro). MLE-Bench excluído por T4 infeasibility.
-Suite expandido após deep bench survey (38 benches analisados).
+**Upgrade**: OMNI-MATH substitui OlympiadBench (4× maior, cleaner). **Putnam-Bench**
+entra como dual-purpose (eval + Lean RL reward source). **MathArena live +
+FrontierMath** parceados como L3 gate zero-contamination. AIME vira sanity ref só.
+HARP droppado (UNVERIFIED answer set).
 
-### Core (5 tasks, ~20h Kaggle T4 x2 aggregate)
+### Core (5 tasks)
 
-| # | Domain | Task | Role | RLVR | 3B base | Frontier |
+| # | Domain | Task | Role | RLVR | 3B base | Frontier '26 |
 |---|---|---|---|---|---|---|
 | 1 | **Code** | **LiveCodeBench monthly** (2403.07974) | L1 held-in + L3 monthly buckets | Unit test exec | ~15-25% | ~75% |
-| 2 | **Math** | **AIME 2024 → 2025** | L1 held-out + temporal split | Integer exact | ~5-15% | ~85% |
-| 3 | **Math** | **OlympiadBench** English text+math subset (2402.14008) | L3 via subject×level, exact-answer only | Exact match | ~10-20% | ~60% |
-| 4 | **Code** | **BigCodeBench-Hard** (2406.15877) | L2 asymptotic, distinct dist from LCB | Unit test exec (complex deps) | ~20% | ~60% |
-| 5 | **Code** | **APPS** (2105.09938) intro+interview+competition | L3 via 3-tier difficulty knob | Unit test exec | ~10% intro / <5% hard | ~50% |
+| 2 | **Code** | **BigCodeBench-Hard** (2406.15877) | L2 asymptotic, distinct dist | Unit test exec | ~20% | ~60% |
+| 3 | **Math** | **OMNI-MATH** (2410.07985) | L2 gate, 4428 Olympiad problems | Rule + verifier | ~10-15% | ~60% |
+| 4 | **Math+Lean** | **Putnam-Bench** (2407.11214) | L2+ dual-purpose (eval + Lean RL reward) | Lean 4 proof | <2% | ~8% formal |
+| 5 | **Math L3 gate** | **MathArena live + FrontierMath** (2505.23281 UNV + 2411.04872) | L3 rolling contest + PhD ceiling | Official + expr match | <1% FrontierMath | o3~25%, GPT-5~30% |
 
-### Optional (2 tasks, se compute sobrar)
+### Optional / sanity
 
-| # | Task | Role | Note |
-|---|---|---|---|
-| 6 | **HARP** (2412.08819 UNVERIFIED) | Monotone 5-tier difficulty L3 | Verificar arxiv ID antes citar |
-| 7 | **USACO waves** (2404.10952 UNVERIFIED) | Bronze→Silver→Gold→Platinum monotone L3 | Verificar arxiv ID, swap com APPS-competition tier |
+| # | Task | Role |
+|---|---|---|
+| 6 | **AIME 2024/2025** | Sanity reference only, não gate |
+| 7 | **APPS** (2105.09938) 3-tier | Extra L3 code difficulty knob se compute sobrar |
+| 8 | **USACO waves** (2404.10952 UNV) | Extra L3 code Bronze→Platinum |
+
+### Droppados
+
+- **HARP** — UNVERIFIED answer set, sem cite confiável
+- **OlympiadBench** — superseded por OMNI-MATH
+- **NuminaMath-Test** — training-adjacent, contamination risk
+
+## Lean 4 como ferramenta (integrar no modelo)
+
+Modelo `Ignite-3B` aprende a chamar Lean prover via `tool_call` durante inference
++ treinamento. Não é bench isolado — é **capability core do modelo**.
+
+### Stack recomendado
+
+| Componente | Escolha | Fonte |
+|---|---|---|
+| **Environment** | LeanDojo | arxiv 2306.15626 |
+| **Interface** | `Dojo.run_tac(state, tactic_str)` JSON-RPC | LeanDojo API |
+| **Training recipe** | DeepSeek-Prover-V1.5: SFT synthetic + GRPO w/ Lean verifier binary reward | arxiv 2408.08152 |
+| **Fallback proof-of-scale** | Kimina-Prover 1.5B distill | arxiv 2504.11354 UNVERIFIED |
+| **Runtime** | Lean 4 daemon em CPU (~2GB RAM host), modelo em GPU | Kaggle T4 x2 compatível |
+| **Data** | LeanDojo Benchmark 4 (98k proofs) + mathlib4 traces | Público |
+
+### Novo tool schema no modelo
+
+```json
+{
+  "name": "lean_prove",
+  "arguments": {
+    "state": "<current tactic state>",
+    "tactic": "<Lean 4 tactic string>"
+  }
+}
+```
+
+Model output: `<tool_call>...</tool_call>` → Lean daemon executa → devolve
+`TacticState` ou `error` → model itera até `no goals` (proved) ou timeout.
+
+### Por que Lean tool?
+
+1. **Verifier gratuito**: RLVR reward direto do Lean (binary: proved / not proved)
+2. **Zero LLM-judge**: Shafayat-proof, sem collapse risk
+3. **Novel angle**: 3B com Lean tool-use nativo, distillado de DeepSeek-Prover-V1.5
+   recipe — combina samesse-model RSI + formal verification
+4. **Dual purpose**: mesmo tool serve pra Putnam-Bench eval (bench #4) E como
+   verifier no RL loop
+5. **Interpretability bonus**: Lean proof trace = explicable reasoning, fecha
+   AIDE² "hard to understand" gap
 
 ### Descartados explícitos (com razão)
 
@@ -209,24 +260,26 @@ Total: **144h Kaggle** (dentro budget 5 founders × 30h/sem = 150h/sem).
 Anthropic API budget (Cond B only): **~$400** (Opus 4.8 outer, 8 gens × 8
 candidates × 5K tokens).
 
-## Novel contributions (9)
+## Novel contributions (10)
 
-1. **First same-3B-weights RSI** — cyber, math, code, reasoning all removed from
-   this list. Weights recursion is the contribution.
-2. **Sigmoid-fit L2 gate** (ScaleRL 2510.13786) — separates asymptotic from
+1. **First same-3B-weights RSI** — weight recursion, not just policy-level
+2. **Same-model RSI with Lean 4 tool-use** — 3B calls Lean via `tool_call`,
+   distilled from DeepSeek-Prover-V1.5 recipe. First 3B RSI paper with formal
+   verifier in the loop.
+3. **Sigmoid-fit L2 gate** (ScaleRL 2510.13786) — separates asymptotic from
    sample-efficient. No RSI paper reports this decomposition.
-3. **Nested-loop noise decomposition** — variance-components ANOVA. First formal
+4. **Nested-loop noise decomposition** — variance-components ANOVA. First formal
    treatment for RSI.
-4. **Shape-agnostic L3 estimator** — Bayesian model select + change-point.
+5. **Shape-agnostic L3 estimator** — Bayesian model select + change-point.
    Nobody applied change-point tooling to RSI gain curves.
-5. **Direct empirical asymmetry test** — Shafayat 2505.21444 predicts collapse,
+6. **Direct empirical asymmetry test** — Shafayat 2505.21444 predicts collapse,
    AZR shows RLVR can break it. Test at 3B.
-6. **Contraction-rate measurement** — Zenil 2601.05280 theory, first empirical.
-7. **Mutation-attribution tree** — Shapley + semantic-diff clustering, closes
-   AIDE² interpretability gap.
-8. **Failure catalog at 3B** — which mutations collapse, which extrapolate.
-9. **Scale ablation 3B → 7B** — does same-model RSI improve with scale, or
-   is asymmetry required at large scale?
+7. **Contraction-rate measurement** — Zenil 2601.05280 theory, first empirical.
+8. **Mutation-attribution tree** — Shapley + semantic-diff clustering, closes
+   AIDE² interpretability gap. Bonus: Lean proof traces are natively explicable.
+9. **Failure catalog at 3B** — which mutations collapse, which extrapolate.
+10. **Scale ablation 3B → 7B** — does same-model RSI improve with scale, or
+    is asymmetry required at large scale?
 
 ## Related work positioning
 
