@@ -63,35 +63,57 @@ em math + coding, produzido por same-model RSI. Nome tentativo: **`Ignite-3B`**
 - Release: `iterate-labs-ai/ignite-3b-v1` HF checkpoint público
 - Paper: side deliverable (methodology write-up)
 
-## Task suite (locked: math + coding)
+## Task suite (locked: 5 core + 2 optional, math + coding)
 
-**Foco math + coding** (Pedro): MLE-Bench excluído por T4 infeasibility (Kaggle
-comps precisam >24h GPU-days/task, T4 x2 insuficiente).
+**Foco math + coding** (Pedro). MLE-Bench excluído por T4 infeasibility.
+Suite expandido após deep bench survey (38 benches analisados).
 
-| Domain | Task | Role | RLVR | 3B baseline | Frontier ceiling |
-|---|---|---|---|---|---|
-| **Code** | LiveCodeBench monthly (2403.07974) | Held-in code reasoning; rolling window = built-in temporal decontamination | Unit test exec | ~15% | ~70% |
-| **Math** | AIME 2024 (train) / AIME 2025 (held-out) | Math generalization gate; integer answers = pure RLVR | Integer exact match | ~10% | ~85% (reasoners) |
+### Core (5 tasks, ~20h Kaggle T4 x2 aggregate)
 
-**Optional bonus (não core)**:
-- **OOD arithmetic** (2502.01612 style, N→N+k digits): synthetic zero-contamination
-  scaffold pra L3 detection. Roda em paralelo se sobrar compute, não é gate.
+| # | Domain | Task | Role | RLVR | 3B base | Frontier |
+|---|---|---|---|---|---|---|
+| 1 | **Code** | **LiveCodeBench monthly** (2403.07974) | L1 held-in + L3 monthly buckets | Unit test exec | ~15-25% | ~75% |
+| 2 | **Math** | **AIME 2024 → 2025** | L1 held-out + temporal split | Integer exact | ~5-15% | ~85% |
+| 3 | **Math** | **OlympiadBench** English text+math subset (2402.14008) | L3 via subject×level, exact-answer only | Exact match | ~10-20% | ~60% |
+| 4 | **Code** | **BigCodeBench-Hard** (2406.15877) | L2 asymptotic, distinct dist from LCB | Unit test exec (complex deps) | ~20% | ~60% |
+| 5 | **Code** | **APPS** (2105.09938) intro+interview+competition | L3 via 3-tier difficulty knob | Unit test exec | ~10% intro / <5% hard | ~50% |
 
-**Descartados**:
-- **MLE-Bench** (2410.07095) — T4 infeasible, precisa 70B+ scale (Pedro confirmou)
-- **SWE-Bench Verified** — repo-scale context blow T4 memory, 3B baseline <5%
-- GSM8K, HumanEval, MBPP, MMLU-Pro — saturated + contaminados
-- ARC-AGI-2 — flatline risk @ 3B (~0-3%, sem headroom)
-- OMNI, OMNI-EPIC — LLM-judge (Shafayat 2505.21444 collapse risk)
-- BIG-Bench-Hard — contaminado
+### Optional (2 tasks, se compute sobrar)
 
-**Justificativa suite math + code**:
-1. **RLVR purity**: unit-test exec + integer match, no LLM-judge → Shafayat-proof
-2. **Kaggle T4 x2 budget**: 3B bf16 ~6GB, headroom pra QLoRA r=16-32 + vLLM 2ª T4
-3. **L2 gate**: ambas admitem outer/inner swap (v_N scaffold applied to v_0 weights)
-4. **L3 signal**: LiveCodeBench monthly buckets = temporal axis natural pra BOCPD
-5. **Coverage**: code + math = 2 dos 3 modos da literatura RSI (rStar-Math + AZR + Self-Improving Transformers)
-6. **Non-saturation**: ambas >50pp headroom @ 3B, sem ceiling artifacts
+| # | Task | Role | Note |
+|---|---|---|---|
+| 6 | **HARP** (2412.08819 UNVERIFIED) | Monotone 5-tier difficulty L3 | Verificar arxiv ID antes citar |
+| 7 | **USACO waves** (2404.10952 UNVERIFIED) | Bronze→Silver→Gold→Platinum monotone L3 | Verificar arxiv ID, swap com APPS-competition tier |
+
+### Descartados explícitos (com razão)
+
+- **MLE-Bench** (2410.07095) — T4 infeasible (Pedro confirmou)
+- **SWE-Bench** (any), **Multi-SWE-Bench**, **RepoBench** — repo-scale context blow T4
+- **KernelBench** — precisa A100+ (kernel stable clocks)
+- **PutnamBench** (2407.11214) — Lean/Isabelle toolchain pesado
+- **USAMO 2025**, **CMO 2024** — proof-based, sem RLVR (precisam judge)
+- **NuminaMath-Test** — training-set overlap risk
+- **Aider-polyglot** — multi-lang toolchain
+- **GSM8K, HumanEval, MBPP, MMLU-Pro** — saturated + contaminados
+- **ARC-AGI-2** — flatline risk @ 3B (~0-3% baseline)
+- **OMNI, OMNI-EPIC** — LLM-judge Shafayat collapse risk
+- **BIG-Bench-Hard** — contaminado
+
+### Justificativa suite 5-core
+
+1. **RLVR purity**: All 5 usam exec/exact-match, no LLM-judge → Shafayat-proof
+2. **L1 gate**: LCB-easy + AIME-easy + OlympiadBench-L1 + APPS-intro ~1000 easy problems, delta measurable sub-hour eval
+3. **L2 asymptotic**: BigCodeBench-Hard + OlympiadBench-mid ~1k problems, variance-controlled repeats
+4. **L3 acceleration**: **4 orthogonal difficulty knobs** — OlympiadBench (10 levels), APPS (3 tiers), LCB (easy/med/hard), USACO (4 divisions). Slope-of-slope possible.
+5. **Held-out generalization**: AIME 2025, LCB post-cutoff months, USACO 2025 waves. Zero overlap com held-in.
+6. **Kaggle T4 x2**: 3B bf16 ~6GB, headroom QLoRA r=16-32 + vLLM 2ª T4. Total ~20h aggregate.
+7. **Coverage**: code + math = 2 de 3 modos RSI literature (rStar-Math + AZR + Self-Improving Transformers).
+
+### Decontamination protocols aplicados
+
+- **Rolling/temporal**: LiveCodeBench (monthly), AIME 2025, USACO waves, OlympiadBench (dated subset)
+- **N-gram/hash decon**: LiveCodeBench, OlympiadBench, HARP
+- **Contamination probes**: MATH-Perturb Hard (2502.06453 UNVERIFIED) como canary opcional
 
 ## Study design
 
