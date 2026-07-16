@@ -49,3 +49,11 @@ scikit-learn>=1.5.0
 # s07 eval + tools
 numpy>=1.26.0
 scipy>=1.13.0
+
+# Ignite-3B RSI (math + code + Lean verifiers)
+sympy>=1.13.0
+latex2sympy2>=1.9.1
+math-verify>=0.5.2
+weco>=0.3.40
+# lean-dojo>=2.0.0   # add on session that uses Lean tool
+# verifiers>=0.4.0   # Prime Intellect RL env pkg
