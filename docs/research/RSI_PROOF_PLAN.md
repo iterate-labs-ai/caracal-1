@@ -306,6 +306,71 @@ candidates × 5K tokens).
 | **Zenil 2601.05280** | Entropy decay + variance amplification when exogenous signal vanishes | RLVR IS the exogenous signal, doesn't vanish |
 | **Task-Centric Theory 2602.10014** | Formal conditions for sustained RSI | Test empirically if satisfied |
 
+## RL stack (locked, Kaggle T4 x2 tested paths)
+
+### A — Trainer: **Unsloth GRPO** (fallback: TRL 0.14+)
+
+Único stack 3B-GRPO realista em 2× T4 (32GB total).
+
+| Feature | Unsloth GRPO |
+|---|---|
+| Base | HF TRL 0.14+ w/ `GRPOTrainer` + `reward_funcs=[fn,...]` |
+| VRAM cut | ~70% via 4-bit LoRA + PagedAdamW |
+| Speed | ~2× throughput vs baseline TRL |
+| Colocate | vLLM sleep/wake mode |
+| Reward API | Any Python callable — Lean/exec/SymPy plug direto |
+
+**Wrappers YAML permitidos**: Axolotl ou LLaMA-Factory (ambos wrap TRL).
+
+### B — Rollout engine: **vLLM ≥0.6** (colocate/sleep mode)
+
+- Prefix caching + chunked prefill maduros
+- ~1-3k tok/s em T4 pra 3B bf16 (UNVERIFIED throughput)
+- Colocate mode: trainer dorme, rollout acorda, GPU compartilhado
+- Fallback: **SGLang** RadixAttention se rollout tree-branching dominar
+
+### C — Verifier stack
+
+| Domínio | Ferramenta | Fonte |
+|---|---|---|
+| Code exec | `bwrap` + Prime Intellect `verifiers` pkg | github.com/PrimeIntellect-ai |
+| Math | **Math-Verify** (HF) = latex2sympy2 + SymPy + timeout | Open-R1 default |
+| Lean 4 | **Pantograph** daemon, async worker pool, 30s timeout | github.com/lenianiva/pantograph |
+| Answer grader ref | OpenAI simple-evals | github.com/openai/simple-evals |
+
+### D — Reference recipe: **DeepScaleR** (rLLM + verl + GRPO on 1.5B Qwen)
+
+Closest hardware/model scale. Downscale batch + LoRA pra caber em T4 x2.
+
+- Framework: rLLM (Berkeley Agentica) built on verl
+- Base: DeepSeek-R1-Distill-Qwen-1.5B
+- Reward: Math-Verify
+- Curriculum: 8k → 24k context progressive
+- Repo: `agentica-project/rllm` + `agentica-project/deepscaler`
+
+**Cross-reference**: AZR (2505.03335) pro self-play code half.
+
+### Infra patterns aplicar
+
+- **Async rollout / decoupled actor-verifier**: obrigatório pra Lean (proofs 5-60s)
+- **Off-policy replay** pra expensive verifiers: PPO importance ratio clip (DeepSeek-Prover-V1.5 RLPAF)
+- **KV-cache reuse** via SGLang RadixAttention ou vLLM prefix cache
+- **Prime Intellect `verifiers` pkg** = current standard env abstraction 2025-26
+- **Ray** — overkill 2×T4, skip
+
+### Kaggle T4 x2 layout
+
+```
+GPU 0: model actor (3B bf16 + LoRA r=32) + Unsloth PagedAdamW
+GPU 1: vLLM rollout engine (colocate sleep mode)
+CPU:   Lean 4 daemon (~2GB) + bwrap sandbox + Math-Verify
+Disk:  KV cache prefix + replay buffer + ckpt per generation
+```
+
+### Rejeitados
+
+NeMo-Aligner (A100+), DeepSpeed-Chat (stale 2023), TensorRT-LLM (heavy build), Ray (overkill).
+
 ## Compute + statistical machinery table
 
 | Component | Method | Reference |
