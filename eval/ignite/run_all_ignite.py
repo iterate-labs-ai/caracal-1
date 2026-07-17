@@ -16,26 +16,19 @@ DEFAULT_BASE = "unsloth/Qwen2.5-3B-Instruct-bnb-4bit"
 
 
 def load_model(base: str, adapter: str | None = None):
-    """Load model + tokenizer. Uses transformers + bnb 4bit (T4-compatible).
-    Falls back to Unsloth if adapter demands it (Kaggle A100+).
+    """Load model + tokenizer. Pure transformers + fp16 (T4 SM 7.5 compat).
+    bnb 4-bit kernels not built for SM 7.5 in recent bnb, so we use fp16.
     """
     import torch
-    from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+    from transformers import AutoModelForCausalLM, AutoTokenizer
 
-    # Strip unsloth prefix if present (unsloth/Qwen2.5-3B-Instruct-bnb-4bit -> Qwen/Qwen2.5-3B-Instruct)
     hf_base = base.replace("unsloth/", "Qwen/").replace("-bnb-4bit", "")
-    bnb = BitsAndBytesConfig(
-        load_in_4bit=True,
-        bnb_4bit_compute_dtype=torch.float16,
-        bnb_4bit_use_double_quant=True,
-        bnb_4bit_quant_type="nf4",
-    )
     tok = AutoTokenizer.from_pretrained(hf_base)
     model = AutoModelForCausalLM.from_pretrained(
         hf_base,
-        quantization_config=bnb,
-        device_map={"": "cuda:0"},
         torch_dtype=torch.float16,
+        device_map={"": "cuda:0"},
+        low_cpu_mem_usage=True,
     )
     if adapter:
         from peft import PeftModel
