@@ -1,18 +1,16 @@
-"""Inner-loop GRPO trainer wrapper (Unsloth + vLLM colocate).
+"""Inner-loop GRPO trainer (transformers + trl, no Unsloth).
 
 Trains one LoRA adapter delta over a task dataset with verifiable reward.
 Used by C_rsi_outer.py to train each mutation candidate.
 
-Stack:
-- Unsloth GRPOTrainer (4-bit LoRA + PagedAdamW, ~70% VRAM cut)
-- vLLM colocate sleep/wake mode (prefix cache + chunked prefill)
-- DAPO dynamic sampling (drop all-correct/all-wrong groups)
-- Per-group advantage norm
-- Rollout truncation on low reward
+Stack (T4-compat):
+- transformers + peft LoRA r=32 fp16
+- trl GRPOTrainer + rule-based reward
+- No Unsloth (kernels require SM 8.0+, T4 is SM 7.5)
+- No vLLM colocate (Kaggle T4 x2 tight VRAM); use HF generate() rollout
 
 Refs:
 - DeepSeek-R1 (2501.12948) - GRPO rule-based reward
-- DAPO (2503.14476 UNVERIFIED) - dynamic sampling
 - DeepScaleR blog - 8k->24k curriculum
 """
 
@@ -42,16 +40,15 @@ def train_lora(
     lora_alpha: int = 64,
     lr: float = 1e-6,
     max_prompt_len: int = 1024,
-    max_completion_len: int = 2048,
-    num_generations: int = 8,
+    max_completion_len: int = 1024,
+    num_generations: int = 4,
     per_device_batch: int = 1,
-    grad_accum: int = 4,
-    max_seq_len: int = 4096,
+    grad_accum: int = 8,
 ) -> Path:
     """Train one LoRA delta over dataset_path with RLVR reward for `bench`.
 
     Args:
-        base_model: HF ID or local path (e.g. "unsloth/Qwen2.5-3B-Instruct-bnb-4bit")
+        base_model: HF ID (e.g. "Qwen/Qwen2.5-3B-Instruct")
         adapter_in: optional prior adapter to merge before training (v_k init)
         dataset_path: JSONL with {prompt, gold, ...}
         bench: "math" | "code" | "lean"
@@ -62,37 +59,48 @@ def train_lora(
     Returns:
         Path to saved LoRA adapter dir.
     """
+    import torch
     from datasets import Dataset
+    from peft import LoraConfig, PeftModel, get_peft_model
+    from transformers import AutoModelForCausalLM, AutoTokenizer
     from trl import GRPOConfig, GRPOTrainer
-    from unsloth import FastLanguageModel
 
-    model, tokenizer = FastLanguageModel.from_pretrained(
-        model_name=base_model,
-        max_seq_length=max_seq_len,
-        load_in_4bit=True,
-        fast_inference=True,
-        gpu_memory_utilization=0.5,
-    )
+    hf_base = base_model.replace("unsloth/", "Qwen/").replace("-bnb-4bit", "")
 
-    model = FastLanguageModel.get_peft_model(
-        model,
-        r=lora_rank,
-        lora_alpha=lora_alpha,
-        target_modules=[
-            "q_proj",
-            "k_proj",
-            "v_proj",
-            "o_proj",
-            "gate_proj",
-            "up_proj",
-            "down_proj",
-        ],
-        use_gradient_checkpointing="unsloth",
+    tokenizer = AutoTokenizer.from_pretrained(hf_base)
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+
+    model = AutoModelForCausalLM.from_pretrained(
+        hf_base,
+        torch_dtype=torch.float16,
+        device_map={"": "cuda:0"},
+        low_cpu_mem_usage=True,
     )
 
     if adapter_in:
-        model.load_adapter(adapter_in, adapter_name="prev")
-        model.set_adapter("prev")
+        model = PeftModel.from_pretrained(model, adapter_in, is_trainable=True)
+    else:
+        peft_cfg = LoraConfig(
+            r=lora_rank,
+            lora_alpha=lora_alpha,
+            target_modules=[
+                "q_proj",
+                "k_proj",
+                "v_proj",
+                "o_proj",
+                "gate_proj",
+                "up_proj",
+                "down_proj",
+            ],
+            lora_dropout=0.0,
+            bias="none",
+            task_type="CAUSAL_LM",
+        )
+        model = get_peft_model(model, peft_cfg)
+
+    model.gradient_checkpointing_enable()
+    model.enable_input_require_grads()
 
     rows = _load_jsonl(dataset_path)
     ds = Dataset.from_list(
@@ -120,12 +128,11 @@ def train_lora(
         max_completion_length=max_completion_len,
         beta=0.001,
         logging_steps=5,
-        save_steps=steps // 3,
+        save_steps=max(1, steps // 3),
         report_to="none",
         remove_unused_columns=False,
-        use_vllm=True,
-        vllm_mode="colocate",
-        vllm_gpu_memory_utilization=0.5,
+        use_vllm=False,
+        fp16=True,
     )
 
     trainer = GRPOTrainer(
@@ -144,7 +151,7 @@ if __name__ == "__main__":
     import argparse
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("--base", default="unsloth/Qwen2.5-3B-Instruct-bnb-4bit")
+    ap.add_argument("--base", default="Qwen/Qwen2.5-3B-Instruct")
     ap.add_argument("--adapter-in", default=None)
     ap.add_argument("--dataset", type=Path, required=True)
     ap.add_argument("--bench", choices=["math", "code", "lean"], required=True)

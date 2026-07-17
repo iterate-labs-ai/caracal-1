@@ -22,13 +22,26 @@ ENTROPY_DROP_MAX = 0.30
 
 
 def load_model_and_tok(base: str, adapter: str | None):
-    from unsloth import FastLanguageModel
+    """T4-compat loader: transformers + fp16, no Unsloth (SM 7.5 unsupported)."""
+    import torch
+    from transformers import AutoModelForCausalLM, AutoTokenizer
 
-    model, tok = FastLanguageModel.from_pretrained(
-        model_name=base, max_seq_length=4096, load_in_4bit=True, fast_inference=True
+    hf_base = base.replace("unsloth/", "Qwen/").replace("-bnb-4bit", "")
+    tok = AutoTokenizer.from_pretrained(hf_base)
+    if tok.pad_token is None:
+        tok.pad_token = tok.eos_token
+    model = AutoModelForCausalLM.from_pretrained(
+        hf_base,
+        torch_dtype=torch.float16,
+        device_map={"": "cuda:0"},
+        low_cpu_mem_usage=True,
     )
     if adapter:
-        model.load_adapter(adapter)
+        from peft import PeftModel
+
+        model = PeftModel.from_pretrained(model, adapter)
+        tok = AutoTokenizer.from_pretrained(adapter, use_fast=True)
+    model.eval()
     return model, tok
 
 
