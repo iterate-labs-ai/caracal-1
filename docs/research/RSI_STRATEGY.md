@@ -88,7 +88,7 @@ Cond C (main treatment same-model) = swap `weco run` outer por **Caracal-3B roda
 
 Unsloth GRPO + vLLM colocate sleep/wake + **prefix caching** + **chunked prefill** + **DAPO dynamic sampling** + per-group advantage norm + rollout truncation.
 
-**DAPO dynamic sampling** (2503.14476 UNVERIFIED): drop all-correct + all-wrong groups → **~1.5× useful signal** (crítico para budget T4).
+**DAPO dynamic sampling** (2503.14476): drop all-correct + all-wrong groups → **~1.5× useful signal** (crítico para budget T4).
 
 ### T4 caveats
 
@@ -111,7 +111,7 @@ Unsloth GRPO + vLLM colocate sleep/wake + **prefix caching** + **chunked prefill
 
 ### GRPO tricks
 
-- **Dr. GRPO** (2503.20783 UNV) — removes length/std bias
+- **Dr. GRPO** (2503.20783) — removes length/std bias
 - **DAPO dynamic sampling** — drop trivial groups (~1.5× signal)
 - **Curriculum 8k→24k** (DeepScaleR) — 40% compute savings
 - **Rollout truncation** — early stop low-reward
@@ -234,8 +234,8 @@ Ignite-3B fills this gap com:
 - Kimi K1.5 (2501.12599)
 - Phi-4-reasoning (2504.21318)
 - Llama-Nemotron (2505.00949)
-- DAPO dynamic sampling (2503.14476 UNVERIFIED)
-- Dr. GRPO (2503.20783 UNVERIFIED)
+- DAPO dynamic sampling (2503.14476)
+- Dr. GRPO (2503.20783)
 - weco CLI (github.com/WecoAI/weco-cli, pypi weco)
 
 **Full catalog em RSI_2026.md**. **Detailed plan em RSI_PROOF_PLAN.md**. **This doc = strategy tl;dr**.

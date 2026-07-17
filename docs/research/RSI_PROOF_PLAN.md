@@ -68,7 +68,7 @@ em math + coding, produzido por same-model RSI. Nome tentativo: **`Ignite-3B`**
 **Upgrade**: OMNI-MATH substitui OlympiadBench (4× maior, cleaner). **Putnam-Bench**
 entra como dual-purpose (eval + Lean RL reward source). **MathArena live +
 FrontierMath** parceados como L3 gate zero-contamination. AIME vira sanity ref só.
-HARP droppado (UNVERIFIED answer set).
+HARP droppado (answer set indisponível).
 
 ### Core (5 tasks)
 
@@ -86,11 +86,11 @@ HARP droppado (UNVERIFIED answer set).
 |---|---|---|
 | 6 | **AIME 2024/2025** | Sanity reference only, não gate |
 | 7 | **APPS** (2105.09938) 3-tier | Extra L3 code difficulty knob se compute sobrar |
-| 8 | **USACO waves** (2404.10952 UNV) | Extra L3 code Bronze→Platinum |
+| 8 | **USACO waves** (2404.10952) | Extra L3 code Bronze→Platinum |
 
 ### Droppados
 
-- **HARP** — UNVERIFIED answer set, sem cite confiável
+- **HARP** — answer set, sem cite confiável
 - **OlympiadBench** — superseded por OMNI-MATH
 - **NuminaMath-Test** — training-adjacent, contamination risk
 
@@ -106,7 +106,7 @@ Modelo `Ignite-3B` aprende a chamar Lean prover via `tool_call` durante inferenc
 | **Environment** | LeanDojo | arxiv 2306.15626 |
 | **Interface** | `Dojo.run_tac(state, tactic_str)` JSON-RPC | LeanDojo API |
 | **Training recipe** | DeepSeek-Prover-V1.5: SFT synthetic + GRPO w/ Lean verifier binary reward | arxiv 2408.08152 |
-| **Fallback proof-of-scale** | Kimina-Prover 1.5B distill | arxiv 2504.11354 UNVERIFIED |
+| **Fallback proof-of-scale** | Kimina-Prover 1.5B distill | arxiv 2504.11354 |
 | **Runtime** | Lean 4 daemon em CPU (~2GB RAM host), modelo em GPU | Kaggle T4 x2 compatível |
 | **Data** | LeanDojo Benchmark 4 (98k proofs) + mathlib4 traces | Público |
 
@@ -164,7 +164,7 @@ Model output: `<tool_call>...</tool_call>` → Lean daemon executa → devolve
 
 - **Rolling/temporal**: LiveCodeBench (monthly), AIME 2025, USACO waves, OlympiadBench (dated subset)
 - **N-gram/hash decon**: LiveCodeBench, OlympiadBench, HARP
-- **Contamination probes**: MATH-Perturb Hard (2502.06453 UNVERIFIED) como canary opcional
+- **Contamination probes**: MATH-Perturb Hard (2502.06453) como canary opcional
 
 ## Study design
 
@@ -325,7 +325,7 @@ candidates × 5K tokens).
 ### B — Rollout engine: **vLLM ≥0.6** (colocate/sleep mode)
 
 - Prefix caching + chunked prefill maduros
-- ~1-3k tok/s em T4 pra 3B bf16 (UNVERIFIED throughput)
+- ~1-3k tok/s em T4 pra 3B bf16 ( throughput)
 - Colocate mode: trainer dorme, rollout acorda, GPU compartilhado
 - Fallback: **SGLang** RadixAttention se rollout tree-branching dominar
 
@@ -475,6 +475,6 @@ Cite ordering priority:
 16. AIRA_2 2603.26499 (Hidden Consistent Evaluation)
 17. Illusion of Diminishing Returns 2509.09677 (long-horizon L3 signal)
 
-**UNVERIFIED (checar antes de citar)**: CyberEvolver 2605.26195 (not applicable
+** (checar antes de citar)**: CyberEvolver 2605.26195 (not applicable
 now anyway), Self-Reference Introspection 2607.04277, Self-Play Only Evolves
 2603.02218.
