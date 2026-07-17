@@ -57,8 +57,26 @@ def _plain_cmd(script_path: Path, timeout_s: float) -> list[str]:
     return ["python3", str(script_path)]
 
 
-def run_tests(code: str, tests: list[str], timeout_s: float = 10.0) -> tuple[int, int]:
-    """Run code + tests, return (passed, total)."""
+def _dict_to_test_script(t: dict, code: str) -> str:
+    """LiveCodeBench-style test dict: {input, output} - drive stdin/stdout."""
+    import json as _json
+
+    inp = t.get("input") or t.get("stdin") or ""
+    out = t.get("output") or t.get("expected_output") or ""
+    return f"""import sys, io
+sys.stdin = io.StringIO({_json.dumps(inp)})
+_out = io.StringIO()
+sys.stdout = _out
+{code}
+sys.stdout = sys.__stdout__
+_got = _out.getvalue().strip()
+_exp = {_json.dumps(str(out).strip())}
+assert _got == _exp, f'got={{_got!r}} expected={{_exp!r}}'
+"""
+
+
+def run_tests(code: str, tests: list, timeout_s: float = 10.0) -> tuple[int, int]:
+    """Run code + tests, return (passed, total). Handles str or dict tests."""
     if not tests:
         return 0, 0
     passed = 0
@@ -66,7 +84,12 @@ def run_tests(code: str, tests: list[str], timeout_s: float = 10.0) -> tuple[int
         tmp = Path(tmpd)
         for i, test in enumerate(tests):
             script = tmp / f"run_{i}.py"
-            script.write_text(code + "\n\n" + test + "\n")
+            if isinstance(test, dict):
+                script.write_text(_dict_to_test_script(test, code))
+            elif isinstance(test, str):
+                script.write_text(code + "\n\n" + test + "\n")
+            else:
+                continue
             cmd = _bwrap_cmd(script, timeout_s) if BWRAP else _plain_cmd(script, timeout_s)
             try:
                 r = subprocess.run(
