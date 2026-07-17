@@ -79,7 +79,7 @@ def verify(pred: str, gold: str, timeout_s: float = 3.0) -> float:
     try:
         with _time_limit(timeout_s):
             return 1.0 if _sympy_eq(pred_ans, gold_ans) else 0.0
-    except VerifyTimeout:
+    except (VerifyTimeout, Exception):
         return 0.0
 
 
