@@ -149,7 +149,7 @@ def sprt_firmbound(
 
 
 def mcnemar_test(a_correct: list[int], b_correct: list[int]) -> dict[str, float]:
-    from scipy.stats.contingency import mcnemar
+    from statsmodels.stats.contingency_tables import mcnemar
 
     b_only = sum(1 for x, y in zip(a_correct, b_correct, strict=False) if x == 0 and y == 1)
     a_only = sum(1 for x, y in zip(a_correct, b_correct, strict=False) if x == 1 and y == 0)
