@@ -16,10 +16,9 @@ from pathlib import Path
 
 def build(out_path: Path) -> int:
     from datasets import load_dataset
-
     from datasets.exceptions import DatasetNotFoundError
 
-    for repo, split in [("amitayusht/PutnamBench", "lean4"), ("amitayusht/PutnamBench", "train")]:
+    for repo, split in [("amitayusht/PutnamBench", "train"), ("amitayusht/PutnamBench", "lean4")]:
         try:
             ds = load_dataset(repo, split=split)
             print(f"loaded {repo} split={split}")
@@ -34,7 +33,12 @@ def build(out_path: Path) -> int:
     n = 0
     with out_path.open("w") as f:
         for i, row in enumerate(ds):
-            theorem = row.get("theorem_statement") or row.get("formal_statement") or ""
+            theorem = (
+                row.get("lean4_statement")
+                or row.get("theorem_statement")
+                or row.get("formal_statement")
+                or ""
+            )
             preamble = row.get("preamble") or row.get("imports") or "import Mathlib\n"
             informal = row.get("informal_statement") or row.get("problem") or ""
             if not theorem:

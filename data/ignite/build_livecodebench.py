@@ -15,20 +15,31 @@ import argparse
 import json
 from pathlib import Path
 
+JSONL_FILES = {
+    "release_v1": "test.jsonl",
+    "release_v2": "test2.jsonl",
+    "release_v3": "test3.jsonl",
+    "release_v4": "test4.jsonl",
+    "release_v5": "test5.jsonl",
+    "release_v6": "test6.jsonl",
+}
+
 
 def build(out_path: Path, version: str = "release_v6") -> int:
-    from datasets import load_dataset
+    from huggingface_hub import hf_hub_download
 
-    ds = load_dataset(
-        "livecodebench/code_generation_lite",
-        version_tag=version,
-        split="test",
-        trust_remote_code=True,
+    filename = JSONL_FILES.get(version, "test6.jsonl")
+    local = hf_hub_download(
+        repo_id="livecodebench/code_generation_lite",
+        filename=filename,
+        repo_type="dataset",
     )
+    with open(local) as f:
+        rows = [json.loads(line) for line in f if line.strip()]
     out_path.parent.mkdir(parents=True, exist_ok=True)
     n = 0
     with out_path.open("w") as f:
-        for i, row in enumerate(ds):
+        for i, row in enumerate(rows):
             prompt = row.get("question_content") or row.get("problem") or ""
             starter = row.get("starter_code", "")
             tests_raw = row.get("public_test_cases") or row.get("private_test_cases") or "[]"

@@ -23,27 +23,31 @@ def build(out_path: Path) -> int:
     from datasets.exceptions import DatasetNotFoundError
 
     rows = []
-    for repo, split in [
-        ("MathArena/matharena", "train"),
-        ("math-arena/live", "test"),
+    for repo, split, tag in [
+        ("MathArena/aime_2026", "train", "AIME 2026"),
+        ("MathArena/hmmt_feb_2026", "train", "HMMT Feb 2026"),
+        ("MathArena/aime_2025_I", "train", "AIME 2025 I"),
+        ("MathArena/aime_2025_II", "train", "AIME 2025 II"),
+        ("MathArena/hmmt_feb_2025", "train", "HMMT Feb 2025"),
     ]:
         try:
             ds = load_dataset(repo, split=split)
-            rows = list(ds)
-            print(f"loaded {repo}/{split}: {len(rows)} rows")
-            break
+            for r in ds:
+                r["contest"] = tag
+                rows.append(r)
+            print(f"loaded {repo}/{split}: {len(list(ds))} rows")
         except (FileNotFoundError, ValueError, ConnectionError, DatasetNotFoundError) as e:
             print(f"skip {repo}/{split}: {e}")
     if not rows:
-        print("matharena: no source available (defer to manual JSONL)")
+        print("matharena: no source available")
         return 0
 
     n = 0
     with out_path.open("w") as f:
         for i, row in enumerate(rows):
-            prompt = row.get("problem") or row.get("question") or ""
-            gold = row.get("answer") or ""
-            if not prompt or not gold:
+            prompt = row.get("problem") or row.get("question") or row.get("statement") or ""
+            gold = row.get("answer") or row.get("gold") or ""
+            if not prompt or gold == "":
                 continue
             f.write(
                 json.dumps(
@@ -53,7 +57,7 @@ def build(out_path: Path) -> int:
                         "gold": str(gold).strip(),
                         "contest": row.get("contest"),
                         "year": row.get("year"),
-                        "source": "matharena-live",
+                        "source": "matharena",
                     }
                 )
                 + "\n"
