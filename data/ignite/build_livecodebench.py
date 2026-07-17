@@ -19,7 +19,12 @@ from pathlib import Path
 def build(out_path: Path, version: str = "release_v6") -> int:
     from datasets import load_dataset
 
-    ds = load_dataset("livecodebench/code_generation_lite", version_tag=version, split="test")
+    ds = load_dataset(
+        "livecodebench/code_generation_lite",
+        version_tag=version,
+        split="test",
+        trust_remote_code=True,
+    )
     out_path.parent.mkdir(parents=True, exist_ok=True)
     n = 0
     with out_path.open("w") as f:

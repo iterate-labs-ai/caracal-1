@@ -16,27 +16,27 @@ import argparse
 import json
 from pathlib import Path
 
-MANUAL_FALLBACK_URL = (
-    "https://raw.githubusercontent.com/mathematicalarena/matharena/main/problems.jsonl"
-)
-
 
 def build(out_path: Path) -> int:
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    try:
-        from datasets import load_dataset
+    from datasets import load_dataset
+    from datasets.exceptions import DatasetNotFoundError
 
-        ds = load_dataset("MathArena/matharena-live", split="test")
-        rows = list(ds)
-    except (FileNotFoundError, ValueError, ConnectionError):
-        import urllib.request
-
+    rows = []
+    for repo, split in [
+        ("MathArena/matharena", "train"),
+        ("math-arena/live", "test"),
+    ]:
         try:
-            with urllib.request.urlopen(MANUAL_FALLBACK_URL, timeout=30) as r:
-                rows = [json.loads(line) for line in r.read().decode().splitlines() if line.strip()]
-        except (OSError, ValueError) as e:
-            print(f"matharena fallback failed: {e}")
-            return 0
+            ds = load_dataset(repo, split=split)
+            rows = list(ds)
+            print(f"loaded {repo}/{split}: {len(rows)} rows")
+            break
+        except (FileNotFoundError, ValueError, ConnectionError, DatasetNotFoundError) as e:
+            print(f"skip {repo}/{split}: {e}")
+    if not rows:
+        print("matharena: no source available (defer to manual JSONL)")
+        return 0
 
     n = 0
     with out_path.open("w") as f:

@@ -15,13 +15,18 @@ import json
 from pathlib import Path
 
 YEAR_SOURCES = {
-    2024: ("Maxwell-Jia/AIME_2024", "train"),
-    2025: ("opencompass/AIME2025", "test"),
+    2024: [("Maxwell-Jia/AIME_2024", None, "train")],
+    2025: [
+        ("yentinglin/aime_2025", None, "train"),
+        ("opencompass/AIME2025", "AIME2025-I", "test"),
+        ("opencompass/AIME2025", "AIME2025-II", "test"),
+    ],
 }
 
 
 def build(out_path: Path, years: list[int]) -> int:
     from datasets import load_dataset
+    from datasets.exceptions import DatasetNotFoundError
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     n = 0
@@ -29,11 +34,19 @@ def build(out_path: Path, years: list[int]) -> int:
         for year in years:
             if year not in YEAR_SOURCES:
                 continue
-            repo, split = YEAR_SOURCES[year]
-            try:
-                ds = load_dataset(repo, split=split)
-            except (FileNotFoundError, ValueError, ConnectionError) as e:
-                print(f"aime {year} load failed: {e}")
+            ds = None
+            for repo, config, split in YEAR_SOURCES[year]:
+                try:
+                    ds = (
+                        load_dataset(repo, config, split=split)
+                        if config
+                        else load_dataset(repo, split=split)
+                    )
+                    print(f"aime {year}: loaded {repo}/{config or 'default'}/{split}")
+                    break
+                except (FileNotFoundError, ValueError, ConnectionError, DatasetNotFoundError) as e:
+                    print(f"aime {year} skip {repo}: {e}")
+            if ds is None:
                 continue
             for i, row in enumerate(ds):
                 prompt = row.get("Problem") or row.get("problem") or row.get("question") or ""

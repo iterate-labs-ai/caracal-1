@@ -17,10 +17,18 @@ from pathlib import Path
 def build(out_path: Path) -> int:
     from datasets import load_dataset
 
-    try:
-        ds = load_dataset("amitayusht/PutnamBench", split="lean4")
-    except (FileNotFoundError, ValueError, ConnectionError):
-        ds = load_dataset("trishullab/PutnamBench", split="test")
+    from datasets.exceptions import DatasetNotFoundError
+
+    for repo, split in [("amitayusht/PutnamBench", "lean4"), ("amitayusht/PutnamBench", "train")]:
+        try:
+            ds = load_dataset(repo, split=split)
+            print(f"loaded {repo} split={split}")
+            break
+        except (FileNotFoundError, ValueError, ConnectionError, DatasetNotFoundError) as e:
+            print(f"skip {repo}/{split}: {e}")
+    else:
+        print("no PutnamBench source available")
+        return 0
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     n = 0
