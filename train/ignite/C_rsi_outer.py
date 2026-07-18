@@ -98,18 +98,27 @@ def outer_loop(
     state = arch.load_state() if resume else {"last_gen": -1, "last_cand": -1}
     start_gen = state["last_gen"] + 1
 
-    v_adapter = v0_adapter
     base_mut = default_mutation(bench)
+
+    # Resume retoma do adapter retido; do contrario mede delta contra referencia errada.
+    resumed_adapter = state.get("v_adapter") or ""
+    if resume and resumed_adapter:
+        v_adapter = resumed_adapter
+        print(f"[outer] resume gen{start_gen} a partir de {v_adapter}")
+    else:
+        v_adapter = v0_adapter
+        if resume:
+            print(f"[outer] resume sem v_adapter no state, comecando de {v_adapter}")
 
     model, tok = load_model_and_tok(base, v_adapter)
     r_prev = eval_on(model, tok, bench_name, dataset_val, n=100)
-    print(f"[outer] v_-1 val_r={r_prev:.4f}")
+    print(f"[outer] referencia val_r={r_prev:.4f} (adapter={v_adapter})")
 
     for k in range(start_gen, gens):
         print(f"\n=== gen {k}/{gens - 1} ===")
 
         recent = json.dumps({"prev_val_r": r_prev})
-        muts = propose_via_self(model, tok, base_mut, recent, n=cands, seed=k)
+        muts = propose_via_self(model, tok, base_mut, recent, n=cands, seed=k, bench=bench)
 
         # Proposer sai da VRAM: train_lora carrega o proprio 3B e nao cabem dois em T4.
         free_gpu(model)
@@ -117,25 +126,30 @@ def outer_loop(
 
         cands_out = []
         for ci, m in enumerate(muts):
-            print(f"[gen{k} cand{ci}] mut={m.hash()}")
+            print(f"[gen{k} cand{ci}] mut={m.hash()} source={m.source}")
             adapter_dir = out_root / f"gen{k}" / f"cand{ci}"
-            try:
-                out = train_lora(
-                    base_model=base,
-                    adapter_in=v_adapter,
-                    dataset_path=dataset_train,
-                    bench=bench,
-                    out_dir=adapter_dir,
-                    steps=steps,
-                    lora_rank=m.lora_rank,
-                    lora_alpha=m.lora_alpha,
-                    lr=m.lr,
-                )
-            except (RuntimeError, ValueError) as e:
-                arch.record_candidate(k, ci, m, dev_r=-1.0, reason=f"train_failed: {e}")
-                continue
+            if steps <= 0:
+                # Cond E (inner congelado): so o scaffold muda. HF Trainer trata
+                # max_steps=0 como "nao setado" e treinaria uma epoca inteira.
+                out = v_adapter
+            else:
+                try:
+                    out = train_lora(
+                        base_model=base,
+                        adapter_in=v_adapter,
+                        dataset_path=dataset_train,
+                        bench=bench,
+                        out_dir=adapter_dir,
+                        steps=steps,
+                        lora_rank=m.lora_rank,
+                        lora_alpha=m.lora_alpha,
+                        lr=m.lr,
+                    )
+                except (RuntimeError, ValueError) as e:
+                    arch.record_candidate(k, ci, m, dev_r=-1.0, reason=f"train_failed: {e}")
+                    continue
 
-            cand_model, cand_tok = load_model_and_tok(base, str(out))
+            cand_model, cand_tok = load_model_and_tok(base, str(out) if out else None)
             dev_r = eval_on(cand_model, cand_tok, bench_name, dataset_dev, n=50)
             free_gpu(cand_model, cand_tok)
             cands_out.append((m, out, dev_r))
@@ -149,7 +163,7 @@ def outer_loop(
         top2 = sorted(cands_out, key=lambda x: x[2], reverse=True)[:2]
         scored = []
         for m, adapter, dev_r in top2:
-            cand_model, cand_tok = load_model_and_tok(base, str(adapter))
+            cand_model, cand_tok = load_model_and_tok(base, str(adapter) if adapter else None)
             v_r = eval_on(cand_model, cand_tok, bench_name, dataset_val, n=100)
             free_gpu(cand_model, cand_tok)
             scored.append((m, adapter, dev_r, v_r))

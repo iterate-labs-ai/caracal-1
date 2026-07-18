@@ -167,6 +167,28 @@ def mcnemar_test(a_correct: list[int], b_correct: list[int]) -> dict[str, float]
     }
 
 
+def proposal_source_rate(archive_log: Path) -> dict[str, Any]:
+    """Fracao de mutacoes que vieram do modelo vs fallback aleatorio.
+
+    Numero obrigatorio pro paper: a tese "same-model RSI" so se sustenta se
+    `self_rate` for alto. Se o modelo raramente produz JSON parseavel, o loop
+    degenera em busca aleatoria e o ganho nao pode ser atribuido a recursao.
+    """
+    rows = [json.loads(line) for line in archive_log.read_text().splitlines() if line.strip()]
+    cands = [r for r in rows if r.get("type") == "candidate"]
+    counts: dict[str, int] = {}
+    for r in cands:
+        mut = r.get("mutation") or {}
+        src = mut.get("source", "unknown") if isinstance(mut, dict) else "unknown"
+        counts[src] = counts.get(src, 0) + 1
+    total = sum(counts.values())
+    return {
+        "total": total,
+        "by_source": counts,
+        "self_rate": counts.get("self", 0) / total if total else 0.0,
+    }
+
+
 def shapley_attribution(archive_log: Path, top_k: int = 10) -> list[dict[str, Any]]:
     """Per-mutation Shapley credit for total gain.
 

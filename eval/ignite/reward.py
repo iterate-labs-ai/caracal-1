@@ -49,37 +49,60 @@ def _extract_python_block(text: str) -> str:
     return text
 
 
+def majority_vote_reward(completions: list[str]) -> list[float]:
+    """Self-reward por voto majoritario, sem gold. Usado na Cond D.
+
+    Reproduz o modo de falha de Shafayat (2505.21444): sem verificador externo,
+    o sinal so mede concordancia interna, entao o modelo pode convergir pra uma
+    resposta errada e ser recompensado por isso. E o contraste da Cond C (RLVR).
+    """
+    from collections import Counter
+
+    from eval.ignite.tools.math_verify import extract_boxed
+
+    answers = [(extract_boxed(c) or "").strip() for c in completions]
+    valid = [a for a in answers if a]
+    if not valid:
+        return [0.0] * len(completions)
+    majority, _ = Counter(valid).most_common(1)[0]
+    return [1.0 if a == majority else 0.0 for a in answers]
+
+
+# bench -> (chave do kwarg com a referencia, funcao de reward por item)
+PAIRWISE_REWARDS = {
+    "math": ("gold", math_reward),
+    "code": ("tests", code_task_reward),
+    "lean": ("thm_state", lean_reward),
+}
+
+
 def build_reward_fn(bench: str, gold_key: str = "gold"):
     """Factory returning closure for GRPO reward_funcs.
 
     Args:
-        bench: one of "math", "code", "lean"
+        bench: "math" | "code" | "lean" (RLVR, referencia externa)
+               ou "llmjudge" (Cond D: voto majoritario, sem referencia)
         gold_key: key in row dict holding gold answer (default "gold")
 
     Returns: (completions, **kwargs) -> list[float] compatible with TRL GRPOTrainer.
     """
-    if bench == "math":
+    if bench == "llmjudge":
 
-        def _r(completions, **kwargs):
-            golds = kwargs.get(gold_key) or kwargs.get("gold")
-            return [math_reward(c, g) for c, g in zip(completions, golds, strict=False)]
+        def _judge(completions, **kwargs):
+            return majority_vote_reward(completions)
 
-        return _r
-    if bench == "code":
+        return _judge
 
-        def _r(completions, **kwargs):
-            tests_list = kwargs.get("tests")
-            return [code_task_reward(c, t) for c, t in zip(completions, tests_list, strict=False)]
+    if bench not in PAIRWISE_REWARDS:
+        raise ValueError(f"unknown bench: {bench}")
 
-        return _r
-    if bench == "lean":
+    ref_key, score = PAIRWISE_REWARDS[bench]
 
-        def _r(completions, **kwargs):
-            thms = kwargs.get("thm_state") or kwargs.get("gold")
-            return [lean_reward(c, t) for c, t in zip(completions, thms, strict=False)]
+    def _paired(completions, **kwargs):
+        refs = kwargs.get(ref_key) or kwargs.get(gold_key) or kwargs.get("gold")
+        return [score(c, r) for c, r in zip(completions, refs, strict=False)]
 
-        return _r
-    raise ValueError(f"unknown bench: {bench}")
+    return _paired
 
 
 if __name__ == "__main__":

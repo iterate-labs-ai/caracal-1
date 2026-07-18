@@ -36,7 +36,7 @@ def eval_aime(
         return rows[0]
 
     per, correct = [], []
-    for i, r in enumerate(rows):
+    for r in rows:
         prompt = tok.apply_chat_template(
             [
                 {"role": "system", "content": SYSTEM},

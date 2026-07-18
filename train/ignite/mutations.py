@@ -22,10 +22,21 @@ class Mutation:
     lora_alpha: int
     lr: float
     seed: int = 0
+    # De onde veio a mutacao. Critico pra tese: se `source` for majoritariamente
+    # fallback, "proposta same-model" degenera em busca aleatoria e a claim cai.
+    #   self            -> modelo propos e o JSON parseou
+    #   fallback_nojson -> resposta sem bloco ```json
+    #   fallback_badjson-> bloco presente mas JSON invalido
+    #   fallback_error  -> generate() levantou excecao
+    #   default         -> mutacao base, sem proposta
+    source: str = "self"
     meta: dict = field(default_factory=dict)
 
     def hash(self) -> str:
-        return hashlib.sha256(json.dumps(asdict(self), sort_keys=True).encode()).hexdigest()[:12]
+        # `source` fora do hash: mesma config vinda de caminhos diferentes
+        # continua sendo a mesma mutacao pra fins de atribuicao.
+        d = {k: v for k, v in asdict(self).items() if k != "source"}
+        return hashlib.sha256(json.dumps(d, sort_keys=True).encode()).hexdigest()[:12]
 
 
 DEFAULT_SYSTEM_MATH = (
@@ -69,10 +80,11 @@ def default_mutation(bench: str) -> Mutation:
         lora_rank=32,
         lora_alpha=64,
         lr=1e-6,
+        source="default",
     )
 
 
-def sample_random(bench: str, seed: int) -> Mutation:
+def sample_random(bench: str, seed: int, source: str = "fallback_nojson") -> Mutation:
     rng = random.Random(seed)
     base = default_mutation(bench)
     return Mutation(
@@ -83,6 +95,7 @@ def sample_random(bench: str, seed: int) -> Mutation:
         lora_alpha=rng.choice(LORA_ALPHA_GRID),
         lr=rng.choice(LR_GRID),
         seed=seed,
+        source=source,
     )
 
 
@@ -100,16 +113,16 @@ Recent trace (last generation gain per task):
 Output ONE JSON object with the mutated fields. Keys: system_prompt, cot_scaffold, curriculum_bin, lora_rank, lora_alpha, lr. Wrap in ```json code fence."""
 
 
-def parse_proposal(text: str, base: Mutation, seed: int) -> Mutation:
+def parse_proposal(text: str, base: Mutation, seed: int, bench: str = "math") -> Mutation:
     import re
 
     m = re.search(r"```json\s*(\{.*?\})\s*```", text, re.DOTALL)
     if not m:
-        return sample_random(base.system_prompt[:20], seed)
+        return sample_random(bench, seed, source="fallback_nojson")
     try:
         d = json.loads(m.group(1))
     except json.JSONDecodeError:
-        return sample_random(base.system_prompt[:20], seed)
+        return sample_random(bench, seed, source="fallback_badjson")
     return Mutation(
         system_prompt=str(d.get("system_prompt", base.system_prompt)),
         cot_scaffold=str(d.get("cot_scaffold", base.cot_scaffold)),
@@ -118,13 +131,26 @@ def parse_proposal(text: str, base: Mutation, seed: int) -> Mutation:
         lora_alpha=int(d.get("lora_alpha", base.lora_alpha)),
         lr=float(d.get("lr", base.lr)),
         seed=seed,
+        source="self",
     )
 
 
 def propose_via_self(
-    model, tok, base: Mutation, recent_stats: str, n: int, temp: float = 0.9, seed: int = 0
+    model,
+    tok,
+    base: Mutation,
+    recent_stats: str,
+    n: int,
+    temp: float = 0.9,
+    seed: int = 0,
+    bench: str = "math",
 ) -> list[Mutation]:
-    """v proposes N mutations to itself. Falls back to random if model errors."""
+    """v propoe N mutacoes a si mesmo. Cai em random se o modelo falhar.
+
+    Cada Mutation carrega `source`, entao a fracao real de propostas do modelo
+    vs fallback aleatorio fica no log — numero obrigatorio pro paper, senao
+    "same-model RSI" pode ser busca aleatoria disfarcada.
+    """
     from eval.s07.benches._common import generate
 
     muts: list[Mutation] = []
@@ -145,8 +171,11 @@ def propose_via_self(
         )
         try:
             resp = generate(model, tok, chat, max_new=512)
-            m = parse_proposal(resp, base, seed=seed * 100 + i)
+            m = parse_proposal(resp, base, seed=seed * 100 + i, bench=bench)
         except (RuntimeError, ValueError, KeyError):
-            m = sample_random(base.system_prompt[:20], seed=seed * 100 + i)
+            m = sample_random(bench, seed=seed * 100 + i, source="fallback_error")
         muts.append(m)
+
+    n_self = sum(1 for m in muts if m.source == "self")
+    print(f"[propose] {n_self}/{len(muts)} vieram do modelo, {len(muts) - n_self} fallback")
     return muts
