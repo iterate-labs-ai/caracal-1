@@ -149,6 +149,14 @@ def train_lora(
     )
     trainer.train()
     trainer.save_model(str(out_dir))
+
+    # Devolve a VRAM: o outer loop carrega outro 3B logo em seguida pra avaliar.
+    import gc
+
+    del trainer, model
+    gc.collect()
+    torch.cuda.empty_cache()
+
     return out_dir
 
 

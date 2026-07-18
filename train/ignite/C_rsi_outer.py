@@ -21,6 +21,18 @@ EPS_PP = 0.01
 ENTROPY_DROP_MAX = 0.30
 
 
+def free_gpu(*objs):
+    """Libera modelos da VRAM. `del` sozinho nao devolve memoria ao allocator."""
+    import gc
+
+    import torch
+
+    for o in objs:
+        del o
+    gc.collect()
+    torch.cuda.empty_cache()
+
+
 def load_model_and_tok(base: str, adapter: str | None):
     """T4-compat loader: transformers + fp16, no Unsloth (SM 7.5 unsupported)."""
     import torch
@@ -99,6 +111,10 @@ def outer_loop(
         recent = json.dumps({"prev_val_r": r_prev})
         muts = propose_via_self(model, tok, base_mut, recent, n=cands, seed=k)
 
+        # Proposer sai da VRAM: train_lora carrega o proprio 3B e nao cabem dois em T4.
+        free_gpu(model)
+        model = None
+
         cands_out = []
         for ci, m in enumerate(muts):
             print(f"[gen{k} cand{ci}] mut={m.hash()}")
@@ -121,7 +137,7 @@ def outer_loop(
 
             cand_model, cand_tok = load_model_and_tok(base, str(out))
             dev_r = eval_on(cand_model, cand_tok, bench_name, dataset_dev, n=50)
-            del cand_model, cand_tok
+            free_gpu(cand_model, cand_tok)
             cands_out.append((m, out, dev_r))
             arch.record_candidate(k, ci, m, dev_r=dev_r)
 
@@ -129,16 +145,16 @@ def outer_loop(
             print(f"[gen{k}] no candidates trained, skip")
             continue
 
+        # Top-2 por dev vao pro val (contamination gate). Um modelo por vez na VRAM.
         top2 = sorted(cands_out, key=lambda x: x[2], reverse=True)[:2]
-        best_m, best_adapter, best_dev = max(
-            top2,
-            key=lambda x: eval_on(
-                *load_model_and_tok(base, str(x[1])), bench_name, dataset_val, n=100
-            ),
-        )
-        cand_model, cand_tok = load_model_and_tok(base, str(best_adapter))
-        val_r = eval_on(cand_model, cand_tok, bench_name, dataset_val, n=100)
-        del cand_model, cand_tok
+        scored = []
+        for m, adapter, dev_r in top2:
+            cand_model, cand_tok = load_model_and_tok(base, str(adapter))
+            v_r = eval_on(cand_model, cand_tok, bench_name, dataset_val, n=100)
+            free_gpu(cand_model, cand_tok)
+            scored.append((m, adapter, dev_r, v_r))
+
+        best_m, best_adapter, best_dev, val_r = max(scored, key=lambda x: x[3])
 
         entropy_delta = compute_entropy_delta(str(v_adapter or "base"), str(best_adapter))
         passk_ok = passk_check(str(v_adapter or "base"), str(best_adapter))
@@ -163,12 +179,15 @@ def outer_loop(
             arch.record_generation(k, v_adapter, val_r, delta_pp)
             if hf_repo:
                 arch.push_hf(best_adapter, hf_repo, gen=k)
-            model, tok = load_model_and_tok(base, v_adapter)
             print(f"[gen{k}] RETAINED val_r={val_r:.4f} delta={delta_pp:.4f}")
         else:
             print(f"[gen{k}] rejected val_r={val_r:.4f} delta={delta_pp:.4f}")
 
         arch.save_state({"last_gen": k, "last_cand": -1, "v_adapter": str(v_adapter or "")})
+
+        # Proposer volta pra VRAM pra propor a proxima geracao.
+        if k + 1 < gens:
+            model, tok = load_model_and_tok(base, v_adapter)
 
 
 def main():
