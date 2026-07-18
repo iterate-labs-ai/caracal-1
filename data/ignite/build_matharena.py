@@ -19,8 +19,11 @@ from pathlib import Path
 
 def build(out_path: Path) -> int:
     out_path.parent.mkdir(parents=True, exist_ok=True)
+    import time
+
     from datasets import load_dataset
     from datasets.exceptions import DatasetNotFoundError
+    from huggingface_hub.errors import HfHubHTTPError
 
     rows = []
     for repo, split, tag in [
@@ -30,14 +33,29 @@ def build(out_path: Path) -> int:
         ("MathArena/aime_2025_II", "train", "AIME 2025 II"),
         ("MathArena/hmmt_feb_2025", "train", "HMMT Feb 2025"),
     ]:
-        try:
-            ds = load_dataset(repo, split=split)
-            for r in ds:
-                r["contest"] = tag
-                rows.append(r)
-            print(f"loaded {repo}/{split}: {len(list(ds))} rows")
-        except (FileNotFoundError, ValueError, ConnectionError, DatasetNotFoundError) as e:
-            print(f"skip {repo}/{split}: {e}")
+        for attempt in range(3):
+            try:
+                ds = load_dataset(repo, split=split)
+                for r in ds:
+                    r["contest"] = tag
+                    rows.append(r)
+                print(f"loaded {repo}/{split}: {len(list(ds))} rows")
+                break
+            except HfHubHTTPError as e:
+                if "429" in str(e) and attempt < 2:
+                    print(f"HF 429 on {repo}, retry {attempt + 1}/3 in 30s")
+                    time.sleep(30)
+                    continue
+                print(f"skip {repo}/{split}: HF error {e}")
+                break
+            except (
+                FileNotFoundError,
+                ValueError,
+                ConnectionError,
+                DatasetNotFoundError,
+            ) as e:
+                print(f"skip {repo}/{split}: {e}")
+                break
     if not rows:
         print("matharena: no source available")
         return 0
