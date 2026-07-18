@@ -39,11 +39,11 @@ def train_lora(
     lora_rank: int = 32,
     lora_alpha: int = 64,
     lr: float = 1e-6,
-    max_prompt_len: int = 1024,
-    max_completion_len: int = 1024,
+    max_prompt_len: int = 640,
+    max_completion_len: int = 512,
     num_generations: int = 4,
-    per_device_batch: int = 1,
-    grad_accum: int = 8,
+    per_device_batch: int = 4,
+    grad_accum: int = 4,
 ) -> Path:
     """Train one LoRA delta over dataset_path with RLVR reward for `bench`.
 
@@ -66,6 +66,11 @@ def train_lora(
     from trl import GRPOConfig, GRPOTrainer
 
     hf_base = base_model.replace("unsloth/", "Qwen/").replace("-bnb-4bit", "")
+
+    # TRL GRPO exige global train batch (per_device x n_devices) divisivel por
+    # num_generations. Roda single-device, entao per_device precisa ser multiplo.
+    if per_device_batch % num_generations != 0:
+        per_device_batch = num_generations
 
     tokenizer = AutoTokenizer.from_pretrained(hf_base)
     if tokenizer.pad_token is None:
