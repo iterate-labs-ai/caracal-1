@@ -1,3 +1,34 @@
+# Onde o Caracal-3B está no mundo — CyberMetric-500 side-by-side
+
+Única comparação estatisticamente válida (set fixo de 500). Generalistas open
+source marcados com [G], specialists cyber com [C].
+
+```
+Llama-3.1-70B-Instruct   [G] 70B  93.0
+GPT-4o-mini              [fechado]  88.9   (referencia)
+DeepHat-v1-7B            [C]  7B   86.9
+Qwen2.5-7B-Instruct      [G]  7B   85.9
+>>> CARACAL-3B (nos)     [C]  3B   85.8 <<<
+Primus-Base              [C]  8B   85.4-86.6
+Llama-3.1-8B-Instruct    [G]  8B   84.7-85.6
+Foundation-Sec-8B        [C]  8B   84.8
+Gemma-3-4B-it            [G]  4B   76.8
+```
+
+**Leitura**: o Caracal-3B empata com os generalistas open source de 7-8B
+(Qwen2.5-7B 85.9, Llama-3.1-8B 84.7-85.6) usando **2.3-2.7x menos parametros**,
+e empata com os specialists cyber de 8B (Foundation-Sec 84.8, Primus 85.4). Bate
+o Gemma-3-4B por +9pp. Fica a ~1pp do teto da faixa pequena (DeepHat-7B 86.9)
+com metade dos params. Caveat: harness proprio, nao controlado — posicionamento
+aproximado, nao ranking rigoroso.
+
+**Segunda claim a habilitar**: CTI-RCM (CVE->CWE) verdadeiro ja esta implementado
+em `eval/s07/benches/cti_bench.py` (n=1000, prompt oficial embutido no dataset,
+normalize_cwe corrigido). Faltou so entrar na lista de benches do run. Rodando,
+compara direto contra Foundation-Sec-8B RCM 72-75, o teto real do specialist.
+
+---
+
 # Baselines cyber open-weight — fontes primárias verificadas
 
 Cada número foi lido direto na fonte primária (leaderboard oficial, PDF do autor
