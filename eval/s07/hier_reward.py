@@ -40,14 +40,18 @@ def hier_cwe_reward(pred_text: str, gold_cwe: str, tree: CWEParser) -> float:
         return 0.0
     gold = normalize_cwe(gold_cwe) or gold_cwe
 
+    # arvore keia por ID cru ("1004"); normalize_cwe devolve "CWE-1004".
+    p_id = pred.removeprefix("CWE-")
+    g_id = gold.removeprefix("CWE-")
+
     base = 0.0
     if pred == gold:
         base = 1.0
-    elif tree.is_ancestor(pred, gold) or tree.is_ancestor(gold, pred):
+    elif tree.is_ancestor(p_id, g_id) or tree.is_ancestor(g_id, p_id):
         base = 0.5
-    elif tree.shared_parent(pred, gold):
+    elif tree.shared_parent(p_id, g_id):
         base = 0.3
-    elif tree.in_view_1003(pred) and tree.in_view_1003(gold):
+    elif tree.in_view_1003(p_id) and tree.in_view_1003(g_id):
         base = 0.1
 
     format_bonus = 0.1 if BOXED_RE.search(pred_text) else 0.0
