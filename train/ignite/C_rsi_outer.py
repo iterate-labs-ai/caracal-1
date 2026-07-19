@@ -21,14 +21,18 @@ EPS_PP = 0.01
 ENTROPY_DROP_MAX = 0.30
 
 
-def free_gpu(*objs):
-    """Libera modelos da VRAM. `del` sozinho nao devolve memoria ao allocator."""
+def free_gpu():
+    """Devolve VRAM ao allocator (gc + empty_cache).
+
+    NAO recebe objetos: `del` num parametro so apaga o binding LOCAL, o caller
+    continua segurando o modelo, entao o empty_cache rodava com a referencia
+    viva e nao liberava nada (era o vazamento que estourava a T4 no gen tardio).
+    O caller precisa zerar as proprias vars (`m = None`) ANTES de chamar aqui.
+    """
     import gc
 
     import torch
 
-    for o in objs:
-        del o
     gc.collect()
     torch.cuda.empty_cache()
 
@@ -121,8 +125,8 @@ def outer_loop(
         muts = propose_via_self(model, tok, base_mut, recent, n=cands, seed=k, bench=bench)
 
         # Proposer sai da VRAM: train_lora carrega o proprio 3B e nao cabem dois em T4.
-        free_gpu(model)
-        model = None
+        model = None  # zera ANTES: senao empty_cache roda com a ref viva e nao libera
+        free_gpu()
 
         cands_out = []
         for ci, m in enumerate(muts):
@@ -154,8 +158,11 @@ def outer_loop(
             try:
                 cand_model, cand_tok = load_model_and_tok(base, str(out) if out else None)
                 dev_r = eval_on(cand_model, cand_tok, bench_name, dataset_dev, n=50)
-                free_gpu(cand_model, cand_tok)
+                cand_model = cand_tok = None  # zera ANTES do empty_cache
+                free_gpu()
             except (RuntimeError, ValueError, OSError) as e:
+                # load pode ter deixado um modelo residente antes do eval estourar
+                cand_model = cand_tok = None
                 free_gpu()
                 arch.record_candidate(k, ci, m, dev_r=-1.0, reason=f"eval_failed: {e}")
                 continue
@@ -172,7 +179,8 @@ def outer_loop(
         for m, adapter, dev_r in top2:
             cand_model, cand_tok = load_model_and_tok(base, str(adapter) if adapter else None)
             v_r = eval_on(cand_model, cand_tok, bench_name, dataset_val, n=100)
-            free_gpu(cand_model, cand_tok)
+            cand_model = cand_tok = None  # zera ANTES do empty_cache
+            free_gpu()
             scored.append((m, adapter, dev_r, v_r))
 
         best_m, best_adapter, best_dev, val_r = max(scored, key=lambda x: x[3])
