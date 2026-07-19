@@ -35,6 +35,19 @@ def normalize_mcq_letter(text: str) -> str | None:
     return None
 
 
+def normalize_mcq_letters(text: str) -> set[str]:
+    """Todas as letras marcadas. Benches multi-resposta (CyberSOCEval) tem gold
+    tipo ['A','B'], que um parser de letra unica nao consegue pontuar."""
+    boxed = BOXED_RE.search(text)
+    scope = boxed.group(1) if boxed else ""
+    if not scope:
+        for line in reversed(text.splitlines()):
+            if LETTER_RE.search(line):
+                scope = line
+                break
+    return {m.group(1).upper() for m in LETTER_RE.finditer(scope)}
+
+
 def generate(model, tokenizer, prompt: str, max_new: int = 256) -> str:
     import torch
 
@@ -64,15 +77,19 @@ def bootstrap_ci(
     )
 
 
-def mcq_chat_prompt(tokenizer, system: str, question: str, choices: dict[str, str]) -> str:
+def mcq_chat_prompt(
+    tokenizer, system: str, question: str, choices: dict[str, str], multi: bool = False
+) -> str:
     formatted = "\n".join(f"{k}. {v}" for k, v in choices.items())
+    instr = (
+        "Multiple answers may be correct. List every correct letter inside \\boxed{}, e.g. \\boxed{A, C}."
+        if multi
+        else "Answer with A, B, C, or D inside \\boxed{}."
+    )
     return tokenizer.apply_chat_template(
         [
             {"role": "system", "content": system},
-            {
-                "role": "user",
-                "content": f"{question}\n\n{formatted}\n\nAnswer with A, B, C, or D inside \\boxed{{}}.",
-            },
+            {"role": "user", "content": f"{question}\n\n{formatted}\n\n{instr}"},
         ],
         tokenize=False,
         add_generation_prompt=True,

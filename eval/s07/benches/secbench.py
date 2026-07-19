@@ -2,7 +2,6 @@
 
 from ._common import bootstrap_ci, generate, mcq_chat_prompt, normalize_mcq_letter
 
-
 SUBSET_FILE = {"mcq": "data/MCQs_2730.jsonl", "saq": "data/SAQs_270.jsonl"}
 
 
@@ -24,31 +23,49 @@ def eval_secbench(model, tok, n_mcq: int = 1000, subset: str = "mcq") -> dict:
     per, correct = [], []
     system = "You are a cybersecurity expert. Answer the multiple choice question."
 
+    skipped = 0
     for i, r in enumerate(rows):
         q = r.get("question") or r.get("Question", "")
-        choices = {}
-        for letter in "ABCD":
-            key_upper = letter
-            key_lower = letter.lower()
-            val = r.get(f"option_{key_lower}") or r.get(f"Option_{key_upper}") or r.get(key_upper)
-            if val:
-                choices[key_upper] = val
-        if not choices:
+        # Schema real: answers = lista de opcoes, label = letra. As chaves
+        # option_a/Option_A nunca existiram, entao todo row era pulado (n=0).
+        raw = r.get("answers") or r.get("options") or []
+        if isinstance(raw, list):
+            choices = {
+                letter: raw[idx] for idx, letter in enumerate("ABCD") if idx < len(raw)
+            }
+        else:
+            choices = raw
+        gold = str(r.get("label") or r.get("answer") or r.get("Answer") or "").strip().upper()
+        if not choices or not q or not gold:
+            skipped += 1
             continue
         prompt = mcq_chat_prompt(tok, system, q, choices)
         resp = generate(model, tok, prompt, max_new=64)
         pred = normalize_mcq_letter(resp)
-        gold = (r.get("answer") or r.get("Answer") or "").strip().upper()
         ok = int(pred == gold)
         correct.append(ok)
-        per.append({"i": i, "pred": pred, "gold": gold, "correct": ok})
+        per.append(
+            {
+                "i": i,
+                "pred": pred,
+                "gold": gold,
+                "correct": ok,
+                "language": r.get("language"),
+            }
+        )
         if (i + 1) % 100 == 0:
             print(f"[secbench {i + 1}/{len(rows)}] acc={sum(correct) / (i + 1):.3f}")
     ci_lo, ci_hi = bootstrap_ci(correct)
+    by_lang: dict[str, list[int]] = {}
+    for p in per:
+        by_lang.setdefault(str(p.get("language")), []).append(p["correct"])
     return {
         "subset": subset,
         "n": len(correct),
+        "skipped": skipped,
         "accuracy": sum(correct) / len(correct) if correct else 0.0,
         "ci_95_low": ci_lo,
         "ci_95_high": ci_hi,
+        "per_language": {k: sum(v) / len(v) for k, v in by_lang.items()},
+        "per_sample": per,
     }
