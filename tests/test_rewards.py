@@ -63,6 +63,24 @@ def test_hier_partial_credit(cwe_tree):
     assert hier_cwe_reward(f"\\boxed{{{pf}}}", cf, cwe_tree) == pytest.approx(0.6)
 
 
+def test_normalize_cwe_single_source():
+    # as 3 copias foram consolidadas em _common: mesma funcao, mesmo id.
+    from eval.s07 import bench_runner, hier_reward
+    from eval.s07.benches._common import normalize_cwe
+
+    assert hier_reward.normalize_cwe is normalize_cwe
+    assert bench_runner.normalize_cwe is normalize_cwe
+    # o regex novo aceita "CWE 119" com espaco (antigo rejeitava)
+    assert normalize_cwe("weakness: CWE 119") == "CWE-119"
+
+
+def test_hier_space_format(cwe_tree):
+    from eval.s07.hier_reward import hier_cwe_reward
+
+    # "CWE 119" sem boxed, exato. Antes do fix do regex vinha 0.0.
+    assert hier_cwe_reward("the weakness is CWE 119", "CWE-119", cwe_tree) == 1.0
+
+
 def test_cyber_rcm_hierarchical(cwe_tree):
     child = next((c for c in cwe_tree.cwe_map if cwe_tree.get_ancestors(c)), None)
     parent = cwe_tree.get_ancestors(child)[0]

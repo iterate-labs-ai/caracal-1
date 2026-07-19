@@ -12,29 +12,16 @@ Usage:
 import argparse
 import csv
 import json
-import re
 import tempfile
 import urllib.request
 from pathlib import Path
 
 import numpy as np
 
+# fonte unica do normalize_cwe (a copia local tinha regex antigo sem espaco)
+from eval.s07.benches._common import normalize_cwe
+
 CTI_BENCH_HF_BASE = "https://huggingface.co/datasets/AI4Sec/cti-bench/resolve/main"
-CWE_RE = re.compile(r"CWE-?(\d{1,4})", re.IGNORECASE)
-BOXED_RE = re.compile(r"\\boxed\{(CWE-?\d{1,4})\}", re.IGNORECASE)
-
-
-def normalize_cwe(text: str) -> str | None:
-    m = BOXED_RE.search(text)
-    if m:
-        inner = CWE_RE.search(m.group(1))
-        if inner:
-            return f"CWE-{int(inner.group(1))}"
-    for line in reversed(text.splitlines()):
-        m = CWE_RE.search(line)
-        if m:
-            return f"CWE-{int(m.group(1))}"
-    return None
 
 
 def load_cti_rcm(subset: str = "cti-rcm") -> list[dict]:

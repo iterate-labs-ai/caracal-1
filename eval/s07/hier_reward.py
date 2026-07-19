@@ -5,24 +5,14 @@ From R5.2 design + Minerva paper. Partial credit baseado em CWE tree distance.
 
 import re
 
+# Fonte unica do normalize_cwe: a copia local tinha regex antigo (CWE-?\d, sem
+# espaco) e rejeitava "CWE 119", divergindo do _common ja corrigido.
+from eval.s07.benches._common import normalize_cwe
 from eval.s07.cwe_tree_parser import CWEParser
 
-CWE_RE = re.compile(r"CWE-?(\d{1,4})", re.IGNORECASE)
+# BOXED so-CWE fica local: o format_bonus premia boxar um CWE especifico, nao
+# qualquer coisa (o BOXED_RE do _common casa \boxed{qualquer}).
 BOXED_RE = re.compile(r"\\boxed\{(CWE-?\d{1,4})\}", re.IGNORECASE)
-
-
-def normalize_cwe(text: str) -> str | None:
-    """Extract CWE-NNN, prefer last line / boxed format."""
-    boxed_match = BOXED_RE.search(text)
-    if boxed_match:
-        m = CWE_RE.search(boxed_match.group(1))
-        if m:
-            return f"CWE-{int(m.group(1))}"
-    for line in reversed(text.splitlines()):
-        m = CWE_RE.search(line)
-        if m:
-            return f"CWE-{int(m.group(1))}"
-    return None
 
 
 def hier_cwe_reward(pred_text: str, gold_cwe: str, tree: CWEParser) -> float:
