@@ -1,5 +1,6 @@
 """Shared inference + parsing utilities for s07 bench suite."""
 
+import os
 import re
 
 import numpy as np
@@ -48,18 +49,54 @@ def normalize_mcq_letters(text: str) -> set[str]:
     return {m.group(1).upper() for m in LETTER_RE.finditer(scope)}
 
 
+# TPU/XLA recompila o grafo a cada shape nova. Com padding pra um bucket fixo
+# e max_new fixo, o numero de shapes distintos fica pequeno e a compilacao
+# amortiza. Ligado por env var pra nao penalizar a GPU com padding inutil.
+XLA_MODE = os.environ.get("IGNITE_XLA", "") == "1"
+PROMPT_BUCKETS = (512, 1024, 2048, 4096)
+
+
+def _bucket_len(n: int) -> int:
+    for b in PROMPT_BUCKETS:
+        if n <= b:
+            return b
+    return PROMPT_BUCKETS[-1]
+
+
 def generate(model, tokenizer, prompt: str, max_new: int = 256) -> str:
     import torch
 
-    inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+    if not XLA_MODE:
+        inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+        with torch.no_grad():
+            out = model.generate(
+                **inputs,
+                max_new_tokens=max_new,
+                do_sample=False,
+                pad_token_id=tokenizer.eos_token_id,
+            )
+        return tokenizer.decode(out[0][inputs["input_ids"].shape[1] :], skip_special_tokens=False)
+
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    raw = tokenizer(prompt, return_tensors="pt")
+    pad_to = _bucket_len(raw["input_ids"].shape[1])
+    inputs = tokenizer(
+        prompt,
+        return_tensors="pt",
+        padding="max_length",
+        max_length=pad_to,
+        truncation=True,
+    ).to(model.device)
     with torch.no_grad():
         out = model.generate(
             **inputs,
             max_new_tokens=max_new,
+            min_new_tokens=max_new,  # shape de saida constante: sem early stop
             do_sample=False,
             pad_token_id=tokenizer.eos_token_id,
         )
-    return tokenizer.decode(out[0][inputs["input_ids"].shape[1] :], skip_special_tokens=False)
+    return tokenizer.decode(out[0][pad_to:], skip_special_tokens=False)
 
 
 def bootstrap_ci(
