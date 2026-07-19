@@ -5,7 +5,9 @@ import re
 
 import numpy as np
 
-CWE_RE = re.compile(r"CWE-?(\d{1,4})", re.IGNORECASE)
+# Aceita CWE-119, CWE119, "CWE 119" e "CWE: 119". Sem o separador opcional
+# o modelo escrevendo "CWE 119" era contado como erro mesmo estando certo.
+CWE_RE = re.compile(r"CWE[\s:\-]*(\d{1,4})", re.IGNORECASE)
 BOXED_RE = re.compile(r"\\boxed\{([^\}]+)\}")
 LETTER_RE = re.compile(r"\b([ABCD])\b")
 
