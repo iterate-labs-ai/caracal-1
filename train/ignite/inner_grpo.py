@@ -131,7 +131,8 @@ def train_lora(
         num_generations=num_generations,
         max_prompt_length=max_prompt_len,
         max_completion_length=max_completion_len,
-        beta=0.001,
+        # beta>0 instancia um ref model inteiro (~6GB) que nao cabe na T4.
+        beta=0.0,
         logging_steps=5,
         save_steps=max(1, steps // 3),
         report_to="none",

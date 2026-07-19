@@ -149,9 +149,16 @@ def outer_loop(
                     arch.record_candidate(k, ci, m, dev_r=-1.0, reason=f"train_failed: {e}")
                     continue
 
-            cand_model, cand_tok = load_model_and_tok(base, str(out) if out else None)
-            dev_r = eval_on(cand_model, cand_tok, bench_name, dataset_dev, n=50)
-            free_gpu(cand_model, cand_tok)
+            # Eval tambem dentro do try: um OOM aqui derrubava a geracao inteira
+            # em vez de so descartar o candidato (foi o que matou o v6).
+            try:
+                cand_model, cand_tok = load_model_and_tok(base, str(out) if out else None)
+                dev_r = eval_on(cand_model, cand_tok, bench_name, dataset_dev, n=50)
+                free_gpu(cand_model, cand_tok)
+            except (RuntimeError, ValueError, OSError) as e:
+                free_gpu()
+                arch.record_candidate(k, ci, m, dev_r=-1.0, reason=f"eval_failed: {e}")
+                continue
             cands_out.append((m, out, dev_r))
             arch.record_candidate(k, ci, m, dev_r=dev_r)
 
