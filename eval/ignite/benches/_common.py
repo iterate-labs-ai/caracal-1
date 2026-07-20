@@ -6,7 +6,9 @@ from eval.s07.benches._common import (
     bootstrap_ci,
     generate,
     mcq_chat_prompt,
+    normalize_cwe,
     normalize_mcq_letter,
+    read_jsonl,
 )
 
 __all__ = [
@@ -15,5 +17,7 @@ __all__ = [
     "bootstrap_ci",
     "generate",
     "mcq_chat_prompt",
+    "normalize_cwe",
     "normalize_mcq_letter",
+    "read_jsonl",
 ]

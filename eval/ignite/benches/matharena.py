@@ -3,13 +3,12 @@
 L3 gate. AIME/HMMT/USAMO/IMO fresh problems.
 """
 
-import json
 import os
 from pathlib import Path
 
 from eval.ignite.reward import math_reward
 
-from ._common import bootstrap_ci, generate
+from ._common import bootstrap_ci, generate, read_jsonl
 
 SYSTEM = "You are a math olympiad expert. Solve the problem step by step. Output the final answer inside \\boxed{}."
 
@@ -17,7 +16,7 @@ SYSTEM = "You are a math olympiad expert. Solve the problem step by step. Output
 def _load(n: int, dataset_path: str) -> list[dict]:
     path = Path(os.environ.get("MATHARENA_JSONL", dataset_path))
     if path.exists():
-        rows = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+        rows = read_jsonl(path)
         return rows[:n]
     return [{"error": f"matharena_jsonl_missing: {path}"}]
 

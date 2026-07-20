@@ -3,19 +3,18 @@
 Uses math_verify tool for verification. First functional bench for Ignite-3B.
 """
 
-import json
 import os
 from pathlib import Path
 
 from eval.ignite.reward import math_reward
 
-from ._common import bootstrap_ci, generate
+from ._common import bootstrap_ci, generate, read_jsonl
 
 
 def _load(n: int, dataset_path: str) -> list[dict]:
     path = Path(os.environ.get("OMNI_MATH_JSONL", dataset_path))
     if path.exists():
-        rows = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+        rows = read_jsonl(path)
         return rows[:n]
     try:
         from datasets import load_dataset

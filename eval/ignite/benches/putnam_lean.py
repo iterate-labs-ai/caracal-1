@@ -3,13 +3,12 @@
 L2+ dual-purpose: eval + Lean RL reward source. Kernel-verifiable proofs.
 """
 
-import json
 import os
 from pathlib import Path
 
 from eval.ignite.tools.lean_tool import LeanDaemonPool, extract_lean_proof
 
-from ._common import bootstrap_ci, generate
+from ._common import bootstrap_ci, generate, read_jsonl
 
 SYSTEM = "You are a Lean 4 theorem prover. Prove the theorem using Mathlib tactics. Output the proof inside a ```lean code fence."
 
@@ -18,7 +17,7 @@ def _load(n: int, dataset_path: str) -> list[dict]:
     path = Path(os.environ.get("PUTNAM_JSONL", dataset_path))
     if not path.exists():
         return [{"error": f"putnam_jsonl_missing: {path}"}]
-    rows = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+    rows = read_jsonl(path)
     return rows[:n]
 
 

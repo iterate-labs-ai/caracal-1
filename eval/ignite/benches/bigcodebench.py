@@ -3,13 +3,12 @@
 L2 asymptotic gate. Complex function calls, distinct dist from LiveCodeBench.
 """
 
-import json
 import os
 from pathlib import Path
 
 from eval.ignite.reward import code_task_reward
 
-from ._common import bootstrap_ci, generate
+from ._common import bootstrap_ci, generate, read_jsonl
 
 SYSTEM = "You are an expert Python programmer. Complete the function. Output only the completed function inside a python code fence."
 
@@ -17,7 +16,7 @@ SYSTEM = "You are an expert Python programmer. Complete the function. Output onl
 def _load(n: int, dataset_path: str) -> list[dict]:
     path = Path(os.environ.get("BCB_JSONL", dataset_path))
     if path.exists():
-        rows = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+        rows = read_jsonl(path)
         return rows[:n]
     return [{"error": f"bcb_jsonl_missing: {path}"}]
 

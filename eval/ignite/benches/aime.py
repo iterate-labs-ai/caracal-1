@@ -3,13 +3,12 @@
 Sanity reference only, não gate primário. Integer exact match RLVR.
 """
 
-import json
 import os
 from pathlib import Path
 
 from eval.ignite.reward import math_reward
 
-from ._common import bootstrap_ci, generate
+from ._common import bootstrap_ci, generate, read_jsonl
 
 SYSTEM = "You are a math olympiad expert. Solve the AIME problem step by step. The answer is an integer 0-999. Output the final answer inside \\boxed{}."
 
@@ -18,7 +17,7 @@ def _load(n: int, dataset_path: str, year: int | None) -> list[dict]:
     path = Path(os.environ.get("AIME_JSONL", dataset_path))
     if not path.exists():
         return [{"error": f"aime_jsonl_missing: {path}"}]
-    rows = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+    rows = read_jsonl(path)
     if year is not None:
         rows = [r for r in rows if r.get("year") == year]
     return rows[:n]

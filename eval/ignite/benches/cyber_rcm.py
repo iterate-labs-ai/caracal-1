@@ -5,14 +5,12 @@ RCM 72-75) e `hier_score` (credito parcial na arvore CWE, sinal mais denso pra
 enxergar progresso cedo quando o exato ainda nao mexeu).
 """
 
-import json
 import os
 from pathlib import Path
 
 from eval.ignite.reward import cyber_rcm_reward
-from eval.s07.benches._common import normalize_cwe
 
-from ._common import bootstrap_ci, generate
+from ._common import bootstrap_ci, generate, normalize_cwe, read_jsonl
 
 # Espelha BENCH_GEN_BUDGET["cyber_rcm"][1] do inner_grpo. Nao importamos de la
 # pra nao inverter a camada (eval nao depende de train); test_rewards.py trava
@@ -24,8 +22,7 @@ def _load(n: int, dataset_path: str) -> list[dict]:
     path = Path(os.environ.get("CYBER_RCM_JSONL", dataset_path))
     if not path.exists():
         return [{"error": f"cyber_rcm dataset ausente: {path}. Rode data/ignite/build_cyber_rcm.py"}]
-    rows = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
-    return rows[:n]
+    return read_jsonl(path)[:n]
 
 
 def eval_cyber_rcm(

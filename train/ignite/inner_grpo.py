@@ -14,12 +14,9 @@ Refs:
 - DeepScaleR blog - 8k->24k curriculum
 """
 
-import json
 from pathlib import Path
 
-
-def _load_jsonl(path: Path) -> list[dict]:
-    return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+from eval.s07.benches._common import read_jsonl as _load_jsonl
 
 
 def build_reward_fn(bench: str, gold_key: str = "gold"):

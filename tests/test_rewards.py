@@ -65,11 +65,12 @@ def test_hier_partial_credit(cwe_tree):
 
 def test_normalize_cwe_single_source():
     # as 3 copias foram consolidadas em _common: mesma funcao, mesmo id.
-    from eval.s07 import bench_runner, hier_reward
+    from eval.s07 import hier_reward
     from eval.s07.benches._common import normalize_cwe
 
+    # a 3a copia vivia em bench_runner.py, agora arquivado (era 5 funcoes
+    # duplicadas de cti_bench/_common/stats, nenhum notebook o usava)
     assert hier_reward.normalize_cwe is normalize_cwe
-    assert bench_runner.normalize_cwe is normalize_cwe
     # o regex novo aceita "CWE 119" com espaco (antigo rejeitava)
     assert normalize_cwe("weakness: CWE 119") == "CWE-119"
 

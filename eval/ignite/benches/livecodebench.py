@@ -4,13 +4,12 @@ Uses code_exec sandbox for RLVR verification. Temporal decontamination via
 monthly buckets (release_v6 in 2026).
 """
 
-import json
 import os
 from pathlib import Path
 
 from eval.ignite.reward import code_task_reward
 
-from ._common import bootstrap_ci, generate
+from ._common import bootstrap_ci, generate, read_jsonl
 
 SYSTEM = "You are an expert programmer. Solve the coding problem. Output the code inside a python code fence."
 
@@ -18,7 +17,7 @@ SYSTEM = "You are an expert programmer. Solve the coding problem. Output the cod
 def _load(n: int, dataset_path: str) -> list[dict]:
     path = Path(os.environ.get("LCB_JSONL", dataset_path))
     if path.exists():
-        rows = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+        rows = read_jsonl(path)
         return rows[:n]
     return [{"error": f"lcb_jsonl_missing: {path}"}]
 
