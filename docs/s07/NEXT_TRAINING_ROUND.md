@@ -24,15 +24,31 @@ Se quiser full-parameter de verdade: precisa A100/H100 (fora do Kaggle grátis).
 Aí a fase 2 roda idêntica, só troca `LoraConfig` por full-param no inner_grpo.
 O código é o mesmo; muda só o hardware. Registrar como opção paga.
 
-## Gate — não disparar treino antes de 2 números
+## Gate — RESOLVIDO 2026-07-20
 
-O CÓDIGO (infra) pode ser montado agora. O TREINO (gasta GPU) espera:
+Os dois números chegaram e **mudaram o plano**. Detalhe em
+`CYBER_BASELINES_VERIFIED.md` (retratação no topo) e JSONs em `results/`.
 
-1. **TPU cyber bench** com cti_bench: onde está o gap real? Se CTI-RCM < Foundation-Sec
-   72-75, é ali que o RL foca (não no CyberMetric, já ~saturado a 85.8).
-2. **GPU RSI Cond C (math)**: o loop gera ganho entre gerações? Se sim, escala pro
-   cyber com confiança. Se `proposal_source_rate` for baixo, o outer loop virou
-   busca aleatória e o redesenho vem antes de aplicar ao cyber.
+1. **Cyber bench com cti_bench (rodou em GPU, não TPU)**: TPU foi descartado —
+   compilação XLA de 2h39 na 1ª questão, 21.6s/questão quente. Resultado:
+   **CTI-RCM adapter 39.8% vs base 44.4% (-4.6pp)**. O adapter s04 **piora** o
+   alvo. E CyberMetric 85.8% do adapter vs **84.2% do base** = +1.6pp, ruído em
+   n=500. A claim "faixa do Llama-3.1-8B" era mérito do Qwen base.
+2. **RSI Cond C (math)**: morreu no teto de 12h do Kaggle. Custo medido:
+   **250s/step** (`train_steps_per_second: 0.004`), ou seja 3.1h por candidato a
+   50 steps. O plano original (8 gens × 8 cands) daria **~740h** — não cabe em
+   Kaggle free. O fix de OOM funcionou (passou do treino), o problema é tempo.
+
+**Mudanças que isso força:**
+
+- **v0 do loop = modelo base**, não o adapter s04 (começar do adapter é começar
+  4.6pp abaixo no alvo).
+- Objetivo do RL deixa de ser "melhorar mais": é **subir de 44.4% em direção aos
+  72-75 do Foundation-Sec-8B**. Headroom medido ~28pp.
+- **Piso de colapso: 27.3%** no dev (responder sempre CWE-79, a classe
+  majoritária = 22% do train). Resultado perto disso é colapso, não aprendizado.
+- Escopo por run tem que caber em 12h. Rodar diagnóstico curto (5 steps) e medir
+  custo/step real no cyber ANTES de escalar.
 
 ## Arquitetura da fase 2 (RSI + RL cyber)
 
