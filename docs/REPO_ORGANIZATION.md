@@ -86,7 +86,27 @@ Manter: README, HOWTO, SETUP, CONTRIBUTING, docs/{architecture,glossary,
 learning_trail}.md, docs/s07/{KAGGLE_ADAPTATION,NEXT_TRAINING_ROUND,PAPERS}.md,
 docs/plan/.
 
-## Moves recomendados — DO-NOT-EXECUTE-WHILE-KAGGLE-RUNS
+## Moves EXECUTADOS 2026-07-20
+
+Feitos com todos os kernels parados (quota GPU esgotada = nada clonando o repo).
+Verificado antes: nenhum notebook em `notebooks/kaggle/` referencia esses
+arquivos, e nada fora de `eval/s07` / `eval/ignite` importava `eval/_common.py`.
+
+- `eval/run_*.py` (9), `eval/_common.py`, `eval/shadow_loop.py`,
+  `eval/compare_baseline.py`, `eval/probe_set.jsonl`, `eval/held_out_2026.yaml`
+  → `archive/legacy_eval_s01/`
+- `train/notebooks/` → `archive/legacy_notebooks_s01/`
+- `.aislop/session.jsonl` untracked + `.aislop/` no `.gitignore`
+
+Mantidos em `eval/`: `__init__.py` (faz o pacote pros imports `eval.s07.*` /
+`eval.ignite.*`) e `check_decontamination.py` (ainda em uso).
+
+Verificação pós-move: 13 testes passando e os 8 módulos que os notebooks
+importam (`eval.s07.benches`, `eval.ignite.benches`, `eval.ignite.reward`,
+`train.ignite.{C_rsi_outer,inner_grpo,mutations}`, `data.ignite.build_cyber_rcm`,
+`eval.check_decontamination`) todos resolvem.
+
+## Moves recomendados (histórico) — DO-NOT-EXECUTE-WHILE-KAGGLE-RUNS
 
 ```bash
 # Rodar SO quando nenhum notebook Kaggle estiver clonando este repo.

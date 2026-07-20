@@ -57,3 +57,4 @@ wandb_key
 
 # Notebook output
 .ipynb_checkpoints/
+.aislop/
