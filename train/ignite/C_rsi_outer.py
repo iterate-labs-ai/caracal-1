@@ -226,7 +226,7 @@ def main():
     ap.add_argument("--dataset-train", type=Path, required=True)
     ap.add_argument("--dataset-dev", type=Path, required=True)
     ap.add_argument("--dataset-val", type=Path, required=True)
-    ap.add_argument("--bench", choices=["math", "code", "lean"], required=True)
+    ap.add_argument("--bench", choices=["math", "code", "lean", "cyber_rcm"], required=True)
     ap.add_argument("--bench-name", default="omni_math", help="registry name for eval")
     ap.add_argument("--gens", type=int, default=8)
     ap.add_argument("--cands", type=int, default=8)
