@@ -22,6 +22,25 @@ o Gemma-3-4B por +9pp. Fica a ~1pp do teto da faixa pequena (DeepHat-7B 86.9)
 com metade dos params. Caveat: harness proprio, nao controlado — posicionamento
 aproximado, nao ranking rigoroso.
 
+## TPU: descartado com evidencia (2026-07-19)
+
+Run `caracal-bench-tpu-s07` na TPU v3-8 mediu:
+
+```
+modelo na TPU em 65s
+q1: 9538.4s                                    <- 2h39 so de compilacao XLA
+primeira: 9538.4s | media das ultimas 5: 21.6s
+```
+
+Mesmo depois de aquecer, **21.6s/questao** (GPU faz ~1-2s). 500 questoes = 3h
+por bench; 7 benches nao cabem nas 20h. O run morreu de DeadKernel no cti_bench.
+O padding pra bucket fixo reduziu o numero de shapes mas nao salvou o custo.
+
+**Conclusao: nao rodar bench em TPU pra esse stack.** O notebook TPU agora tem
+gate DURO (`raise SystemExit` se warm > 10s/questao) em vez de so avisar - antes
+ele imprimia "LENTO DEMAIS" e seguia mesmo assim, queimando o run inteiro.
+Bench cyber vai pra GPU.
+
 **Segunda claim a habilitar**: CTI-RCM (CVE->CWE) verdadeiro ja esta implementado
 em `eval/s07/benches/cti_bench.py` (n=1000, prompt oficial embutido no dataset,
 normalize_cwe corrigido). Faltou so entrar na lista de benches do run. Rodando,
