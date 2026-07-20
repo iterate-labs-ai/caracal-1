@@ -51,6 +51,11 @@ DEFAULT_SYSTEM_LEAN = (
     "You are a Lean 4 theorem prover. Prove the theorem using Mathlib tactics. "
     "Output the proof inside a ```lean code fence."
 )
+DEFAULT_SYSTEM_CYBER = (
+    "You are a security analyst. Map the CVE description to the correct CWE. "
+    "Reason briefly about the root cause weakness, not the impact. "
+    "The last line of your response must contain only the CWE ID (e.g. CWE-79)."
+)
 
 COT_SCAFFOLDS = [
     "Think step by step.",
@@ -72,9 +77,14 @@ def default_mutation(bench: str) -> Mutation:
         "math": DEFAULT_SYSTEM_MATH,
         "code": DEFAULT_SYSTEM_CODE,
         "lean": DEFAULT_SYSTEM_LEAN,
+        "cyber_rcm": DEFAULT_SYSTEM_CYBER,
     }
+    if bench not in sys_map:
+        # Sem isso um bench novo cai calado no prompt de matematica: o run de
+        # 2026-07-20 treinou CVE->CWE com "You are an AI math tutor".
+        raise ValueError(f"bench sem system prompt: {bench!r}. Registre em sys_map.")
     return Mutation(
-        system_prompt=sys_map.get(bench, DEFAULT_SYSTEM_MATH),
+        system_prompt=sys_map[bench],
         cot_scaffold=COT_SCAFFOLDS[0],
         curriculum_bin="mixed",
         lora_rank=32,
