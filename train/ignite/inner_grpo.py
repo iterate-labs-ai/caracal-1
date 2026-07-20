@@ -29,6 +29,23 @@ def build_reward_fn(bench: str, gold_key: str = "gold"):
     return _build(bench, gold_key)
 
 
+# Orcamento de geracao por bench. GRPO gera num_generations x max_completion_len
+# tokens POR PROMPT a cada step, entao esse numero domina o custo do step.
+# Medido 2026-07-20 no cyber_rcm (tokenizer Qwen2.5-Coder-3B, n=700):
+#   prompt  -> mediana 104, p90 169, p99 898  (384 cobre 98%)
+#   resposta-> o CWE em si tem 5.6 tokens; sobra folga pra justificativa curta
+# Usar 512 de completion pra emitir "CWE-79" era pagar ~4x a mais por step.
+# Se a truncagem apertar demais, o bench acusa via `unparsed_frac` (o modelo
+# nao chega a emitir o CWE) - e a canaria pra reverter esses numeros.
+BENCH_GEN_BUDGET = {
+    "cyber_rcm": {"max_prompt_len": 384, "max_completion_len": 160},
+    "math": {"max_prompt_len": 640, "max_completion_len": 512},
+    "code": {"max_prompt_len": 640, "max_completion_len": 512},
+    "lean": {"max_prompt_len": 640, "max_completion_len": 512},
+}
+_GEN_BUDGET_FALLBACK = {"max_prompt_len": 640, "max_completion_len": 512}
+
+
 def train_lora(
     base_model: str,
     adapter_in: str | None,
@@ -39,8 +56,8 @@ def train_lora(
     lora_rank: int = 32,
     lora_alpha: int = 64,
     lr: float = 1e-6,
-    max_prompt_len: int = 640,
-    max_completion_len: int = 512,
+    max_prompt_len: int | None = None,
+    max_completion_len: int | None = None,
     num_generations: int = 4,
     per_device_batch: int = 4,
     grad_accum: int = 4,
@@ -120,6 +137,19 @@ def train_lora(
     )
 
     reward_fn = build_reward_fn(bench)
+
+    budget = BENCH_GEN_BUDGET.get(bench, _GEN_BUDGET_FALLBACK)
+    if max_prompt_len is None:
+        max_prompt_len = budget["max_prompt_len"]
+    if max_completion_len is None:
+        max_completion_len = budget["max_completion_len"]
+    # tokens gerados por step = generations x completion x batch efetivo
+    gen_tokens = num_generations * max_completion_len * per_device_batch * grad_accum
+    print(
+        f"[inner] bench={bench} prompt<={max_prompt_len} completion<={max_completion_len} "
+        f"=> ~{gen_tokens} tokens gerados/step",
+        flush=True,
+    )
 
     cfg = GRPOConfig(
         output_dir=str(out_dir),

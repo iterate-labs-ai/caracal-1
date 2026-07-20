@@ -53,8 +53,9 @@ DEFAULT_SYSTEM_LEAN = (
 )
 DEFAULT_SYSTEM_CYBER = (
     "You are a security analyst. Map the CVE description to the correct CWE. "
-    "Reason briefly about the root cause weakness, not the impact. "
-    "The last line of your response must contain only the CWE ID (e.g. CWE-79)."
+    "Name the root cause weakness, not the impact. "
+    "Answer in at most two sentences, then put the CWE ID alone on the last "
+    "line (e.g. CWE-79). Be concise: long answers are truncated before the ID."
 )
 
 COT_SCAFFOLDS = [
