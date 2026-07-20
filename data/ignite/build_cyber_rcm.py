@@ -10,6 +10,7 @@ val so decide retencao (contamination gate do outer loop).
 """
 
 import json
+import random
 from pathlib import Path
 
 from eval.s07.benches._common import normalize_cwe
@@ -20,16 +21,16 @@ SPLITS = {"train": 0.7, "dev": 0.15, "val": 0.15}
 
 
 def build(seed: int = 0) -> dict[str, int]:
-    import random
-
     rows = _load_tsv("cti-rcm")
     items = []
     for r in rows:
         prompt, gold_raw = r.get("Prompt"), r.get("GT")
         if not prompt or not gold_raw:
             continue
-        gold = normalize_cwe(gold_raw) or str(gold_raw).strip()
-        if not gold.startswith("CWE-"):
+        # normalize_cwe so devolve None quando nao ha CWE nenhum no texto, e ai
+        # o raw tambem nao passaria no startswith - o fallback era sempre morto.
+        gold = normalize_cwe(gold_raw)
+        if not gold:
             continue
         items.append({"prompt": prompt, "gold": gold})
 

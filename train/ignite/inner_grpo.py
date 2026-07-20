@@ -37,13 +37,13 @@ def build_reward_fn(bench: str, gold_key: str = "gold"):
 # Usar 512 de completion pra emitir "CWE-79" era pagar ~4x a mais por step.
 # Se a truncagem apertar demais, o bench acusa via `unparsed_frac` (o modelo
 # nao chega a emitir o CWE) - e a canaria pra reverter esses numeros.
-BENCH_GEN_BUDGET = {
-    "cyber_rcm": {"max_prompt_len": 384, "max_completion_len": 160},
-    "math": {"max_prompt_len": 640, "max_completion_len": 512},
-    "code": {"max_prompt_len": 640, "max_completion_len": 512},
-    "lean": {"max_prompt_len": 640, "max_completion_len": 512},
-}
-_GEN_BUDGET_FALLBACK = {"max_prompt_len": 640, "max_completion_len": 512}
+# (max_prompt_len, max_completion_len). So quem foge do default entra aqui.
+# Fallback generoso de proposito: bench nao registrado paga mais caro por step,
+# mas nao gera dado errado. Contraste com o sys_map de mutations.py, que agora
+# da raise - la o fallback silencioso trocava a SEMANTICA (treinou CVE->CWE com
+# prompt de tutor de matematica). Errar pra cima em custo != errar de tarefa.
+DEFAULT_GEN_BUDGET = (640, 512)
+BENCH_GEN_BUDGET = {"cyber_rcm": (384, 160)}
 
 
 def train_lora(
@@ -138,13 +138,13 @@ def train_lora(
 
     reward_fn = build_reward_fn(bench)
 
-    budget = BENCH_GEN_BUDGET.get(bench, _GEN_BUDGET_FALLBACK)
+    default_prompt, default_completion = BENCH_GEN_BUDGET.get(bench, DEFAULT_GEN_BUDGET)
     if max_prompt_len is None:
-        max_prompt_len = budget["max_prompt_len"]
+        max_prompt_len = default_prompt
     if max_completion_len is None:
-        max_completion_len = budget["max_completion_len"]
-    # tokens gerados por step = generations x completion x batch efetivo
-    gen_tokens = num_generations * max_completion_len * per_device_batch * grad_accum
+        max_completion_len = default_completion
+    # per_device_batch ja conta completions no TRL: num_generations dentro dele.
+    gen_tokens = per_device_batch * grad_accum * max_completion_len
     print(
         f"[inner] bench={bench} prompt<={max_prompt_len} completion<={max_completion_len} "
         f"=> ~{gen_tokens} tokens gerados/step",
@@ -198,7 +198,11 @@ if __name__ == "__main__":
     ap.add_argument("--base", default="Qwen/Qwen2.5-3B-Instruct")
     ap.add_argument("--adapter-in", default=None)
     ap.add_argument("--dataset", type=Path, required=True)
-    ap.add_argument("--bench", choices=["math", "code", "lean"], required=True)
+    # choices derivado do registry: a lista hardcoded aqui ja tinha divergido
+    # (ganhou cyber_rcm no C_rsi_outer e nao aqui).
+    from eval.ignite.reward import PAIRWISE_REWARDS
+
+    ap.add_argument("--bench", choices=sorted(PAIRWISE_REWARDS), required=True)
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--steps", type=int, default=150)
     args = ap.parse_args()

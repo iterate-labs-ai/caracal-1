@@ -220,13 +220,15 @@ def outer_loop(
 
 
 def main():
+    from eval.ignite.reward import PAIRWISE_REWARDS
+
     ap = argparse.ArgumentParser()
     ap.add_argument("--base", default="unsloth/Qwen2.5-3B-Instruct-bnb-4bit")
     ap.add_argument("--v0-adapter", default=None)
     ap.add_argument("--dataset-train", type=Path, required=True)
     ap.add_argument("--dataset-dev", type=Path, required=True)
     ap.add_argument("--dataset-val", type=Path, required=True)
-    ap.add_argument("--bench", choices=["math", "code", "lean", "cyber_rcm"], required=True)
+    ap.add_argument("--bench", choices=sorted(PAIRWISE_REWARDS), required=True)
     ap.add_argument("--bench-name", default="omni_math", help="registry name for eval")
     ap.add_argument("--gens", type=int, default=8)
     ap.add_argument("--cands", type=int, default=8)

@@ -49,60 +49,25 @@ def _extract_python_block(text: str) -> str:
     return text
 
 
-_CWE_TREE = None
-_CWE_XML = "data/cwec_latest.xml"
-_CWE_ZIP_URL = "https://cwe.mitre.org/data/xml/cwec_latest.xml.zip"
-
-
-def _cwe_tree():
-    """Carrega a arvore CWE uma vez. Baixa o XML da MITRE se nao estiver local.
-    Reusa o CWEParser do s07 (nao duplica)."""
-    global _CWE_TREE
-    if _CWE_TREE is not None:
-        return _CWE_TREE
-
-    import glob
-    from pathlib import Path
-
-    from eval.s07.cwe_tree_parser import CWEParser
-
-    xml = next(iter(glob.glob("data/cwec*.xml")), None)
-    if xml is None:
-        import io
-        import urllib.request
-        import zipfile
-
-        Path("data").mkdir(exist_ok=True)
-        with urllib.request.urlopen(_CWE_ZIP_URL, timeout=60) as r:
-            zf = zipfile.ZipFile(io.BytesIO(r.read()))
-            name = next(n for n in zf.namelist() if n.endswith(".xml"))
-            xml = f"data/{name}"
-            zf.extract(name, "data")
-    _CWE_TREE = CWEParser(xml)
-    return _CWE_TREE
-
-
 def cyber_rcm_reward(pred_text: str, gold_cwe: str, hierarchical: bool = True) -> float:
     """RL reward pra CVE->CWE (fase 2 cyber). RLVR: gold verificavel, sem LLM-judge.
 
     hierarchical=True: acerto exato=1.0, ancestral=0.5, irmao=0.3 (arvore CWE).
-    Reward denso faz o GRPO aprender mais rapido que binario 0/1. Reusa o
-    hier_cwe_reward do s07. Se a arvore nao carregar, cai pro binario.
+    Reward denso faz o GRPO aprender mais rapido que binario 0/1. Se a arvore
+    nao carregar (sem internet no kernel), cai pro binario.
     """
     from eval.s07.benches._common import normalize_cwe
+    from eval.s07.cwe_tree_parser import get_cwe_tree
+    from eval.s07.hier_reward import hier_cwe_reward
 
     pred = normalize_cwe(pred_text)
     gold = normalize_cwe(gold_cwe) or gold_cwe
     if pred is None:
         return -1.0
-    if not hierarchical:
+    tree = get_cwe_tree() if hierarchical else None
+    if tree is None:
         return 1.0 if pred == gold else 0.0
-    try:
-        from eval.s07.hier_reward import hier_cwe_reward
-
-        return hier_cwe_reward(pred_text, gold, _cwe_tree())
-    except (ImportError, FileNotFoundError, OSError):
-        return 1.0 if pred == gold else 0.0
+    return hier_cwe_reward(pred_text, gold, tree)
 
 
 def majority_vote_reward(completions: list[str]) -> list[float]:

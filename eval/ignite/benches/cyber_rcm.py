@@ -14,6 +14,11 @@ from eval.s07.benches._common import normalize_cwe
 
 from ._common import bootstrap_ci, generate
 
+# Espelha BENCH_GEN_BUDGET["cyber_rcm"][1] do inner_grpo. Nao importamos de la
+# pra nao inverter a camada (eval nao depende de train); test_rewards.py trava
+# os dois no mesmo valor.
+MAX_NEW = 160
+
 
 def _load(n: int, dataset_path: str) -> list[dict]:
     path = Path(os.environ.get("CYBER_RCM_JSONL", dataset_path))
@@ -33,7 +38,7 @@ def eval_cyber_rcm(
     per, correct, hier = [], [], []
     unparsed = 0
     for i, r in enumerate(rows):
-        resp = generate(model, tok, r["prompt"], max_new=256)
+        resp = generate(model, tok, r["prompt"], max_new=MAX_NEW)
         pred = normalize_cwe(resp)
         gold = r["gold"]
         ok = int(pred is not None and pred == gold)
@@ -46,13 +51,14 @@ def eval_cyber_rcm(
             print(f"[cyber_rcm {i + 1}/{len(rows)}] acc={sum(correct) / (i + 1):.3f}", flush=True)
 
     ci_lo, ci_hi = bootstrap_ci(correct)
+    n = len(correct)  # um append por row: mesmo denominador pras tres metricas
     return {
-        "n": len(correct),
-        "accuracy": sum(correct) / len(correct) if correct else 0.0,
-        "hier_score": sum(hier) / len(hier) if hier else 0.0,
+        "n": n,
+        "accuracy": sum(correct) / n if n else 0.0,
+        "hier_score": sum(hier) / n if n else 0.0,
         # unparsed alto = modelo parou de emitir CWE (colapso de formato), nao
         # "ficou ruim". Sem isso os dois viram a mesma queda de accuracy.
-        "unparsed_frac": unparsed / len(rows) if rows else 0.0,
+        "unparsed_frac": unparsed / n if n else 0.0,
         "ci_95_low": ci_lo,
         "ci_95_high": ci_hi,
         "per_sample": per,
