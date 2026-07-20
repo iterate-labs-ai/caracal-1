@@ -1,4 +1,46 @@
-# Onde o Caracal-3B está no mundo — CyberMetric-500 side-by-side
+> **RETRATAÇÃO 2026-07-20.** O head-to-head contra o modelo base derrubou a
+> claim principal deste documento. Ver "Caracal vs base" abaixo antes de usar
+> qualquer número daqui. Resumo: o adapter s04 **piora** o CTI-RCM (-4.6pp) e o
+> CyberMetric 85.8% é essencialmente o que o Qwen2.5-Coder-3B base já faz
+> sozinho (84.2%). O texto original fica preservado abaixo como registro.
+
+# Caracal vs base — head-to-head medido (2026-07-20, GPU T4, n na tabela)
+
+Mesmo harness, mesmo prompt, mesma máquina. `Caracal` = Qwen2.5-Coder-3B-Instruct
++ adapter `caracal-base-3b-s04`. `base` = o mesmo Qwen sem adapter.
+
+| bench | Caracal | base | delta | n |
+|---|---|---|---|---|
+| cti_bench.rcm | 39.8% | **44.4%** | **-4.6pp** | 500 |
+| cti_bench.mcq | 44.2% | **50.6%** | **-6.4pp** | 500 |
+| cybermetric | 85.8% | 84.2% | +1.6pp | 500 |
+| secqa v1 | 99.1% | 99.1% | 0.0pp | 110 |
+| secqa v2 | 97.0% | 98.0% | -1.0pp | 100 |
+| secbench | **79.7%** | 74.0% | **+5.7pp** | 300 |
+| mmlu_security | 75.0% | 73.0% | +2.0pp | 100 |
+| seceval | 42.5% | 40.5% | +2.0pp | 200 |
+| cybersoceval.malware | 14.0% | 20.0% | -6.0pp | 100 |
+| cybersoceval.threat_intel | 17.0% | 22.0% | -5.0pp | 100 |
+
+**Leitura honesta:**
+
+1. **O fine-tune não entregou specialist.** Na claim que importa (CTI-RCM, o
+   benchmark comparável com Foundation-Sec-8B), o adapter é **pior que o base**.
+2. **A claim do CyberMetric era do Qwen, não nossa.** 84.2% do base vs 85.8% com
+   adapter: +1.6pp em n=500 é ruído (CI ±~2pp). Posicionar "Caracal-3B na faixa
+   do Llama-3.1-8B" era atribuir ao adapter um mérito do modelo base.
+3. **Único ganho acima de ruído**: secbench +5.7pp (n=300).
+4. **Distância real do specialist**: CTI-RCM 39.8% (ou 44.4% do base) contra
+   Foundation-Sec-8B 72-75%. Headroom de ~28pp.
+
+**Consequência pra fase 2 (RSI+RL):** o v0 do loop passa a ser o **modelo base**,
+não o adapter s04 — começar do adapter seria começar 4.6pp abaixo no alvo. O
+objetivo do RL deixa de ser "melhorar mais" e passa a ser subir de 44.4% em
+direção a 72-75. Piso de colapso medido no dev: responder sempre CWE-79 = 27.3%.
+
+---
+
+# (histórico, superado pela retratação acima) Onde o Caracal-3B está no mundo — CyberMetric-500 side-by-side
 
 Única comparação estatisticamente válida (set fixo de 500). Generalistas open
 source marcados com [G], specialists cyber com [C].

@@ -1,0 +1,8115 @@
+{
+  "model": "Qwen/Qwen2.5-Coder-3B-Instruct",
+  "adapter": null,
+  "device": "gpu-baseline",
+  "cti_bench": {
+    "rcm": {
+      "n": 500,
+      "accuracy": 0.444,
+      "ci_95_low": 0.4019500000000005,
+      "ci_95_high": 0.488,
+      "per_sample": [
+        {
+          "i": 0,
+          "pred": "CWE-416",
+          "gold": "CWE-416",
+          "correct": 1
+        },
+        {
+          "i": 1,
+          "pred": "CWE-287",
+          "gold": "CWE-257",
+          "correct": 0
+        },
+        {
+          "i": 2,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 3,
+          "pred": "CWE-119",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 4,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 5,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 6,
+          "pred": "CWE-20",
+          "gold": "CWE-269",
+          "correct": 0
+        },
+        {
+          "i": 7,
+          "pred": "CWE-918",
+          "gold": "CWE-918",
+          "correct": 1
+        },
+        {
+          "i": 8,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 9,
+          "pred": "CWE-200",
+          "gold": "CWE-116",
+          "correct": 0
+        },
+        {
+          "i": 10,
+          "pred": "CWE-476",
+          "gold": "CWE-79",
+          "correct": 0
+        },
+        {
+          "i": 11,
+          "pred": "CWE-119",
+          "gold": "CWE-119",
+          "correct": 1
+        },
+        {
+          "i": 12,
+          "pred": "CWE-416",
+          "gold": "CWE-416",
+          "correct": 1
+        },
+        {
+          "i": 13,
+          "pred": "CWE-79",
+          "gold": "CWE-77",
+          "correct": 0
+        },
+        {
+          "i": 14,
+          "pred": "CWE-284",
+          "gold": "CWE-346",
+          "correct": 0
+        },
+        {
+          "i": 15,
+          "pred": "CWE-200",
+          "gold": "CWE-532",
+          "correct": 0
+        },
+        {
+          "i": 16,
+          "pred": "CWE-23",
+          "gold": "CWE-434",
+          "correct": 0
+        },
+        {
+          "i": 17,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 18,
+          "pred": null,
+          "gold": "CWE-434",
+          "correct": 0
+        },
+        {
+          "i": 19,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 20,
+          "pred": "CWE-78",
+          "gold": "CWE-77",
+          "correct": 0
+        },
+        {
+          "i": 21,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 22,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 23,
+          "pred": "CWE-20",
+          "gold": "CWE-404",
+          "correct": 0
+        },
+        {
+          "i": 24,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 25,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 26,
+          "pred": "CWE-22",
+          "gold": "CWE-22",
+          "correct": 1
+        },
+        {
+          "i": 27,
+          "pred": "CWE-20",
+          "gold": "CWE-22",
+          "correct": 0
+        },
+        {
+          "i": 28,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 29,
+          "pred": "CWE-287",
+          "gold": "CWE-434",
+          "correct": 0
+        },
+        {
+          "i": 30,
+          "pred": "CWE-209",
+          "gold": "CWE-829",
+          "correct": 0
+        },
+        {
+          "i": 31,
+          "pred": "CWE-287",
+          "gold": "CWE-611",
+          "correct": 0
+        },
+        {
+          "i": 32,
+          "pred": "CWE-284",
+          "gold": "CWE-434",
+          "correct": 0
+        },
+        {
+          "i": 33,
+          "pred": "CWE-200",
+          "gold": "CWE-200",
+          "correct": 1
+        },
+        {
+          "i": 34,
+          "pred": "CWE-120",
+          "gold": "CWE-476",
+          "correct": 0
+        },
+        {
+          "i": 35,
+          "pred": "CWE-119",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 36,
+          "pred": "CWE-120",
+          "gold": "CWE-908",
+          "correct": 0
+        },
+        {
+          "i": 37,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 38,
+          "pred": "CWE-352",
+          "gold": "CWE-295",
+          "correct": 0
+        },
+        {
+          "i": 39,
+          "pred": "CWE-119",
+          "gold": "CWE-754",
+          "correct": 0
+        },
+        {
+          "i": 40,
+          "pred": "CWE-22",
+          "gold": "CWE-22",
+          "correct": 1
+        },
+        {
+          "i": 41,
+          "pred": "CWE-79",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 42,
+          "pred": "CWE-476",
+          "gold": "CWE-476",
+          "correct": 1
+        },
+        {
+          "i": 43,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 44,
+          "pred": "CWE-284",
+          "gold": "CWE-434",
+          "correct": 0
+        },
+        {
+          "i": 45,
+          "pred": "CWE-120",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 46,
+          "pred": null,
+          "gold": "CWE-74",
+          "correct": 0
+        },
+        {
+          "i": 47,
+          "pred": "CWE-287",
+          "gold": "CWE-284",
+          "correct": 0
+        },
+        {
+          "i": 48,
+          "pred": "CWE-78",
+          "gold": "CWE-78",
+          "correct": 1
+        },
+        {
+          "i": 49,
+          "pred": "CWE-200",
+          "gold": "CWE-610",
+          "correct": 0
+        },
+        {
+          "i": 50,
+          "pred": "CWE-119",
+          "gold": "CWE-120",
+          "correct": 0
+        },
+        {
+          "i": 51,
+          "pred": "CWE-20",
+          "gold": "CWE-404",
+          "correct": 0
+        },
+        {
+          "i": 52,
+          "pred": "CWE-79",
+          "gold": "CWE-400",
+          "correct": 0
+        },
+        {
+          "i": 53,
+          "pred": "CWE-119",
+          "gold": "CWE-416",
+          "correct": 0
+        },
+        {
+          "i": 54,
+          "pred": "CWE-209",
+          "gold": "CWE-347",
+          "correct": 0
+        },
+        {
+          "i": 55,
+          "pred": "CWE-190",
+          "gold": "CWE-681",
+          "correct": 0
+        },
+        {
+          "i": 56,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 57,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 58,
+          "pred": "CWE-120",
+          "gold": "CWE-120",
+          "correct": 1
+        },
+        {
+          "i": 59,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 60,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 61,
+          "pred": null,
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 62,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 63,
+          "pred": "CWE-400",
+          "gold": "CWE-416",
+          "correct": 0
+        },
+        {
+          "i": 64,
+          "pred": "CWE-120",
+          "gold": "CWE-125",
+          "correct": 0
+        },
+        {
+          "i": 65,
+          "pred": "CWE-362",
+          "gold": "CWE-362",
+          "correct": 1
+        },
+        {
+          "i": 66,
+          "pred": "CWE-20",
+          "gold": "CWE-79",
+          "correct": 0
+        },
+        {
+          "i": 67,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 68,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 69,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 70,
+          "pred": "CWE-119",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 71,
+          "pred": "CWE-200",
+          "gold": "CWE-522",
+          "correct": 0
+        },
+        {
+          "i": 72,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 73,
+          "pred": "CWE-120",
+          "gold": "CWE-476",
+          "correct": 0
+        },
+        {
+          "i": 74,
+          "pred": "CWE-22",
+          "gold": "CWE-22",
+          "correct": 1
+        },
+        {
+          "i": 75,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 76,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 77,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 78,
+          "pred": "CWE-287",
+          "gold": "CWE-306",
+          "correct": 0
+        },
+        {
+          "i": 79,
+          "pred": "CWE-200",
+          "gold": "CWE-862",
+          "correct": 0
+        },
+        {
+          "i": 80,
+          "pred": "CWE-209",
+          "gold": "CWE-327",
+          "correct": 0
+        },
+        {
+          "i": 81,
+          "pred": "CWE-20",
+          "gold": "CWE-732",
+          "correct": 0
+        },
+        {
+          "i": 82,
+          "pred": "CWE-209",
+          "gold": "CWE-209",
+          "correct": 1
+        },
+        {
+          "i": 83,
+          "pred": "CWE-416",
+          "gold": "CWE-416",
+          "correct": 1
+        },
+        {
+          "i": 84,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 85,
+          "pred": "CWE-22",
+          "gold": "CWE-22",
+          "correct": 1
+        },
+        {
+          "i": 86,
+          "pred": "CWE-20",
+          "gold": "CWE-404",
+          "correct": 0
+        },
+        {
+          "i": 87,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 88,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 89,
+          "pred": "CWE-190",
+          "gold": "CWE-190",
+          "correct": 1
+        },
+        {
+          "i": 90,
+          "pred": "CWE-284",
+          "gold": "CWE-306",
+          "correct": 0
+        },
+        {
+          "i": 91,
+          "pred": "CWE-476",
+          "gold": "CWE-470",
+          "correct": 0
+        },
+        {
+          "i": 92,
+          "pred": "CWE-209",
+          "gold": "CWE-319",
+          "correct": 0
+        },
+        {
+          "i": 93,
+          "pred": "CWE-119",
+          "gold": "CWE-120",
+          "correct": 0
+        },
+        {
+          "i": 94,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 95,
+          "pred": "CWE-120",
+          "gold": "CWE-863",
+          "correct": 0
+        },
+        {
+          "i": 96,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 97,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 98,
+          "pred": "CWE-287",
+          "gold": "CWE-668",
+          "correct": 0
+        },
+        {
+          "i": 99,
+          "pred": "CWE-79",
+          "gold": "CWE-78",
+          "correct": 0
+        },
+        {
+          "i": 100,
+          "pred": "CWE-20",
+          "gold": "CWE-290",
+          "correct": 0
+        },
+        {
+          "i": 101,
+          "pred": "CWE-79",
+          "gold": "CWE-77",
+          "correct": 0
+        },
+        {
+          "i": 102,
+          "pred": "CWE-120",
+          "gold": "CWE-476",
+          "correct": 0
+        },
+        {
+          "i": 103,
+          "pred": "CWE-119",
+          "gold": "CWE-120",
+          "correct": 0
+        },
+        {
+          "i": 104,
+          "pred": "CWE-200",
+          "gold": "CWE-404",
+          "correct": 0
+        },
+        {
+          "i": 105,
+          "pred": "CWE-20",
+          "gold": "CWE-434",
+          "correct": 0
+        },
+        {
+          "i": 106,
+          "pred": "CWE-79",
+          "gold": "CWE-434",
+          "correct": 0
+        },
+        {
+          "i": 107,
+          "pred": "CWE-79",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 108,
+          "pred": "CWE-119",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 109,
+          "pred": "CWE-284",
+          "gold": "CWE-287",
+          "correct": 0
+        },
+        {
+          "i": 110,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 111,
+          "pred": "CWE-120",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 112,
+          "pred": "CWE-20",
+          "gold": "CWE-347",
+          "correct": 0
+        },
+        {
+          "i": 113,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 114,
+          "pred": "CWE-20",
+          "gold": "CWE-22",
+          "correct": 0
+        },
+        {
+          "i": 115,
+          "pred": "CWE-416",
+          "gold": "CWE-416",
+          "correct": 1
+        },
+        {
+          "i": 116,
+          "pred": "CWE-120",
+          "gold": "CWE-190",
+          "correct": 0
+        },
+        {
+          "i": 117,
+          "pred": "CWE-79",
+          "gold": "CWE-77",
+          "correct": 0
+        },
+        {
+          "i": 118,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 119,
+          "pred": "CWE-20",
+          "gold": "CWE-502",
+          "correct": 0
+        },
+        {
+          "i": 120,
+          "pred": "CWE-284",
+          "gold": "CWE-434",
+          "correct": 0
+        },
+        {
+          "i": 121,
+          "pred": "CWE-404",
+          "gold": "CWE-416",
+          "correct": 0
+        },
+        {
+          "i": 122,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 123,
+          "pred": "CWE-78",
+          "gold": "CWE-78",
+          "correct": 1
+        },
+        {
+          "i": 124,
+          "pred": "CWE-209",
+          "gold": "CWE-436",
+          "correct": 0
+        },
+        {
+          "i": 125,
+          "pred": "CWE-200",
+          "gold": "CWE-755",
+          "correct": 0
+        },
+        {
+          "i": 126,
+          "pred": "CWE-120",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 127,
+          "pred": "CWE-119",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 128,
+          "pred": "CWE-79",
+          "gold": "CWE-78",
+          "correct": 0
+        },
+        {
+          "i": 129,
+          "pred": "CWE-416",
+          "gold": "CWE-416",
+          "correct": 1
+        },
+        {
+          "i": 130,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 131,
+          "pred": "CWE-120",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 132,
+          "pred": "CWE-284",
+          "gold": "CWE-346",
+          "correct": 0
+        },
+        {
+          "i": 133,
+          "pred": "CWE-79",
+          "gold": "CWE-77",
+          "correct": 0
+        },
+        {
+          "i": 134,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 135,
+          "pred": "CWE-79",
+          "gold": "CWE-404",
+          "correct": 0
+        },
+        {
+          "i": 136,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 137,
+          "pred": "CWE-119",
+          "gold": "CWE-121",
+          "correct": 0
+        },
+        {
+          "i": 138,
+          "pred": "CWE-94",
+          "gold": "CWE-287",
+          "correct": 0
+        },
+        {
+          "i": 139,
+          "pred": null,
+          "gold": "CWE-190",
+          "correct": 0
+        },
+        {
+          "i": 140,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 141,
+          "pred": "CWE-352",
+          "gold": "CWE-352",
+          "correct": 1
+        },
+        {
+          "i": 142,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 143,
+          "pred": "CWE-23",
+          "gold": "CWE-22",
+          "correct": 0
+        },
+        {
+          "i": 144,
+          "pred": "CWE-78",
+          "gold": "CWE-78",
+          "correct": 1
+        },
+        {
+          "i": 145,
+          "pred": "CWE-23",
+          "gold": "CWE-22",
+          "correct": 0
+        },
+        {
+          "i": 146,
+          "pred": "CWE-611",
+          "gold": "CWE-611",
+          "correct": 1
+        },
+        {
+          "i": 147,
+          "pred": "CWE-690",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 148,
+          "pred": null,
+          "gold": "CWE-434",
+          "correct": 0
+        },
+        {
+          "i": 149,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 150,
+          "pred": "CWE-400",
+          "gold": "CWE-401",
+          "correct": 0
+        },
+        {
+          "i": 151,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 152,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 153,
+          "pred": "CWE-119",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 154,
+          "pred": "CWE-352",
+          "gold": "CWE-352",
+          "correct": 1
+        },
+        {
+          "i": 155,
+          "pred": "CWE-352",
+          "gold": "CWE-352",
+          "correct": 1
+        },
+        {
+          "i": 156,
+          "pred": null,
+          "gold": "CWE-119",
+          "correct": 0
+        },
+        {
+          "i": 157,
+          "pred": "CWE-20",
+          "gold": "CWE-404",
+          "correct": 0
+        },
+        {
+          "i": 158,
+          "pred": null,
+          "gold": "CWE-190",
+          "correct": 0
+        },
+        {
+          "i": 159,
+          "pred": "CWE-287",
+          "gold": "CWE-862",
+          "correct": 0
+        },
+        {
+          "i": 160,
+          "pred": "CWE-7",
+          "gold": "CWE-79",
+          "correct": 0
+        },
+        {
+          "i": 161,
+          "pred": "CWE-119",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 162,
+          "pred": "CWE-22",
+          "gold": "CWE-24",
+          "correct": 0
+        },
+        {
+          "i": 163,
+          "pred": "CWE-310",
+          "gold": "CWE-327",
+          "correct": 0
+        },
+        {
+          "i": 164,
+          "pred": "CWE-120",
+          "gold": "CWE-119",
+          "correct": 0
+        },
+        {
+          "i": 165,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 166,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 167,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 168,
+          "pred": "CWE-119",
+          "gold": "CWE-121",
+          "correct": 0
+        },
+        {
+          "i": 169,
+          "pred": "CWE-120",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 170,
+          "pred": null,
+          "gold": "CWE-73",
+          "correct": 0
+        },
+        {
+          "i": 171,
+          "pred": "CWE-200",
+          "gold": "CWE-321",
+          "correct": 0
+        },
+        {
+          "i": 172,
+          "pred": null,
+          "gold": "CWE-131",
+          "correct": 0
+        },
+        {
+          "i": 173,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 174,
+          "pred": "CWE-259",
+          "gold": "CWE-203",
+          "correct": 0
+        },
+        {
+          "i": 175,
+          "pred": "CWE-209",
+          "gold": "CWE-918",
+          "correct": 0
+        },
+        {
+          "i": 176,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 177,
+          "pred": "CWE-200",
+          "gold": "CWE-668",
+          "correct": 0
+        },
+        {
+          "i": 178,
+          "pred": "CWE-231",
+          "gold": "CWE-22",
+          "correct": 0
+        },
+        {
+          "i": 179,
+          "pred": "CWE-78",
+          "gold": "CWE-78",
+          "correct": 1
+        },
+        {
+          "i": 180,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 181,
+          "pred": "CWE-7",
+          "gold": "CWE-79",
+          "correct": 0
+        },
+        {
+          "i": 182,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 183,
+          "pred": "CWE-119",
+          "gold": "CWE-843",
+          "correct": 0
+        },
+        {
+          "i": 184,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 185,
+          "pred": "CWE-643",
+          "gold": "CWE-352",
+          "correct": 0
+        },
+        {
+          "i": 186,
+          "pred": "CWE-200",
+          "gold": "CWE-290",
+          "correct": 0
+        },
+        {
+          "i": 187,
+          "pred": "CWE-119",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 188,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 189,
+          "pred": null,
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 190,
+          "pred": "CWE-22",
+          "gold": "CWE-22",
+          "correct": 1
+        },
+        {
+          "i": 191,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 192,
+          "pred": "CWE-120",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 193,
+          "pred": "CWE-643",
+          "gold": "CWE-918",
+          "correct": 0
+        },
+        {
+          "i": 194,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 195,
+          "pred": "CWE-200",
+          "gold": "CWE-755",
+          "correct": 0
+        },
+        {
+          "i": 196,
+          "pred": "CWE-20",
+          "gold": "CWE-434",
+          "correct": 0
+        },
+        {
+          "i": 197,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 198,
+          "pred": "CWE-119",
+          "gold": "CWE-125",
+          "correct": 0
+        },
+        {
+          "i": 199,
+          "pred": "CWE-120",
+          "gold": "CWE-362",
+          "correct": 0
+        },
+        {
+          "i": 200,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 201,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 202,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 203,
+          "pred": "CWE-79",
+          "gold": "CWE-77",
+          "correct": 0
+        },
+        {
+          "i": 204,
+          "pred": "CWE-120",
+          "gold": "CWE-125",
+          "correct": 0
+        },
+        {
+          "i": 205,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 206,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 207,
+          "pred": "CWE-190",
+          "gold": "CWE-190",
+          "correct": 1
+        },
+        {
+          "i": 208,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 209,
+          "pred": "CWE-200",
+          "gold": "CWE-307",
+          "correct": 0
+        },
+        {
+          "i": 210,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 211,
+          "pred": "CWE-79",
+          "gold": "CWE-125",
+          "correct": 0
+        },
+        {
+          "i": 212,
+          "pred": "CWE-22",
+          "gold": "CWE-22",
+          "correct": 1
+        },
+        {
+          "i": 213,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 214,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 215,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 216,
+          "pred": null,
+          "gold": "CWE-347",
+          "correct": 0
+        },
+        {
+          "i": 217,
+          "pred": "CWE-230",
+          "gold": "CWE-22",
+          "correct": 0
+        },
+        {
+          "i": 218,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 219,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 220,
+          "pred": "CWE-416",
+          "gold": "CWE-416",
+          "correct": 1
+        },
+        {
+          "i": 221,
+          "pred": "CWE-79",
+          "gold": "CWE-78",
+          "correct": 0
+        },
+        {
+          "i": 222,
+          "pred": "CWE-79",
+          "gold": "CWE-639",
+          "correct": 0
+        },
+        {
+          "i": 223,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 224,
+          "pred": "CWE-20",
+          "gold": "CWE-78",
+          "correct": 0
+        },
+        {
+          "i": 225,
+          "pred": "CWE-120",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 226,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 227,
+          "pred": "CWE-20",
+          "gold": "CWE-601",
+          "correct": 0
+        },
+        {
+          "i": 228,
+          "pred": "CWE-200",
+          "gold": "CWE-532",
+          "correct": 0
+        },
+        {
+          "i": 229,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 230,
+          "pred": "CWE-119",
+          "gold": "CWE-119",
+          "correct": 1
+        },
+        {
+          "i": 231,
+          "pred": "CWE-20",
+          "gold": "CWE-22",
+          "correct": 0
+        },
+        {
+          "i": 232,
+          "pred": "CWE-352",
+          "gold": "CWE-352",
+          "correct": 1
+        },
+        {
+          "i": 233,
+          "pred": "CWE-20",
+          "gold": "CWE-798",
+          "correct": 0
+        },
+        {
+          "i": 234,
+          "pred": "CWE-22",
+          "gold": "CWE-269",
+          "correct": 0
+        },
+        {
+          "i": 235,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 236,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 237,
+          "pred": "CWE-94",
+          "gold": "CWE-918",
+          "correct": 0
+        },
+        {
+          "i": 238,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 239,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 240,
+          "pred": "CWE-78",
+          "gold": "CWE-78",
+          "correct": 1
+        },
+        {
+          "i": 241,
+          "pred": "CWE-377",
+          "gold": "CWE-639",
+          "correct": 0
+        },
+        {
+          "i": 242,
+          "pred": "CWE-20",
+          "gold": "CWE-119",
+          "correct": 0
+        },
+        {
+          "i": 243,
+          "pred": "CWE-79",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 244,
+          "pred": "CWE-476",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 245,
+          "pred": "CWE-120",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 246,
+          "pred": "CWE-190",
+          "gold": "CWE-190",
+          "correct": 1
+        },
+        {
+          "i": 247,
+          "pred": "CWE-120",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 248,
+          "pred": "CWE-476",
+          "gold": "CWE-476",
+          "correct": 1
+        },
+        {
+          "i": 249,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 250,
+          "pred": "CWE-798",
+          "gold": "CWE-908",
+          "correct": 0
+        },
+        {
+          "i": 251,
+          "pred": "CWE-209",
+          "gold": "CWE-22",
+          "correct": 0
+        },
+        {
+          "i": 252,
+          "pred": "CWE-79",
+          "gold": "CWE-426",
+          "correct": 0
+        },
+        {
+          "i": 253,
+          "pred": "CWE-284",
+          "gold": "CWE-862",
+          "correct": 0
+        },
+        {
+          "i": 254,
+          "pred": "CWE-200",
+          "gold": "CWE-639",
+          "correct": 0
+        },
+        {
+          "i": 255,
+          "pred": "CWE-20",
+          "gold": "CWE-798",
+          "correct": 0
+        },
+        {
+          "i": 256,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 257,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 258,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 259,
+          "pred": "CWE-129",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 260,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 261,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 262,
+          "pred": "CWE-78",
+          "gold": "CWE-78",
+          "correct": 1
+        },
+        {
+          "i": 263,
+          "pred": "CWE-20",
+          "gold": "CWE-434",
+          "correct": 0
+        },
+        {
+          "i": 264,
+          "pred": "CWE-287",
+          "gold": "CWE-284",
+          "correct": 0
+        },
+        {
+          "i": 265,
+          "pred": "CWE-7",
+          "gold": "CWE-79",
+          "correct": 0
+        },
+        {
+          "i": 266,
+          "pred": "CWE-209",
+          "gold": "CWE-863",
+          "correct": 0
+        },
+        {
+          "i": 267,
+          "pred": "CWE-352",
+          "gold": "CWE-346",
+          "correct": 0
+        },
+        {
+          "i": 268,
+          "pred": "CWE-209",
+          "gold": "CWE-327",
+          "correct": 0
+        },
+        {
+          "i": 269,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 270,
+          "pred": "CWE-120",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 271,
+          "pred": "CWE-287",
+          "gold": "CWE-862",
+          "correct": 0
+        },
+        {
+          "i": 272,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 273,
+          "pred": "CWE-284",
+          "gold": "CWE-862",
+          "correct": 0
+        },
+        {
+          "i": 274,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 275,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 276,
+          "pred": "CWE-119",
+          "gold": "CWE-120",
+          "correct": 0
+        },
+        {
+          "i": 277,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 278,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 279,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 280,
+          "pred": "CWE-798",
+          "gold": "CWE-862",
+          "correct": 0
+        },
+        {
+          "i": 281,
+          "pred": "CWE-94",
+          "gold": "CWE-434",
+          "correct": 0
+        },
+        {
+          "i": 282,
+          "pred": "CWE-119",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 283,
+          "pred": "CWE-400",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 284,
+          "pred": "CWE-284",
+          "gold": "CWE-79",
+          "correct": 0
+        },
+        {
+          "i": 285,
+          "pred": "CWE-732",
+          "gold": "CWE-502",
+          "correct": 0
+        },
+        {
+          "i": 286,
+          "pred": "CWE-78",
+          "gold": "CWE-78",
+          "correct": 1
+        },
+        {
+          "i": 287,
+          "pred": "CWE-352",
+          "gold": "CWE-352",
+          "correct": 1
+        },
+        {
+          "i": 288,
+          "pred": "CWE-352",
+          "gold": "CWE-352",
+          "correct": 1
+        },
+        {
+          "i": 289,
+          "pred": "CWE-798",
+          "gold": "CWE-913",
+          "correct": 0
+        },
+        {
+          "i": 290,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 291,
+          "pred": "CWE-402",
+          "gold": "CWE-400",
+          "correct": 0
+        },
+        {
+          "i": 292,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 293,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 294,
+          "pred": "CWE-362",
+          "gold": "CWE-613",
+          "correct": 0
+        },
+        {
+          "i": 295,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 296,
+          "pred": "CWE-287",
+          "gold": "CWE-862",
+          "correct": 0
+        },
+        {
+          "i": 297,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 298,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 299,
+          "pred": "CWE-287",
+          "gold": "CWE-639",
+          "correct": 0
+        },
+        {
+          "i": 300,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 301,
+          "pred": "CWE-79",
+          "gold": "CWE-502",
+          "correct": 0
+        },
+        {
+          "i": 302,
+          "pred": "CWE-119",
+          "gold": "CWE-121",
+          "correct": 0
+        },
+        {
+          "i": 303,
+          "pred": "CWE-352",
+          "gold": "CWE-352",
+          "correct": 1
+        },
+        {
+          "i": 304,
+          "pred": "CWE-119",
+          "gold": "CWE-120",
+          "correct": 0
+        },
+        {
+          "i": 305,
+          "pred": "CWE-284",
+          "gold": "CWE-732",
+          "correct": 0
+        },
+        {
+          "i": 306,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 307,
+          "pred": "CWE-119",
+          "gold": "CWE-120",
+          "correct": 0
+        },
+        {
+          "i": 308,
+          "pred": null,
+          "gold": "CWE-798",
+          "correct": 0
+        },
+        {
+          "i": 309,
+          "pred": "CWE-78",
+          "gold": "CWE-78",
+          "correct": 1
+        },
+        {
+          "i": 310,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 311,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 312,
+          "pred": null,
+          "gold": "CWE-434",
+          "correct": 0
+        },
+        {
+          "i": 313,
+          "pred": "CWE-20",
+          "gold": "CWE-502",
+          "correct": 0
+        },
+        {
+          "i": 314,
+          "pred": "CWE-119",
+          "gold": "CWE-120",
+          "correct": 0
+        },
+        {
+          "i": 315,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 316,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 317,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 318,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 319,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 320,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 321,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 322,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 323,
+          "pred": "CWE-401",
+          "gold": "CWE-401",
+          "correct": 1
+        },
+        {
+          "i": 324,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 325,
+          "pred": "CWE-75",
+          "gold": "CWE-22",
+          "correct": 0
+        },
+        {
+          "i": 326,
+          "pred": "CWE-787",
+          "gold": "CWE-362",
+          "correct": 0
+        },
+        {
+          "i": 327,
+          "pred": "CWE-79",
+          "gold": "CWE-116",
+          "correct": 0
+        },
+        {
+          "i": 328,
+          "pred": "CWE-7",
+          "gold": "CWE-79",
+          "correct": 0
+        },
+        {
+          "i": 329,
+          "pred": "CWE-119",
+          "gold": "CWE-119",
+          "correct": 1
+        },
+        {
+          "i": 330,
+          "pred": "CWE-22",
+          "gold": "CWE-22",
+          "correct": 1
+        },
+        {
+          "i": 331,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 332,
+          "pred": "CWE-200",
+          "gold": "CWE-532",
+          "correct": 0
+        },
+        {
+          "i": 333,
+          "pred": "CWE-234",
+          "gold": "CWE-434",
+          "correct": 0
+        },
+        {
+          "i": 334,
+          "pred": "CWE-401",
+          "gold": "CWE-668",
+          "correct": 0
+        },
+        {
+          "i": 335,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 336,
+          "pred": "CWE-915",
+          "gold": "CWE-918",
+          "correct": 0
+        },
+        {
+          "i": 337,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 338,
+          "pred": "CWE-352",
+          "gold": "CWE-352",
+          "correct": 1
+        },
+        {
+          "i": 339,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 340,
+          "pred": "CWE-398",
+          "gold": "CWE-362",
+          "correct": 0
+        },
+        {
+          "i": 341,
+          "pred": "CWE-287",
+          "gold": "CWE-434",
+          "correct": 0
+        },
+        {
+          "i": 342,
+          "pred": "CWE-120",
+          "gold": "CWE-754",
+          "correct": 0
+        },
+        {
+          "i": 343,
+          "pred": null,
+          "gold": "CWE-611",
+          "correct": 0
+        },
+        {
+          "i": 344,
+          "pred": "CWE-126",
+          "gold": "CWE-125",
+          "correct": 0
+        },
+        {
+          "i": 345,
+          "pred": null,
+          "gold": "CWE-94",
+          "correct": 0
+        },
+        {
+          "i": 346,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 347,
+          "pred": null,
+          "gold": "CWE-300",
+          "correct": 0
+        },
+        {
+          "i": 348,
+          "pred": "CWE-918",
+          "gold": "CWE-436",
+          "correct": 0
+        },
+        {
+          "i": 349,
+          "pred": "CWE-20",
+          "gold": "CWE-125",
+          "correct": 0
+        },
+        {
+          "i": 350,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 351,
+          "pred": "CWE-190",
+          "gold": "CWE-190",
+          "correct": 1
+        },
+        {
+          "i": 352,
+          "pred": "CWE-119",
+          "gold": "CWE-121",
+          "correct": 0
+        },
+        {
+          "i": 353,
+          "pred": null,
+          "gold": "CWE-434",
+          "correct": 0
+        },
+        {
+          "i": 354,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 355,
+          "pred": "CWE-362",
+          "gold": "CWE-362",
+          "correct": 1
+        },
+        {
+          "i": 356,
+          "pred": "CWE-20",
+          "gold": "CWE-863",
+          "correct": 0
+        },
+        {
+          "i": 357,
+          "pred": "CWE-22",
+          "gold": "CWE-610",
+          "correct": 0
+        },
+        {
+          "i": 358,
+          "pred": "CWE-79",
+          "gold": "CWE-94",
+          "correct": 0
+        },
+        {
+          "i": 359,
+          "pred": "CWE-20",
+          "gold": "CWE-59",
+          "correct": 0
+        },
+        {
+          "i": 360,
+          "pred": "CWE-352",
+          "gold": "CWE-352",
+          "correct": 1
+        },
+        {
+          "i": 361,
+          "pred": "CWE-234",
+          "gold": "CWE-22",
+          "correct": 0
+        },
+        {
+          "i": 362,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 363,
+          "pred": "CWE-120",
+          "gold": "CWE-120",
+          "correct": 1
+        },
+        {
+          "i": 364,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 365,
+          "pred": "CWE-126",
+          "gold": "CWE-125",
+          "correct": 0
+        },
+        {
+          "i": 366,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 367,
+          "pred": null,
+          "gold": "CWE-119",
+          "correct": 0
+        },
+        {
+          "i": 368,
+          "pred": "CWE-79",
+          "gold": "CWE-77",
+          "correct": 0
+        },
+        {
+          "i": 369,
+          "pred": "CWE-310",
+          "gold": "CWE-319",
+          "correct": 0
+        },
+        {
+          "i": 370,
+          "pred": "CWE-200",
+          "gold": "CWE-532",
+          "correct": 0
+        },
+        {
+          "i": 371,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 372,
+          "pred": "CWE-79",
+          "gold": "CWE-77",
+          "correct": 0
+        },
+        {
+          "i": 373,
+          "pred": "CWE-79",
+          "gold": "CWE-346",
+          "correct": 0
+        },
+        {
+          "i": 374,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 375,
+          "pred": "CWE-119",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 376,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 377,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 378,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 379,
+          "pred": "CWE-287",
+          "gold": "CWE-640",
+          "correct": 0
+        },
+        {
+          "i": 380,
+          "pred": "CWE-94",
+          "gold": "CWE-436",
+          "correct": 0
+        },
+        {
+          "i": 381,
+          "pred": "CWE-284",
+          "gold": "CWE-346",
+          "correct": 0
+        },
+        {
+          "i": 382,
+          "pred": "CWE-752",
+          "gold": "CWE-502",
+          "correct": 0
+        },
+        {
+          "i": 383,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 384,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 385,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 386,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 387,
+          "pred": "CWE-20",
+          "gold": "CWE-798",
+          "correct": 0
+        },
+        {
+          "i": 388,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 389,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 390,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 391,
+          "pred": "CWE-119",
+          "gold": "CWE-119",
+          "correct": 1
+        },
+        {
+          "i": 392,
+          "pred": "CWE-119",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 393,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 394,
+          "pred": "CWE-476",
+          "gold": "CWE-476",
+          "correct": 1
+        },
+        {
+          "i": 395,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 396,
+          "pred": "CWE-798",
+          "gold": "CWE-94",
+          "correct": 0
+        },
+        {
+          "i": 397,
+          "pred": "CWE-78",
+          "gold": "CWE-78",
+          "correct": 1
+        },
+        {
+          "i": 398,
+          "pred": null,
+          "gold": "CWE-276",
+          "correct": 0
+        },
+        {
+          "i": 399,
+          "pred": "CWE-20",
+          "gold": "CWE-434",
+          "correct": 0
+        },
+        {
+          "i": 400,
+          "pred": "CWE-120",
+          "gold": "CWE-125",
+          "correct": 0
+        },
+        {
+          "i": 401,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 402,
+          "pred": "CWE-20",
+          "gold": "CWE-281",
+          "correct": 0
+        },
+        {
+          "i": 403,
+          "pred": "CWE-416",
+          "gold": "CWE-416",
+          "correct": 1
+        },
+        {
+          "i": 404,
+          "pred": "CWE-352",
+          "gold": "CWE-352",
+          "correct": 1
+        },
+        {
+          "i": 405,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 406,
+          "pred": "CWE-78",
+          "gold": "CWE-77",
+          "correct": 0
+        },
+        {
+          "i": 407,
+          "pred": "CWE-22",
+          "gold": "CWE-22",
+          "correct": 1
+        },
+        {
+          "i": 408,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 409,
+          "pred": "CWE-20",
+          "gold": "CWE-269",
+          "correct": 0
+        },
+        {
+          "i": 410,
+          "pred": "CWE-352",
+          "gold": "CWE-352",
+          "correct": 1
+        },
+        {
+          "i": 411,
+          "pred": "CWE-120",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 412,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 413,
+          "pred": null,
+          "gold": "CWE-120",
+          "correct": 0
+        },
+        {
+          "i": 414,
+          "pred": "CWE-352",
+          "gold": "CWE-352",
+          "correct": 1
+        },
+        {
+          "i": 415,
+          "pred": "CWE-23",
+          "gold": "CWE-22",
+          "correct": 0
+        },
+        {
+          "i": 416,
+          "pred": "CWE-20",
+          "gold": "CWE-347",
+          "correct": 0
+        },
+        {
+          "i": 417,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 418,
+          "pred": "CWE-79",
+          "gold": "CWE-94",
+          "correct": 0
+        },
+        {
+          "i": 419,
+          "pred": "CWE-119",
+          "gold": "CWE-121",
+          "correct": 0
+        },
+        {
+          "i": 420,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 421,
+          "pred": "CWE-352",
+          "gold": "CWE-352",
+          "correct": 1
+        },
+        {
+          "i": 422,
+          "pred": null,
+          "gold": "CWE-369",
+          "correct": 0
+        },
+        {
+          "i": 423,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 424,
+          "pred": "CWE-79",
+          "gold": "CWE-94",
+          "correct": 0
+        },
+        {
+          "i": 425,
+          "pred": "CWE-20",
+          "gold": "CWE-346",
+          "correct": 0
+        },
+        {
+          "i": 426,
+          "pred": "CWE-89",
+          "gold": "CWE-427",
+          "correct": 0
+        },
+        {
+          "i": 427,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 428,
+          "pred": "CWE-20",
+          "gold": "CWE-215",
+          "correct": 0
+        },
+        {
+          "i": 429,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 430,
+          "pred": "CWE-119",
+          "gold": "CWE-120",
+          "correct": 0
+        },
+        {
+          "i": 431,
+          "pred": "CWE-790",
+          "gold": "CWE-125",
+          "correct": 0
+        },
+        {
+          "i": 432,
+          "pred": "CWE-259",
+          "gold": "CWE-670",
+          "correct": 0
+        },
+        {
+          "i": 433,
+          "pred": "CWE-284",
+          "gold": "CWE-862",
+          "correct": 0
+        },
+        {
+          "i": 434,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 435,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 436,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 437,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 438,
+          "pred": "CWE-79",
+          "gold": "CWE-78",
+          "correct": 0
+        },
+        {
+          "i": 439,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 440,
+          "pred": "CWE-79",
+          "gold": "CWE-78",
+          "correct": 0
+        },
+        {
+          "i": 441,
+          "pred": "CWE-120",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 442,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 443,
+          "pred": "CWE-416",
+          "gold": "CWE-416",
+          "correct": 1
+        },
+        {
+          "i": 444,
+          "pred": "CWE-78",
+          "gold": "CWE-94",
+          "correct": 0
+        },
+        {
+          "i": 445,
+          "pred": "CWE-476",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 446,
+          "pred": "CWE-120",
+          "gold": "CWE-476",
+          "correct": 0
+        },
+        {
+          "i": 447,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 448,
+          "pred": null,
+          "gold": "CWE-120",
+          "correct": 0
+        },
+        {
+          "i": 449,
+          "pred": "CWE-89",
+          "gold": "CWE-89",
+          "correct": 1
+        },
+        {
+          "i": 450,
+          "pred": "CWE-200",
+          "gold": "CWE-203",
+          "correct": 0
+        },
+        {
+          "i": 451,
+          "pred": "CWE-23",
+          "gold": "CWE-22",
+          "correct": 0
+        },
+        {
+          "i": 452,
+          "pred": "CWE-506",
+          "gold": "CWE-436",
+          "correct": 0
+        },
+        {
+          "i": 453,
+          "pred": "CWE-120",
+          "gold": "CWE-125",
+          "correct": 0
+        },
+        {
+          "i": 454,
+          "pred": "CWE-79",
+          "gold": "CWE-77",
+          "correct": 0
+        },
+        {
+          "i": 455,
+          "pred": "CWE-416",
+          "gold": "CWE-416",
+          "correct": 1
+        },
+        {
+          "i": 456,
+          "pred": null,
+          "gold": "CWE-119",
+          "correct": 0
+        },
+        {
+          "i": 457,
+          "pred": null,
+          "gold": "CWE-416",
+          "correct": 0
+        },
+        {
+          "i": 458,
+          "pred": "CWE-120",
+          "gold": "CWE-476",
+          "correct": 0
+        },
+        {
+          "i": 459,
+          "pred": "CWE-284",
+          "gold": "CWE-862",
+          "correct": 0
+        },
+        {
+          "i": 460,
+          "pred": "CWE-352",
+          "gold": "CWE-352",
+          "correct": 1
+        },
+        {
+          "i": 461,
+          "pred": "CWE-291",
+          "gold": "CWE-295",
+          "correct": 0
+        },
+        {
+          "i": 462,
+          "pred": "CWE-476",
+          "gold": "CWE-835",
+          "correct": 0
+        },
+        {
+          "i": 463,
+          "pred": null,
+          "gold": "CWE-665",
+          "correct": 0
+        },
+        {
+          "i": 464,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 465,
+          "pred": "CWE-20",
+          "gold": "CWE-20",
+          "correct": 1
+        },
+        {
+          "i": 466,
+          "pred": "CWE-416",
+          "gold": "CWE-416",
+          "correct": 1
+        },
+        {
+          "i": 467,
+          "pred": "CWE-200",
+          "gold": "CWE-203",
+          "correct": 0
+        },
+        {
+          "i": 468,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 469,
+          "pred": "CWE-287",
+          "gold": "CWE-862",
+          "correct": 0
+        },
+        {
+          "i": 470,
+          "pred": "CWE-404",
+          "gold": "CWE-416",
+          "correct": 0
+        },
+        {
+          "i": 471,
+          "pred": "CWE-120",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 472,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 473,
+          "pred": "CWE-120",
+          "gold": "CWE-787",
+          "correct": 0
+        },
+        {
+          "i": 474,
+          "pred": "CWE-284",
+          "gold": "CWE-284",
+          "correct": 1
+        },
+        {
+          "i": 475,
+          "pred": "CWE-401",
+          "gold": "CWE-416",
+          "correct": 0
+        },
+        {
+          "i": 476,
+          "pred": "CWE-400",
+          "gold": "CWE-362",
+          "correct": 0
+        },
+        {
+          "i": 477,
+          "pred": "CWE-119",
+          "gold": "CWE-120",
+          "correct": 0
+        },
+        {
+          "i": 478,
+          "pred": "CWE-310",
+          "gold": "CWE-614",
+          "correct": 0
+        },
+        {
+          "i": 479,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 480,
+          "pred": "CWE-398",
+          "gold": "CWE-295",
+          "correct": 0
+        },
+        {
+          "i": 481,
+          "pred": "CWE-259",
+          "gold": "CWE-522",
+          "correct": 0
+        },
+        {
+          "i": 482,
+          "pred": "CWE-200",
+          "gold": "CWE-203",
+          "correct": 0
+        },
+        {
+          "i": 483,
+          "pred": "CWE-190",
+          "gold": "CWE-190",
+          "correct": 1
+        },
+        {
+          "i": 484,
+          "pred": "CWE-190",
+          "gold": "CWE-755",
+          "correct": 0
+        },
+        {
+          "i": 485,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 486,
+          "pred": "CWE-79",
+          "gold": "CWE-78",
+          "correct": 0
+        },
+        {
+          "i": 487,
+          "pred": "CWE-209",
+          "gold": "CWE-209",
+          "correct": 1
+        },
+        {
+          "i": 488,
+          "pred": "CWE-416",
+          "gold": "CWE-416",
+          "correct": 1
+        },
+        {
+          "i": 489,
+          "pred": "CWE-287",
+          "gold": "CWE-294",
+          "correct": 0
+        },
+        {
+          "i": 490,
+          "pred": "CWE-200",
+          "gold": "CWE-798",
+          "correct": 0
+        },
+        {
+          "i": 491,
+          "pred": "CWE-200",
+          "gold": "CWE-532",
+          "correct": 0
+        },
+        {
+          "i": 492,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 493,
+          "pred": "CWE-400",
+          "gold": "CWE-401",
+          "correct": 0
+        },
+        {
+          "i": 494,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 495,
+          "pred": "CWE-119",
+          "gold": "CWE-400",
+          "correct": 0
+        },
+        {
+          "i": 496,
+          "pred": "CWE-79",
+          "gold": "CWE-79",
+          "correct": 1
+        },
+        {
+          "i": 497,
+          "pred": "CWE-20",
+          "gold": "CWE-78",
+          "correct": 0
+        },
+        {
+          "i": 498,
+          "pred": "CWE-287",
+          "gold": "CWE-287",
+          "correct": 1
+        },
+        {
+          "i": 499,
+          "pred": "CWE-362",
+          "gold": "CWE-426",
+          "correct": 0
+        }
+      ]
+    },
+    "mcq": {
+      "n": 500,
+      "accuracy": 0.506,
+      "ci_95_low": 0.462,
+      "ci_95_high": 0.55
+    }
+  },
+  "cybermetric": {
+    "tier": 500,
+    "n": 500,
+    "accuracy": 0.842,
+    "ci_95_low": 0.81,
+    "ci_95_high": 0.872
+  },
+  "secqa": {
+    "secqa_v1": {
+      "n": 110,
+      "accuracy": 0.990909090909091,
+      "ci_95_low": 0.9727272727272728,
+      "ci_95_high": 1.0
+    },
+    "secqa_v2": {
+      "n": 100,
+      "accuracy": 0.98,
+      "ci_95_low": 0.95,
+      "ci_95_high": 1.0
+    }
+  },
+  "secbench": {
+    "subset": "mcq",
+    "n": 300,
+    "skipped": 0,
+    "accuracy": 0.74,
+    "ci_95_low": 0.6866666666666666,
+    "ci_95_high": 0.79,
+    "per_language": {
+      "Chinese": 0.7756653992395437,
+      "English": 0.4864864864864865
+    },
+    "per_sample": [
+      {
+        "i": 0,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 1,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 2,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 3,
+        "pred": "D",
+        "gold": "B",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 4,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 5,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 6,
+        "pred": "D",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 7,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "English"
+      },
+      {
+        "i": 8,
+        "pred": "A",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 9,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 10,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 11,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 12,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 13,
+        "pred": "D",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 14,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 15,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 16,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 17,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 18,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "English"
+      },
+      {
+        "i": 19,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 20,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 21,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 22,
+        "pred": "A",
+        "gold": "ABC",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 23,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 24,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 25,
+        "pred": "A",
+        "gold": "B",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 26,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 27,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 28,
+        "pred": "A",
+        "gold": "ABC",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 29,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 30,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 31,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 32,
+        "pred": "A",
+        "gold": "B",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 33,
+        "pred": "B",
+        "gold": "D",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 34,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 35,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 36,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 37,
+        "pred": "D",
+        "gold": "A",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 38,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 39,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 40,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 41,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 42,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 43,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 44,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 45,
+        "pred": "C",
+        "gold": "D",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 46,
+        "pred": "C",
+        "gold": "B",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 47,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 48,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 49,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 50,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 51,
+        "pred": "D",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 52,
+        "pred": "C",
+        "gold": "D",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 53,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 54,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 55,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 56,
+        "pred": "A",
+        "gold": "B",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 57,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 58,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 59,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 60,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 61,
+        "pred": "A",
+        "gold": "ABC",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 62,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 63,
+        "pred": "C",
+        "gold": "ABC",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 64,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 65,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 66,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 67,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 68,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 69,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "English"
+      },
+      {
+        "i": 70,
+        "pred": "D",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 71,
+        "pred": "C",
+        "gold": "ABC",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 72,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 73,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 74,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 75,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 76,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 77,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 78,
+        "pred": "A",
+        "gold": "D",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 79,
+        "pred": "C",
+        "gold": "A",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 80,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 81,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 82,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 83,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 84,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 85,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 86,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 87,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 88,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 89,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 90,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 91,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 92,
+        "pred": "C",
+        "gold": "D",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 93,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 94,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 95,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 96,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 97,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 98,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 99,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 100,
+        "pred": "A",
+        "gold": "B",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 101,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 102,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 103,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 104,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 105,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 106,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "English"
+      },
+      {
+        "i": 107,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 108,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 109,
+        "pred": "B",
+        "gold": "A",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 110,
+        "pred": "B",
+        "gold": "A",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 111,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 112,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 113,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 114,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 115,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 116,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 117,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 118,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 119,
+        "pred": "A",
+        "gold": "C",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 120,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 121,
+        "pred": "D",
+        "gold": "A",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 122,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "English"
+      },
+      {
+        "i": 123,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 124,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 125,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 126,
+        "pred": "D",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 127,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 128,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 129,
+        "pred": "D",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 130,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 131,
+        "pred": "D",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 132,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 133,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 134,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 135,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 136,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 137,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 138,
+        "pred": "D",
+        "gold": "C",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 139,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 140,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 141,
+        "pred": "A",
+        "gold": "D",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 142,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 143,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 144,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 145,
+        "pred": "D",
+        "gold": "B",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 146,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 147,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 148,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 149,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 150,
+        "pred": "C",
+        "gold": "D",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 151,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 152,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "English"
+      },
+      {
+        "i": 153,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 154,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 155,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 156,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 157,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 158,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 159,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 160,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 161,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "English"
+      },
+      {
+        "i": 162,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 163,
+        "pred": "A",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 164,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 165,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 166,
+        "pred": "D",
+        "gold": "CD",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 167,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "English"
+      },
+      {
+        "i": 168,
+        "pred": "D",
+        "gold": "B",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 169,
+        "pred": "A",
+        "gold": "B",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 170,
+        "pred": "C",
+        "gold": "D",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 171,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 172,
+        "pred": "D",
+        "gold": "B",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 173,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "English"
+      },
+      {
+        "i": 174,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 175,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 176,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 177,
+        "pred": "D",
+        "gold": "B",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 178,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 179,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 180,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 181,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "English"
+      },
+      {
+        "i": 182,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 183,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 184,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 185,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 186,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 187,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 188,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 189,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 190,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "English"
+      },
+      {
+        "i": 191,
+        "pred": "A",
+        "gold": "C",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 192,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 193,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 194,
+        "pred": "A",
+        "gold": "D",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 195,
+        "pred": "C",
+        "gold": "B",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 196,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 197,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 198,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 199,
+        "pred": "A",
+        "gold": "B",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 200,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 201,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 202,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 203,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 204,
+        "pred": "A",
+        "gold": "B",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 205,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 206,
+        "pred": "A",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 207,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 208,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 209,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "English"
+      },
+      {
+        "i": 210,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 211,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 212,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 213,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 214,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 215,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 216,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 217,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 218,
+        "pred": "A",
+        "gold": "D",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 219,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 220,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 221,
+        "pred": "B",
+        "gold": "D",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 222,
+        "pred": "D",
+        "gold": "A",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 223,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 224,
+        "pred": "D",
+        "gold": "B",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 225,
+        "pred": "D",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 226,
+        "pred": "D",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 227,
+        "pred": "D",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 228,
+        "pred": "C",
+        "gold": "B",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 229,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 230,
+        "pred": "D",
+        "gold": "A",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 231,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "English"
+      },
+      {
+        "i": 232,
+        "pred": "B",
+        "gold": "D",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 233,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 234,
+        "pred": "D",
+        "gold": "B",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 235,
+        "pred": "D",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 236,
+        "pred": "D",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 237,
+        "pred": "B",
+        "gold": "ABCD",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 238,
+        "pred": "B",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 239,
+        "pred": "C",
+        "gold": "B",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 240,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 241,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 242,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 243,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 244,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 245,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 246,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 247,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 248,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 249,
+        "pred": "D",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 250,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 251,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 252,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "English"
+      },
+      {
+        "i": 253,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 254,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 255,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 256,
+        "pred": "A",
+        "gold": "B",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 257,
+        "pred": "B",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 258,
+        "pred": "D",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 259,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 260,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 261,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 262,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "English"
+      },
+      {
+        "i": 263,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 264,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "English"
+      },
+      {
+        "i": 265,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "English"
+      },
+      {
+        "i": 266,
+        "pred": "A",
+        "gold": "B",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 267,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 268,
+        "pred": "D",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 269,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 270,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 271,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 272,
+        "pred": "C",
+        "gold": "B",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 273,
+        "pred": "A",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 274,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 275,
+        "pred": "A",
+        "gold": "AB",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 276,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 277,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 278,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "English"
+      },
+      {
+        "i": 279,
+        "pred": "A",
+        "gold": "AB",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 280,
+        "pred": "D",
+        "gold": "C",
+        "correct": 0,
+        "language": "English"
+      },
+      {
+        "i": 281,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 282,
+        "pred": "A",
+        "gold": "ABD",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 283,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 284,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 285,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 286,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 287,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 288,
+        "pred": "D",
+        "gold": "C",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 289,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 290,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 291,
+        "pred": "C",
+        "gold": "BC",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 292,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 293,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 294,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 295,
+        "pred": null,
+        "gold": "ABCD",
+        "correct": 0,
+        "language": "Chinese"
+      },
+      {
+        "i": 296,
+        "pred": "C",
+        "gold": "C",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 297,
+        "pred": "D",
+        "gold": "D",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 298,
+        "pred": "B",
+        "gold": "B",
+        "correct": 1,
+        "language": "Chinese"
+      },
+      {
+        "i": 299,
+        "pred": "A",
+        "gold": "A",
+        "correct": 1,
+        "language": "Chinese"
+      }
+    ]
+  },
+  "mmlu_security": {
+    "n": 100,
+    "accuracy": 0.73,
+    "ci_95_low": 0.64,
+    "ci_95_high": 0.81
+  },
+  "seceval": {
+    "n": 200,
+    "accuracy": 0.405,
+    "ci_95_low": 0.34,
+    "ci_95_high": 0.475
+  },
+  "cybersoceval": {
+    "malware_analysis": {
+      "n": 100,
+      "accuracy": 0.2,
+      "partial_credit": 0.4103452380952381,
+      "multi_answer_frac": 0.55,
+      "ci_95_low": 0.12,
+      "ci_95_high": 0.28,
+      "per_sample": [
+        {
+          "i": 0,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "A",
+            "B"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": true
+        },
+        {
+          "i": 1,
+          "pred": [
+            "A",
+            "D"
+          ],
+          "gold": [
+            "B",
+            "D"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 2,
+          "pred": [
+            "B",
+            "C"
+          ],
+          "gold": [
+            "B",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 3,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.8,
+          "multi": true
+        },
+        {
+          "i": 4,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "B"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 5,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "A"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 6,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "B",
+            "D"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 7,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "J"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 8,
+          "pred": [
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "B",
+            "D",
+            "E",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.4,
+          "multi": true
+        },
+        {
+          "i": 9,
+          "pred": [
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 10,
+          "pred": [
+            "B",
+            "D"
+          ],
+          "gold": [
+            "B",
+            "D"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": true
+        },
+        {
+          "i": 11,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "B",
+            "C",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.4,
+          "multi": true
+        },
+        {
+          "i": 12,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "C",
+            "F",
+            "G"
+          ],
+          "correct": 0,
+          "jaccard": 0.16666666666666666,
+          "multi": true
+        },
+        {
+          "i": 13,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "A"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 14,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "D"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 15,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "D",
+            "F",
+            "H"
+          ],
+          "correct": 0,
+          "jaccard": 0.16666666666666666,
+          "multi": true
+        },
+        {
+          "i": 16,
+          "pred": [
+            "A",
+            "C"
+          ],
+          "gold": [
+            "A",
+            "D"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 17,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "A"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 18,
+          "pred": [
+            "A",
+            "B",
+            "C"
+          ],
+          "gold": [
+            "B",
+            "C"
+          ],
+          "correct": 0,
+          "jaccard": 0.6666666666666666,
+          "multi": true
+        },
+        {
+          "i": 19,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "B",
+            "C",
+            "D"
+          ],
+          "correct": 0,
+          "jaccard": 0.75,
+          "multi": true
+        },
+        {
+          "i": 20,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "J"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 21,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "A"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 22,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "D"
+          ],
+          "correct": 0,
+          "jaccard": 0.25,
+          "multi": false
+        },
+        {
+          "i": 23,
+          "pred": [
+            "A",
+            "B",
+            "C"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": true
+        },
+        {
+          "i": 24,
+          "pred": [
+            "D"
+          ],
+          "gold": [
+            "B"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 25,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "H"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 26,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "B",
+            "D",
+            "E",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 27,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "I"
+          ],
+          "correct": 0,
+          "jaccard": 0.5714285714285714,
+          "multi": true
+        },
+        {
+          "i": 28,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 29,
+          "pred": [
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "D"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 30,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 31,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "A"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 32,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 33,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "D"
+          ],
+          "correct": 0,
+          "jaccard": 0.25,
+          "multi": false
+        },
+        {
+          "i": 34,
+          "pred": [
+            "D"
+          ],
+          "gold": [
+            "A"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 35,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "A"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 36,
+          "pred": [
+            "A",
+            "B",
+            "C"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "I"
+          ],
+          "correct": 0,
+          "jaccard": 0.375,
+          "multi": true
+        },
+        {
+          "i": 37,
+          "pred": [
+            "C"
+          ],
+          "gold": [
+            "C"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 38,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 39,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.6,
+          "multi": true
+        },
+        {
+          "i": 40,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 41,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.4,
+          "multi": true
+        },
+        {
+          "i": 42,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 43,
+          "pred": [
+            "B"
+          ],
+          "gold": [
+            "G"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 44,
+          "pred": [
+            "D"
+          ],
+          "gold": [
+            "D"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 45,
+          "pred": [
+            "A",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C",
+            "D",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 46,
+          "pred": [
+            "D"
+          ],
+          "gold": [
+            "I"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 47,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "D",
+            "E",
+            "F",
+            "G"
+          ],
+          "correct": 0,
+          "jaccard": 0.42857142857142855,
+          "multi": true
+        },
+        {
+          "i": 48,
+          "pred": [
+            "A",
+            "B",
+            "C"
+          ],
+          "gold": [
+            "D",
+            "E",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": true
+        },
+        {
+          "i": 49,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "B",
+            "E",
+            "J"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": true
+        },
+        {
+          "i": 50,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "I"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 51,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "C",
+            "F",
+            "G",
+            "J"
+          ],
+          "correct": 0,
+          "jaccard": 0.14285714285714285,
+          "multi": true
+        },
+        {
+          "i": 52,
+          "pred": [
+            "C",
+            "D"
+          ],
+          "gold": [
+            "C",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 53,
+          "pred": [
+            "B"
+          ],
+          "gold": [
+            "B"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 54,
+          "pred": [
+            "A",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 55,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C",
+            "D"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 56,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "J"
+          ],
+          "correct": 0,
+          "jaccard": 0.2,
+          "multi": true
+        },
+        {
+          "i": 57,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "correct": 0,
+          "jaccard": 0.75,
+          "multi": true
+        },
+        {
+          "i": 58,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 59,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "A"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 60,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 61,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "J"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 62,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "G"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 63,
+          "pred": [
+            "A",
+            "B",
+            "C"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": true
+        },
+        {
+          "i": 64,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "A"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 65,
+          "pred": [
+            "C"
+          ],
+          "gold": [
+            "A"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 66,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "C"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 67,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "J"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 68,
+          "pred": [
+            "D"
+          ],
+          "gold": [
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 69,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 70,
+          "pred": [
+            "B"
+          ],
+          "gold": [
+            "B"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 71,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 72,
+          "pred": [
+            "A",
+            "B",
+            "C"
+          ],
+          "gold": [
+            "A"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": false
+        },
+        {
+          "i": 73,
+          "pred": [
+            "A",
+            "B",
+            "C"
+          ],
+          "gold": [
+            "C",
+            "D"
+          ],
+          "correct": 0,
+          "jaccard": 0.25,
+          "multi": true
+        },
+        {
+          "i": 74,
+          "pred": [
+            "C"
+          ],
+          "gold": [
+            "D"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 75,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "D",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.4,
+          "multi": true
+        },
+        {
+          "i": 76,
+          "pred": [
+            "A",
+            "C"
+          ],
+          "gold": [
+            "A",
+            "C",
+            "E",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 77,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C",
+            "D",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.6,
+          "multi": true
+        },
+        {
+          "i": 78,
+          "pred": [
+            "B"
+          ],
+          "gold": [
+            "G"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 79,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "H"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 80,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J"
+          ],
+          "correct": 0,
+          "jaccard": 0.3,
+          "multi": true
+        },
+        {
+          "i": 81,
+          "pred": [
+            "A",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "D",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.6666666666666666,
+          "multi": true
+        },
+        {
+          "i": 82,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": true
+        },
+        {
+          "i": 83,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 84,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "A"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 85,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "A"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 86,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "H"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 87,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C"
+          ],
+          "correct": 0,
+          "jaccard": 0.75,
+          "multi": true
+        },
+        {
+          "i": 88,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "B"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 89,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "D",
+            "E",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.6,
+          "multi": true
+        },
+        {
+          "i": 90,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 91,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.4,
+          "multi": true
+        },
+        {
+          "i": 92,
+          "pred": [
+            "C",
+            "D"
+          ],
+          "gold": [
+            "C",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 93,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "F",
+            "G"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 94,
+          "pred": [
+            "B"
+          ],
+          "gold": [
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 95,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          "correct": 0,
+          "jaccard": 0.25,
+          "multi": true
+        },
+        {
+          "i": 96,
+          "pred": [
+            "C"
+          ],
+          "gold": [
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 97,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "E",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": true
+        },
+        {
+          "i": 98,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "E",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 99,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": true
+        }
+      ]
+    },
+    "threat_intel_reasoning": {
+      "n": 100,
+      "accuracy": 0.22,
+      "partial_credit": 0.4736666666666667,
+      "multi_answer_frac": 0.75,
+      "ci_95_low": 0.14,
+      "ci_95_high": 0.3,
+      "per_sample": [
+        {
+          "i": 0,
+          "pred": [
+            "C"
+          ],
+          "gold": [
+            "C"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 1,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "B",
+            "C"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 2,
+          "pred": [
+            "C",
+            "D"
+          ],
+          "gold": [
+            "C",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 3,
+          "pred": [
+            "A",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.25,
+          "multi": true
+        },
+        {
+          "i": 4,
+          "pred": [
+            "A",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C",
+            "D"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": true
+        },
+        {
+          "i": 5,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "A",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 6,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 7,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "A"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 8,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 9,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.6666666666666666,
+          "multi": true
+        },
+        {
+          "i": 10,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "A"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 11,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "B",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 12,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "D"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 13,
+          "pred": [
+            "D"
+          ],
+          "gold": [
+            "A"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 14,
+          "pred": [
+            "B",
+            "D"
+          ],
+          "gold": [
+            "B",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 15,
+          "pred": [
+            "D"
+          ],
+          "gold": [
+            "D"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 16,
+          "pred": [
+            "C"
+          ],
+          "gold": [
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 17,
+          "pred": [
+            "A",
+            "B",
+            "C"
+          ],
+          "gold": [
+            "B",
+            "C"
+          ],
+          "correct": 0,
+          "jaccard": 0.6666666666666666,
+          "multi": true
+        },
+        {
+          "i": 18,
+          "pred": [
+            "A",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "D",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.25,
+          "multi": true
+        },
+        {
+          "i": 19,
+          "pred": [
+            "C"
+          ],
+          "gold": [
+            "A"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 20,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "A"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 21,
+          "pred": [
+            "B"
+          ],
+          "gold": [
+            "B"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 22,
+          "pred": [
+            "C"
+          ],
+          "gold": [
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 23,
+          "pred": [
+            "B"
+          ],
+          "gold": [
+            "C"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 24,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 25,
+          "pred": [
+            "C"
+          ],
+          "gold": [
+            "C"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 26,
+          "pred": [
+            "A"
+          ],
+          "gold": [
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 27,
+          "pred": [
+            "D"
+          ],
+          "gold": [
+            "D"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 28,
+          "pred": [
+            "A",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "D",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.6666666666666666,
+          "multi": true
+        },
+        {
+          "i": 29,
+          "pred": [
+            "B",
+            "C"
+          ],
+          "gold": [
+            "B",
+            "C",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.6666666666666666,
+          "multi": true
+        },
+        {
+          "i": 30,
+          "pred": [
+            "B"
+          ],
+          "gold": [
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 31,
+          "pred": [
+            "D"
+          ],
+          "gold": [
+            "D"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 32,
+          "pred": [
+            "D"
+          ],
+          "gold": [
+            "D"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 33,
+          "pred": [
+            "D"
+          ],
+          "gold": [
+            "B"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 34,
+          "pred": [
+            "D"
+          ],
+          "gold": [
+            "D"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 35,
+          "pred": [
+            "B"
+          ],
+          "gold": [
+            "B"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": false
+        },
+        {
+          "i": 36,
+          "pred": [
+            "D"
+          ],
+          "gold": [
+            "B"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 37,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "B",
+            "C",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.4,
+          "multi": true
+        },
+        {
+          "i": 38,
+          "pred": [
+            "A",
+            "B",
+            "C"
+          ],
+          "gold": [
+            "A",
+            "D",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.2,
+          "multi": true
+        },
+        {
+          "i": 39,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "D",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 40,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "B",
+            "C"
+          ],
+          "correct": 0,
+          "jaccard": 0.25,
+          "multi": true
+        },
+        {
+          "i": 41,
+          "pred": [
+            "B",
+            "D"
+          ],
+          "gold": [
+            "B",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 42,
+          "pred": [
+            "B",
+            "C"
+          ],
+          "gold": [
+            "C",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 43,
+          "pred": [
+            "C"
+          ],
+          "gold": [
+            "D"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": false
+        },
+        {
+          "i": 44,
+          "pred": [
+            "B",
+            "D"
+          ],
+          "gold": [
+            "B",
+            "D"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": true
+        },
+        {
+          "i": 45,
+          "pred": [
+            "A",
+            "B",
+            "C"
+          ],
+          "gold": [
+            "A",
+            "C",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 46,
+          "pred": [
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "B",
+            "C",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 47,
+          "pred": [
+            "B",
+            "C"
+          ],
+          "gold": [
+            "B",
+            "C"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": true
+        },
+        {
+          "i": 48,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C",
+            "E",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 49,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "B",
+            "C"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 50,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "A",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 51,
+          "pred": [
+            "A",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 52,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 53,
+          "pred": [
+            "B",
+            "D"
+          ],
+          "gold": [
+            "C",
+            "D",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.25,
+          "multi": true
+        },
+        {
+          "i": 54,
+          "pred": [
+            "A",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C",
+            "D"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": true
+        },
+        {
+          "i": 55,
+          "pred": [
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": true
+        },
+        {
+          "i": 56,
+          "pred": [
+            "A",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.25,
+          "multi": true
+        },
+        {
+          "i": 57,
+          "pred": [
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.2,
+          "multi": true
+        },
+        {
+          "i": 58,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "A",
+            "C"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 59,
+          "pred": [
+            "A",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 60,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "A",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 61,
+          "pred": [
+            "A",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 62,
+          "pred": [
+            "A",
+            "B",
+            "C"
+          ],
+          "gold": [
+            "A",
+            "E",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.2,
+          "multi": true
+        },
+        {
+          "i": 63,
+          "pred": [
+            "A",
+            "B",
+            "C"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 64,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "D"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": true
+        },
+        {
+          "i": 65,
+          "pred": [
+            "A",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 66,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "C",
+            "D",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.2,
+          "multi": true
+        },
+        {
+          "i": 67,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "B",
+            "C"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 68,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "C",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.0,
+          "multi": true
+        },
+        {
+          "i": 69,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 70,
+          "pred": [
+            "A",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 71,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 72,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 73,
+          "pred": [
+            "A",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "D"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": true
+        },
+        {
+          "i": 74,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "A",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 75,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "B",
+            "D",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 76,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "D",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 77,
+          "pred": [
+            "A",
+            "B",
+            "C"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 78,
+          "pred": [
+            "A",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "D"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": true
+        },
+        {
+          "i": 79,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C",
+            "E",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 80,
+          "pred": [
+            "B",
+            "D"
+          ],
+          "gold": [
+            "B",
+            "D",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.6666666666666666,
+          "multi": true
+        },
+        {
+          "i": 81,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "A",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 82,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 83,
+          "pred": [
+            "A",
+            "B"
+          ],
+          "gold": [
+            "B",
+            "C"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 84,
+          "pred": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.6,
+          "multi": true
+        },
+        {
+          "i": 85,
+          "pred": [
+            "A",
+            "D"
+          ],
+          "gold": [
+            "B",
+            "C",
+            "D"
+          ],
+          "correct": 0,
+          "jaccard": 0.25,
+          "multi": true
+        },
+        {
+          "i": 86,
+          "pred": [
+            "A",
+            "B",
+            "C"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": true
+        },
+        {
+          "i": 87,
+          "pred": [
+            "B",
+            "C"
+          ],
+          "gold": [
+            "A",
+            "C"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 88,
+          "pred": [
+            "A",
+            "C"
+          ],
+          "gold": [
+            "C",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 89,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 90,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 91,
+          "pred": [
+            "B",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.2,
+          "multi": true
+        },
+        {
+          "i": 92,
+          "pred": [
+            "A",
+            "B",
+            "C"
+          ],
+          "gold": [
+            "B",
+            "C",
+            "D"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 93,
+          "pred": [
+            "A",
+            "B",
+            "C"
+          ],
+          "gold": [
+            "B",
+            "C",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 94,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B",
+            "C"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 95,
+          "pred": [
+            "A",
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C",
+            "F"
+          ],
+          "correct": 0,
+          "jaccard": 0.2,
+          "multi": true
+        },
+        {
+          "i": 96,
+          "pred": [
+            "B",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "B"
+          ],
+          "correct": 0,
+          "jaccard": 0.3333333333333333,
+          "multi": true
+        },
+        {
+          "i": 97,
+          "pred": [
+            "A",
+            "C"
+          ],
+          "gold": [
+            "A",
+            "C"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": true
+        },
+        {
+          "i": 98,
+          "pred": [
+            "A",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C",
+            "E"
+          ],
+          "correct": 0,
+          "jaccard": 0.5,
+          "multi": true
+        },
+        {
+          "i": 99,
+          "pred": [
+            "A",
+            "C",
+            "D"
+          ],
+          "gold": [
+            "A",
+            "C",
+            "D"
+          ],
+          "correct": 1,
+          "jaccard": 1.0,
+          "multi": true
+        }
+      ]
+    }
+  }
+}
