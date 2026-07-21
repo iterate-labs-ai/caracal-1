@@ -1,3 +1,8 @@
+> **NOTA 2026-07-20**: este e o draft de RSI em MATEMATICA (Ignite-3B). Os
+> resultados de cyber e a retratacao da claim CyberMetric estao em
+> CARACAL_PAPER.md. O run math (Cond C) bateu no teto de 12h do Kaggle; os
+> numeros de baseline aqui (Cond A) continuam validos.
+
 # Closing the Asymmetry Gap: Same-Model Recursive Self-Improvement in a 3B Language Model with Verifiable Rewards
 
 *Draft. Conditions B-F pending. All numbers reported below are measured; every
