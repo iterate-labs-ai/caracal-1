@@ -88,7 +88,9 @@ def test_rsi_outer_loop_retencao_trajetoria(tmp_path, monkeypatch):
     # ref 0.44 | gen0: dev .46/.45 val .47/.46 (retem) | gen1: dev .46/.44 val .47/.465 (rejeita)
     vals = iter([0.44, 0.46, 0.45, 0.47, 0.46, 0.46, 0.44, 0.47, 0.465])
     monkeypatch.setattr(C, "eval_on", lambda m, t, bn, dp, n: next(vals))
-    perf = lambda acc: {"accuracy": acc, "hier_score": acc + 0.1, "unparsed_frac": 0.02, "n": 150}
+    def perf(acc):
+        return {"accuracy": acc, "hier_score": acc + 0.1, "unparsed_frac": 0.02, "n": 150}
+
     monkeypatch.setattr(C, "score", lambda m, t, bn, dp, n: perf(0.44))
     monkeypatch.setattr(C, "perf_of", lambda base, ad, bn, dp, n: perf(0.47))
 
