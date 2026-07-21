@@ -69,6 +69,24 @@ def eval_on(model, tok, bench_name: str, dataset_path: Path, n: int) -> float:
     return float(res.get("accuracy", 0.0))
 
 
+def perf_of(base: str, adapter, bench_name: str, dataset_path: Path, n: int) -> dict:
+    """Performance completa de um adapter (nao so accuracy): acerto exato +
+    credito parcial hierarquico + unparsed_frac (canaria de colapso de formato).
+    Carrega e libera o modelo. Usado pra medir a cada melhoria do RSI."""
+    from eval.ignite.benches import BENCH_REGISTRY
+
+    m, t = load_model_and_tok(base, str(adapter) if adapter else None)
+    res = BENCH_REGISTRY[bench_name](m, t, n=n, dataset_path=str(dataset_path))
+    m = t = None
+    free_gpu()
+    return {
+        "accuracy": round(res.get("accuracy", 0.0), 4),
+        "hier_score": round(res.get("hier_score", 0.0), 4),
+        "unparsed_frac": round(res.get("unparsed_frac", 0.0), 4),
+        "n": res.get("n", n),
+    }
+
+
 def compute_entropy_delta(v_ckpt: str, cand_ckpt: str) -> float:
     """Placeholder. Full impl requires probing logits on held-out prompts.
     Returns 0.0 == no delta. Wire in S07 notebook when compute allows.
@@ -117,6 +135,18 @@ def outer_loop(
     model, tok = load_model_and_tok(base, v_adapter)
     r_prev = eval_on(model, tok, bench_name, dataset_val, n=100)
     print(f"[outer] referencia val_r={r_prev:.4f} (adapter={v_adapter})")
+
+    # Benchmark a cada melhoria: performance completa do modelo retido por geracao
+    # (accuracy + hier + unparsed no dev), gravada num arquivo que o notebook le.
+    traj_path = Path(out_root) / "trajectory.json"
+    if resume and traj_path.exists():
+        trajectory = json.loads(traj_path.read_text())
+    else:
+        base_perf = perf_of(base, v_adapter, bench_name, dataset_dev, n=150)
+        trajectory = [{"gen": -1, "label": "base", "retained": None, **base_perf}]
+        traj_path.parent.mkdir(parents=True, exist_ok=True)
+        traj_path.write_text(json.dumps(trajectory, indent=2))
+        print(f"[outer] base perf {base_perf}")
 
     for k in range(start_gen, gens):
         print(f"\n=== gen {k}/{gens - 1} ===")
@@ -211,6 +241,16 @@ def outer_loop(
             print(f"[gen{k}] RETAINED val_r={val_r:.4f} delta={delta_pp:.4f}")
         else:
             print(f"[gen{k}] rejected val_r={val_r:.4f} delta={delta_pp:.4f}")
+
+        # Performance completa do modelo VIGENTE apos esta geracao. So re-mede se
+        # reteve (o modelo mudou); senao repete o ultimo ponto sem gastar GPU.
+        if retained:
+            gen_perf = perf_of(base, v_adapter, bench_name, dataset_dev, n=150)
+        else:
+            gen_perf = {k2: v2 for k2, v2 in trajectory[-1].items() if k2 not in ("gen", "label", "retained")}
+        trajectory.append({"gen": k, "label": f"gen{k}", "retained": retained, **gen_perf})
+        traj_path.write_text(json.dumps(trajectory, indent=2))
+        print(f"[gen{k}] perf {gen_perf}")
 
         arch.save_state({"last_gen": k, "last_cand": -1, "v_adapter": str(v_adapter or "")})
 

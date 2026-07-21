@@ -100,7 +100,7 @@ class _FakeDS:
 
 
 def test_cybersoceval_multi_answer_gold(monkeypatch, tok):
-    import datasets
+    datasets = pytest.importorskip("datasets")  # dep pesada; presente no Kaggle/Colab
 
     from eval.s07.benches import cybersoceval
 
