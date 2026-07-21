@@ -159,3 +159,17 @@ def test_cyber_rcm_hierarchical(cwe_tree):
     assert cyber_rcm_reward(f"\\boxed{{{cf}}}", cf) == 1.0
     assert cyber_rcm_reward(f"\\boxed{{{pf}}}", cf) == pytest.approx(0.6)
     assert cyber_rcm_reward("sei la", cf) == -1.0
+
+
+def test_bench_run_schema_canonico():
+    """curve.json (GRPO) e trajectory.json (RSI) tem que usar o MESMO schema.
+    A drift hier vs hier_score nasceu num PR; o schema unico impede voltar."""
+    import inspect
+
+    from eval.ignite.benches.run import CANONICAL_KEYS
+    from train.ignite import B_grpo_straight, C_rsi_outer
+
+    assert CANONICAL_KEYS == ("accuracy", "hier_score", "unparsed_frac", "n")
+    for mod in (B_grpo_straight, C_rsi_outer):
+        src = inspect.getsource(mod)
+        assert "['hier']" not in src and "['unparsed']" not in src, f"{mod.__name__} chave nao-canonica"

@@ -13,6 +13,8 @@ import argparse
 import json
 from pathlib import Path
 
+from eval.ignite.benches.run import bench_adapter, free_gpu, load_eval_model, score
+
 from .archive import Archive
 from .inner_grpo import train_lora
 from .mutations import default_mutation, propose_via_self
@@ -20,71 +22,19 @@ from .mutations import default_mutation, propose_via_self
 EPS_PP = 0.01
 ENTROPY_DROP_MAX = 0.30
 
-
-def free_gpu():
-    """Devolve VRAM ao allocator (gc + empty_cache).
-
-    NAO recebe objetos: `del` num parametro so apaga o binding LOCAL, o caller
-    continua segurando o modelo, entao o empty_cache rodava com a referencia
-    viva e nao liberava nada (era o vazamento que estourava a T4 no gen tardio).
-    O caller precisa zerar as proprias vars (`m = None`) ANTES de chamar aqui.
-    """
-    import gc
-
-    import torch
-
-    gc.collect()
-    torch.cuda.empty_cache()
-
-
-def load_model_and_tok(base: str, adapter: str | None):
-    """T4-compat loader: transformers + fp16, no Unsloth (SM 7.5 unsupported)."""
-    import torch
-    from transformers import AutoModelForCausalLM, AutoTokenizer
-
-    hf_base = base.replace("unsloth/", "Qwen/").replace("-bnb-4bit", "")
-    tok = AutoTokenizer.from_pretrained(hf_base)
-    if tok.pad_token is None:
-        tok.pad_token = tok.eos_token
-    model = AutoModelForCausalLM.from_pretrained(
-        hf_base,
-        torch_dtype=torch.float16,
-        device_map={"": "cuda:0"},
-        low_cpu_mem_usage=True,
-    )
-    if adapter:
-        from peft import PeftModel
-
-        model = PeftModel.from_pretrained(model, adapter)
-        tok = AutoTokenizer.from_pretrained(adapter, use_fast=True)
-    model.eval()
-    return model, tok
+# Loader e medidor moram no primitivo neutro eval/ignite/benches/run.py (uma
+# copia, nao quatro). perf_of = load+score+free; eval_on = score no hot path.
+load_model_and_tok = load_eval_model
 
 
 def eval_on(model, tok, bench_name: str, dataset_path: Path, n: int) -> float:
-    from eval.ignite.benches import BENCH_REGISTRY
-
-    fn = BENCH_REGISTRY[bench_name]
-    res = fn(model, tok, n=n, dataset_path=str(dataset_path))
-    return float(res.get("accuracy", 0.0))
+    return score(model, tok, bench_name, dataset_path, n)["accuracy"]
 
 
 def perf_of(base: str, adapter, bench_name: str, dataset_path: Path, n: int) -> dict:
-    """Performance completa de um adapter (nao so accuracy): acerto exato +
-    credito parcial hierarquico + unparsed_frac (canaria de colapso de formato).
-    Carrega e libera o modelo. Usado pra medir a cada melhoria do RSI."""
-    from eval.ignite.benches import BENCH_REGISTRY
-
-    m, t = load_model_and_tok(base, str(adapter) if adapter else None)
-    res = BENCH_REGISTRY[bench_name](m, t, n=n, dataset_path=str(dataset_path))
-    m = t = None
-    free_gpu()
-    return {
-        "accuracy": round(res.get("accuracy", 0.0), 4),
-        "hier_score": round(res.get("hier_score", 0.0), 4),
-        "unparsed_frac": round(res.get("unparsed_frac", 0.0), 4),
-        "n": res.get("n", n),
-    }
+    """Performance completa (acerto exato + credito parcial hier + unparsed).
+    Carrega/mede/libera. Usado pra medir a cada melhoria do RSI."""
+    return bench_adapter(base, adapter, bench_name, dataset_path, n)
 
 
 def compute_entropy_delta(v_ckpt: str, cand_ckpt: str) -> float:
@@ -141,12 +91,14 @@ def outer_loop(
     traj_path = Path(out_root) / "trajectory.json"
     if resume and traj_path.exists():
         trajectory = json.loads(traj_path.read_text())
+        last_perf = {k: trajectory[-1][k] for k in ("accuracy", "hier_score", "unparsed_frac", "n")}
     else:
-        base_perf = perf_of(base, v_adapter, bench_name, dataset_dev, n=150)
-        trajectory = [{"gen": -1, "label": "base", "retained": None, **base_perf}]
+        # base no modelo JA residente (nao recarrega um 2o 3B com o primeiro vivo)
+        last_perf = score(model, tok, bench_name, dataset_dev, n=150)
+        trajectory = [{"gen": -1, "label": "base", "retained": None, **last_perf}]
         traj_path.parent.mkdir(parents=True, exist_ok=True)
         traj_path.write_text(json.dumps(trajectory, indent=2))
-        print(f"[outer] base perf {base_perf}")
+        print(f"[outer] base perf {last_perf}")
 
     for k in range(start_gen, gens):
         print(f"\n=== gen {k}/{gens - 1} ===")
@@ -242,15 +194,13 @@ def outer_loop(
         else:
             print(f"[gen{k}] rejected val_r={val_r:.4f} delta={delta_pp:.4f}")
 
-        # Performance completa do modelo VIGENTE apos esta geracao. So re-mede se
-        # reteve (o modelo mudou); senao repete o ultimo ponto sem gastar GPU.
+        # Performance do modelo VIGENTE apos esta geracao. So re-mede se reteve
+        # (o modelo mudou); senao last_perf repete o ultimo ponto, sem gastar GPU.
         if retained:
-            gen_perf = perf_of(base, v_adapter, bench_name, dataset_dev, n=150)
-        else:
-            gen_perf = {k2: v2 for k2, v2 in trajectory[-1].items() if k2 not in ("gen", "label", "retained")}
-        trajectory.append({"gen": k, "label": f"gen{k}", "retained": retained, **gen_perf})
+            last_perf = perf_of(base, v_adapter, bench_name, dataset_dev, n=150)
+        trajectory.append({"gen": k, "label": f"gen{k}", "retained": retained, **last_perf})
         traj_path.write_text(json.dumps(trajectory, indent=2))
-        print(f"[gen{k}] perf {gen_perf}")
+        print(f"[gen{k}] perf {last_perf}")
 
         arch.save_state({"last_gen": k, "last_cand": -1, "v_adapter": str(v_adapter or "")})
 

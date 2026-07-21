@@ -15,30 +15,8 @@ import argparse
 import json
 from pathlib import Path
 
-from eval.ignite.benches import BENCH_REGISTRY
+from eval.ignite.benches.run import bench_adapter
 from train.ignite.inner_grpo import train_lora
-
-
-def _eval(base: str, adapter: str | None, dev_path: str, n: int) -> dict:
-    import gc
-
-    import torch
-    from peft import PeftModel
-    from transformers import AutoModelForCausalLM, AutoTokenizer
-
-    tok = AutoTokenizer.from_pretrained(base)
-    if tok.pad_token is None:
-        tok.pad_token = tok.eos_token
-    tok.padding_side = "left"
-    model = AutoModelForCausalLM.from_pretrained(base, torch_dtype=torch.float16, device_map="cuda")
-    if adapter:
-        model = PeftModel.from_pretrained(model, adapter)
-    model.eval()
-    r = BENCH_REGISTRY["cyber_rcm"](model, tok, n=n, dataset_path=dev_path)
-    model = tok = None
-    gc.collect()
-    torch.cuda.empty_cache()
-    return {"accuracy": r["accuracy"], "hier": r["hier_score"], "unparsed": r["unparsed_frac"]}
 
 
 def run(cfg):
@@ -52,7 +30,7 @@ def run(cfg):
     adapter = str(out_root / f"block-{done}") if done else None
 
     if not curve:  # baseline do v0 (base cru) - a referencia do delta
-        curve["0"] = _eval(cfg.base, None, cfg.dev, cfg.eval_n)
+        curve["0"] = bench_adapter(cfg.base, None, "cyber_rcm", cfg.dev, cfg.eval_n)
         curve_path.write_text(json.dumps(curve, indent=2))
         print(f"[grpo] step 0 (base): {curve['0']}", flush=True)
 
@@ -73,7 +51,7 @@ def run(cfg):
                 lr=cfg.lr,
             )
         )
-        m = _eval(cfg.base, adapter, cfg.dev, cfg.eval_n)
+        m = bench_adapter(cfg.base, adapter, "cyber_rcm", cfg.dev, cfg.eval_n)
         curve[str(nxt)] = m
         curve_path.write_text(json.dumps(curve, indent=2))
         print(f"[grpo] step {nxt}: {m}", flush=True)
@@ -81,7 +59,7 @@ def run(cfg):
 
     print("\n=== CURVA (base=step0 | piso de colapso CWE-79=0.273) ===")
     for s, v in sorted(curve.items(), key=lambda x: int(x[0])):
-        print(f"  step {int(s):3d}: acc={v['accuracy']:.3f} hier={v['hier']:.3f} unparsed={v['unparsed']:.2f}")
+        print(f"  step {int(s):3d}: acc={v['accuracy']:.3f} hier={v['hier_score']:.3f} unparsed={v['unparsed_frac']:.2f}")
     return curve
 
 
