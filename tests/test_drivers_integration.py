@@ -119,7 +119,7 @@ def test_notebook_final_cell_roda(tmp_path, monkeypatch):
     import glob as _glob
     import os as _os
 
-    nb = json.loads(Path("notebooks/kaggle/ignite/caracal_rl_cyber.ipynb").read_text())
+    nb = json.loads(Path("notebooks/kaggle/s07/caracal_rl_cyber.ipynb").read_text())
     src = "".join(nb["cells"][7]["source"])
     final_json = tmp_path / "final.json"
     src = src.replace("/kaggle/working/final_benchmark.json", str(final_json))
