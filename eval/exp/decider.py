@@ -79,16 +79,16 @@ def embed(texts, model_name):
     import torch
     from transformers import AutoModel, AutoTokenizer
 
+    dev = "cuda" if torch.cuda.is_available() else "cpu"
+    dtype = torch.float16 if dev == "cuda" else torch.float32
     tok = AutoTokenizer.from_pretrained(hf_name)
     if tok.pad_token is None:
         tok.pad_token = tok.eos_token
-    mdl = AutoModel.from_pretrained(model_name, torch_dtype=torch.float16, device_map="cuda").eval()
+    mdl = AutoModel.from_pretrained(hf_name, torch_dtype=dtype).to(dev).eval()
     out = []
     for i in range(0, len(texts), 16):
         batch = texts[i : i + 16]
-        enc = tok(batch, return_tensors="pt", padding=True, truncation=True, max_length=512).to(
-            "cuda"
-        )
+        enc = tok(batch, return_tensors="pt", padding=True, truncation=True, max_length=512).to(dev)
         with torch.no_grad():
             h = mdl(**enc).last_hidden_state
         mask = enc["attention_mask"].unsqueeze(-1).float()
@@ -96,7 +96,8 @@ def embed(texts, model_name):
         pooled = torch.nn.functional.normalize(pooled.float(), dim=-1)
         out.append(pooled.cpu().numpy())
     del mdl
-    torch.cuda.empty_cache()
+    if dev == "cuda":
+        torch.cuda.empty_cache()
     return np.concatenate(out).astype("float32")
 
 
