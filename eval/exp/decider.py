@@ -58,21 +58,28 @@ def _score(preds, golds, tree):
 
 
 def embed(texts, model_name):
-    """Embedder congelado. sentence-transformer OU mean-pool do Qwen."""
+    """Embedder congelado. sentence-transformer OU mean-pool via transformers."""
     import numpy as np
 
+    hf_name = model_name
     if model_name.startswith("st:"):
-        from sentence_transformers import SentenceTransformer
+        hf_name = model_name[3:]
+        try:
+            from sentence_transformers import SentenceTransformer
 
-        m = SentenceTransformer(model_name[3:])
-        v = m.encode(texts, batch_size=64, normalize_embeddings=True, show_progress_bar=True)
-        return np.asarray(v, dtype="float32")
+            m = SentenceTransformer(hf_name)
+            v = m.encode(texts, batch_size=64, normalize_embeddings=True, show_progress_bar=True)
+            return np.asarray(v, dtype="float32")
+        except Exception as e:
+            # sentence-transformers 5+ puxa torchcodec/libavutil e quebra com torch 2.6;
+            # cai pro mean-pool via transformers, mesmo resultado sem a dep fragil.
+            print(f"[embed] sentence-transformers falhou ({type(e).__name__}), mean-pool via transformers", flush=True)
 
-    # Qwen mean-pool do ultimo hidden (o backbone congelado de verdade)
+    # mean-pool do ultimo hidden (o backbone congelado de verdade)
     import torch
     from transformers import AutoModel, AutoTokenizer
 
-    tok = AutoTokenizer.from_pretrained(model_name)
+    tok = AutoTokenizer.from_pretrained(hf_name)
     if tok.pad_token is None:
         tok.pad_token = tok.eos_token
     mdl = AutoModel.from_pretrained(model_name, torch_dtype=torch.float16, device_map="cuda").eval()
